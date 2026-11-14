@@ -682,9 +682,10 @@
         <button class="vote-button" id="vote-button" type="button" aria-pressed="false">
           <span id="vote-label">♡ التصميم ده عجبني</span><strong id="vote-count">0</strong>
         </button>
+        <button class="action-button danger-action" id="unvote-button" type="button" style="width:100%;margin-top:8px" hidden>✕ إلغاء اختياري لهذا التصميم</button>
       </div>
       <div class="dialog-footer">
-        <span class="dialog-footer-note">تقدر تغيّر اختيارك في أي وقت بالضغط مرة تانية.</span>
+        <span class="dialog-footer-note">تقدر تلغي اختيارك لأي تصميم في أي وقت بزرار «إلغاء اختياري».</span>
         <div class="download-actions">
           <button class="action-button danger-action" id="delete-design" type="button" hidden>حذف تصميمي</button>
           <button class="action-button" id="share-design" type="button">نسخ رابط التصميم</button>
@@ -862,10 +863,19 @@
         result[mode]={};LOGO_PART_KEYS.forEach(key=>result[mode][key]=safeHex(source[key],fallback[key]||fallback.background));
       });return result;
     }
+    /* التصميمات العشرة الأصلية: نفس معادلة إعادة التلوين الأصلية (خلفية/أساسي/إضافي) مطبّقة على ألوان كل جزء. */
+    const SRC_COLORS=[[1,155,149],[255,232,143],[224,230,245]];
+    function inv3(m){const[[a,b,c],[d,e,f],[g,i,j]]=m,A=e*j-f*i,B=c*i-b*j,C=b*f-c*e,D=f*g-d*j,E=a*j-c*g,F=c*d-a*f,G=d*i-e*g,H=b*g-a*i,I=a*e-b*d,det=a*A+b*D+c*G;return[[A,B,C],[D,E,F],[G,H,I]].map(r=>r.map(v=>v/det))}
+    function recolor(theme,hex){
+      const S=[0,1,2].map(ch=>SRC_COLORS.map(c=>c[ch]/255)),I=inv3(S),T=[0,1,2].map(ch=>[theme.background,theme.primary,theme.accent].map(x=>hexToRgb(x)[ch]/255));
+      const M=T.map(r=>[0,1,2].map(j=>r.reduce((s,v,k)=>s+v*I[k][j],0))),v=hexToRgb(hex).map(x=>x/255);
+      return '#'+M.map(r=>Math.round(Math.max(0,Math.min(1,r[0]*v[0]+r[1]*v[1]+r[2]*v[2]))*255).toString(16).padStart(2,'0')).join('').toUpperCase();
+    }
     function partsFor(pair,mode){
       if(pair.parts&&pair.parts[mode])return pair.parts[mode];
-      const primary=pair[mode].primary,accent=pair[mode].accent||pair.accent.hex;
-      return {background:pair[mode].background,bird1:accent,bird2:accent,bird3:accent,bird4:accent,bird5:primary,bird6:accent,bird7:accent,brandName:primary,letterProtrusions:accent};
+      pair._parts=pair._parts||{};
+      if(!pair._parts[mode]){const out={};LOGO_PART_KEYS.forEach(key=>{out[key]=recolor(pair[mode],key==='background'?'#019B95':DEFAULT_PARTS.light[key])});pair._parts[mode]=out}
+      return pair._parts[mode];
     }
     function createCommunityPair(id,data){
       const raw=data&&data.colors||{},colors={};COLOR_KEYS.forEach(key=>colors[key]=safeHex(raw[key],DEFAULT_CUSTOM[key]));
@@ -971,7 +981,7 @@
 
     /* نافذة المعاينة */
     const dialog=$('#preview-dialog');
-    function updateVoteButton(){if(!state.active)return;const selected=hasVoted(state.active);$('#vote-button').setAttribute('aria-pressed',String(selected));$('#vote-label').textContent=selected?'♥ اخترت التصميم ده':'♡ التصميم ده عجبني';$('#vote-count').textContent=designVotes(state.active).toLocaleString('en-US')}
+    function updateVoteButton(){if(!state.active)return;const selected=hasVoted(state.active);$('#vote-button').setAttribute('aria-pressed',String(selected));$('#vote-label').textContent=selected?'♥ اخترت التصميم ده':'♡ التصميم ده عجبني';$('#vote-count').textContent=designVotes(state.active).toLocaleString('en-US');$('#unvote-button').hidden=!selected}
     function colorDetail(label,hex){return`<div class="color-detail"><i style="background:${hex}"></i><span><b>${label}</b><code>${hex}</code></span></div>`}
     function openDesign(token,updateHash=true){
       const pair=typeof token==='object'?token:findDesign(token);if(!pair)return;state.active=pair;
@@ -987,11 +997,11 @@
 
     /* التصويت: نفس المعرّفات القديمة للتصميمات العشرة، ومجموعة منفصلة لتصميمات المجتمع. */
     async function submitVote(){
-      if(!state.active||state.voteBusy)return;const pair=state.active,key=voteKey(pair),wasSelected=state.mine.has(key),oldCount=designVotes(pair);state.voteBusy=true;$('#vote-button').disabled=true;
+      if(!state.active||state.voteBusy)return;const pair=state.active,key=voteKey(pair),wasSelected=state.mine.has(key),oldCount=designVotes(pair);state.voteBusy=true;$('#vote-button').disabled=true;$('#unvote-button').disabled=true;
       if(wasSelected)state.mine.delete(key);else state.mine.add(key);state.votes[key]=Math.max(0,oldCount+(wasSelected?-1:1));render();updateVoteButton();
       try{const result=await window.LumiFB.vote(pair);state.votes[key]=Math.max(0,Number(result.votes)||0);if(result.liked)state.mine.add(key);else state.mine.delete(key);toast(result.liked?'اتسجل إعجابك، شكرًا!':'شيلنا اختيارك.');}
       catch(error){if(wasSelected)state.mine.add(key);else state.mine.delete(key);state.votes[key]=oldCount;const message=String(error&&error.message||'');toast(/[\u0600-\u06FF]/.test(message)?message:'مقدرناش نحفظ اختيارك دلوقتي. جرّب تاني.','error')}
-      finally{state.voteBusy=false;$('#vote-button').disabled=false;render();updateVoteButton()}
+      finally{state.voteBusy=false;$('#vote-button').disabled=false;$('#unvote-button').disabled=false;render();updateVoteButton()}
     }
     window.LumiApp={
       notify(message,type='info',title=''){toast(message,type,title)},
@@ -1127,7 +1137,7 @@
     });
     window.addEventListener('error',event=>{if(event.error)toast('حصل خطأ غير متوقع. حدّث الصفحة وجرب تاني.','error','حصلت مشكلة')});
     window.addEventListener('unhandledrejection',event=>{const message=String(event.reason&&event.reason.message||'');toast(/[\u0600-\u06FF]/.test(message)?message:'حصلت مشكلة أثناء تنفيذ العملية. جرّب تاني.','error','حصلت مشكلة')});
-    $('#dialog-close').addEventListener('click',closeDesign);$('#dialog-prev').addEventListener('click',()=>stepDesign(-1));$('#dialog-next').addEventListener('click',()=>stepDesign(1));$('#vote-button').addEventListener('click',submitVote);$('#download-svg').addEventListener('click',()=>download('svg'));$('#download-png').addEventListener('click',()=>download('png'));$('#share-design').addEventListener('click',shareDesign);
+    $('#dialog-close').addEventListener('click',closeDesign);$('#dialog-prev').addEventListener('click',()=>stepDesign(-1));$('#dialog-next').addEventListener('click',()=>stepDesign(1));$('#vote-button').addEventListener('click',submitVote);$('#unvote-button').addEventListener('click',submitVote);$('#download-svg').addEventListener('click',()=>download('svg'));$('#download-png').addEventListener('click',()=>download('png'));$('#share-design').addEventListener('click',shareDesign);
     ['base-filter','accent-filter','sort-filter','mine-filter'].forEach(id=>$('#'+id).addEventListener('change',()=>{track('filter_change',{filter:id});render(true)}));
     let searchLogged=false;$('#search').addEventListener('input',()=>{render(true);if(!searchLogged&&$('#search').value.trim()){track('search_used',{});searchLogged=true}if(!$('#search').value.trim())searchLogged=false});
 
@@ -1152,12 +1162,13 @@
           window.LumiApp?.notify?.(message,'error','مشكلة في حفظ البيانات');
         }else if(state!=='error')lastNotifiedError='';
       };
+      const withTimeout=(promise,ms=20000)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(Object.assign(new Error('الاتصال بطيء والعملية اتأخرت. جرّب تاني.'),{code:'deadline-exceeded'})),ms))]);
       const explain=error=>{
         const code=String(error?.code||'').toLowerCase();
         if(location.protocol==='file:')return'افتح الموقع من رابط HTTPS بعد رفعه، مش من ملف HTML على الجهاز.';
         if(code.includes('operation-not-allowed')||code.includes('admin-restricted'))return'فعّل تسجيل الدخول المجهول من Firebase Authentication.';
         if(code.includes('unauthorized-domain'))return'ضيف دومين الموقع في Authentication ← Settings ← Authorized domains.';
-        if(code.includes('permission-denied'))return'Firebase رفض الحفظ. انشر ملف firestore.rules المرفق كاملًا بعد دمجه مع قواعد مشروعك.';
+        if(code.includes('permission-denied'))return'Firebase رفض الحفظ. الصق ملف firestore.rules المرفق في Firestore › Rules واضغط Publish.';
         if(code.includes('not-found'))return'قاعدة Cloud Firestore مش موجودة في المشروع ده. أنشئ قاعدة بيانات Firestore من Firebase Console.';
         if(code.includes('failed-precondition'))return'إعداد قاعدة البيانات غير مكتمل أو محتاج فهرس. راجع رسالة الخطأ في Console.';
         if(code.includes('unauthenticated'))return'انتهت جلسة الزائر. اضغط «اختبر الحفظ» لتجديدها.';
@@ -1222,6 +1233,7 @@
           db=F.getFirestore(app);
         }
 
+        const runTx=fn=>withTimeout(F.runTransaction(db,fn));
         const waitForUser=async()=>{
           if(!user)await Promise.race([authReady,new Promise(resolve=>setTimeout(resolve,15000))]);
           if(!user)throw new Error('معرّف الزائر لم يجهز. تأكد من تفعيل Anonymous Authentication وجرب تاني.');
@@ -1263,7 +1275,7 @@
           })();
           return probePromise;
         };
-        const waitForDataStore=async()=>{await waitForUser();if(!firestoreReady)await verifyFirestoreWrite()};
+        const waitForDataStore=async()=>{await waitForUser();if(!firestoreReady)await withTimeout(verifyFirestoreWrite(),25000)};
 
         const saveFailedEvent=item=>{
           try{
@@ -1317,7 +1329,7 @@
             if(pair&&pair.kind==='community'){
               const designId=String(pair.firestoreId),voteId=`${designId}_${user.uid}`;
               const voteRef=F.doc(db,'communityDesignVotes',voteId),statsRef=F.doc(db,'communityDesignStats',designId),designRef=F.doc(db,'communityDesigns',designId);
-              const result=await F.runTransaction(db,async transaction=>{
+              const result=await runTx(async transaction=>{
                 const [voteSnapshot,statsSnapshot,designSnapshot]=await Promise.all([transaction.get(voteRef),transaction.get(statsRef),transaction.get(designRef)]);
                 if(!designSnapshot.exists())throw new Error('التصميم ده مش موجود دلوقتي.');
                 const current=statsSnapshot.exists()?Math.max(0,Number(statsSnapshot.data().votes)||0):0;
@@ -1337,7 +1349,7 @@
             if(!pair||!Number.isInteger(pair.id)||!Number.isInteger(pair.displayIndex))throw new Error('التصميم ده مش صحيح.');
             const pairId=String(pair.id).padStart(3,'0');
             const voteRef=F.doc(db,'pairVotes',`${pairId}_${user.uid}`),statsRef=F.doc(db,'pairVoteStats',pairId);
-            const result=await F.runTransaction(db,async transaction=>{
+            const result=await runTx(async transaction=>{
               const [voteSnapshot,statsSnapshot]=await Promise.all([transaction.get(voteRef),transaction.get(statsRef)]);
               const current=statsSnapshot.exists()?Math.max(0,Number(statsSnapshot.data().votes)||0):0;
               if(voteSnapshot.exists()){
@@ -1382,7 +1394,7 @@
           clean.parts=parts;
           const cleanName=String(name||'').trim().slice(0,28);
           try{
-            const ref=await F.addDoc(F.collection(db,'communityDesigns'),{name:cleanName,colors:clean,createdBy:user.uid,createdAt:F.serverTimestamp()});
+            const ref=await withTimeout(F.addDoc(F.collection(db,'communityDesigns'),{name:cleanName,colors:clean,createdBy:user.uid,createdAt:F.serverTimestamp()}));
             const result={id:ref.id,data:{name:cleanName,colors:clean,createdBy:user.uid}};
             window.LumiFB.track('community_design_published',{designId:ref.id});return result;
           }catch(error){console.error('Custom design was not published:',error);throw new Error(explain(error)||error.message||'مقدرناش ننشر التصميم. اتأكد من قواعد Firestore وجرب تاني.')}
