@@ -606,7 +606,7 @@
         </div>
         <div class="connection" id="firebase-status" data-state="loading" role="status" aria-live="polite">
           <span class="connection-copy"><i class="connection-dot"></i><span id="firebase-message">بنوصل بقاعدة البيانات…</span></span>
-          <button id="firebase-retry" type="button" hidden>حاول تاني</button>
+          <button id="firebase-retry" type="button">اختبر الحفظ</button>
         </div>
       </aside>
     </section>
@@ -1140,77 +1140,311 @@
   <script type="module">
     (async()=>{
       const $=selector=>document.querySelector(selector);
+      $('#firebase-retry').addEventListener('click',()=>{if(window.LumiFB?.retry)window.LumiFB.retry();else location.reload()});
       let lastNotifiedError='';
       const status=(message,state)=>{
-        $('#firebase-message').textContent=message;$('#firebase-status').dataset.state=state;$('#firebase-retry').hidden=state!=='error';
-        if(state==='error'&&message!==lastNotifiedError){lastNotifiedError=message;window.LumiApp?.notify?.(message,'error','مشكلة في الاتصال')}else if(state!=='error')lastNotifiedError='';
+        $('#firebase-message').textContent=message;
+        $('#firebase-status').dataset.state=state;
+        $('#firebase-retry').disabled=state==='checking';
+        $('#firebase-retry').textContent=state==='checking'?'بنختبر…':'اختبر الحفظ';
+        if(state==='error'&&message!==lastNotifiedError){
+          lastNotifiedError=message;
+          window.LumiApp?.notify?.(message,'error','مشكلة في حفظ البيانات');
+        }else if(state!=='error')lastNotifiedError='';
       };
-      const explain=error=>{const code=String(error&&error.code||'');if(code.includes('operation-not-allowed')||code.includes('admin-restricted'))return'فعّل تسجيل الدخول المجهول من Firebase Authentication.';if(code.includes('unauthorized-domain'))return'ضيف عنوان الموقع في Authorized domains داخل Firebase Authentication.';if(code.includes('permission-denied'))return'قواعد Firestore محتاجة تحديث. استخدم ملف القواعد الجديد.';if(code.includes('unavailable')||code.includes('network'))return'الاتصال مش متاح حاليًا. جرّب تاني لما النت يرجع.';return''};
-      let auth=null,db=null,user=null,subscriptionsStarted=false,signingIn=false,flushBusy=false,resolveAuthReady;
-      const authReady=new Promise(resolve=>{resolveAuthReady=resolve}),eventQueue=window.LumiFB._pending;
-      try{const saved=JSON.parse(localStorage.getItem('lumi-event-queue-v1')||'[]');if(Array.isArray(saved)&&saved.length)eventQueue.unshift(...saved.slice(-100))}catch(_){}
+      const explain=error=>{
+        const code=String(error?.code||'').toLowerCase();
+        if(location.protocol==='file:')return'افتح الموقع من رابط HTTPS بعد رفعه، مش من ملف HTML على الجهاز.';
+        if(code.includes('operation-not-allowed')||code.includes('admin-restricted'))return'فعّل تسجيل الدخول المجهول من Firebase Authentication.';
+        if(code.includes('unauthorized-domain'))return'ضيف دومين الموقع في Authentication ← Settings ← Authorized domains.';
+        if(code.includes('permission-denied'))return'Firebase رفض الحفظ. انشر ملف firestore.rules المرفق كاملًا بعد دمجه مع قواعد مشروعك.';
+        if(code.includes('not-found'))return'قاعدة Cloud Firestore مش موجودة في المشروع ده. أنشئ قاعدة بيانات Firestore من Firebase Console.';
+        if(code.includes('failed-precondition'))return'إعداد قاعدة البيانات غير مكتمل أو محتاج فهرس. راجع رسالة الخطأ في Console.';
+        if(code.includes('unauthenticated'))return'انتهت جلسة الزائر. اضغط «اختبر الحفظ» لتجديدها.';
+        if(code.includes('unavailable')||code.includes('network')||code.includes('deadline-exceeded'))return'الاتصال بفايربيس مش مستقر. راجع الإنترنت وجرب تاني.';
+        if(code.includes('resource-exhausted')||code.includes('quota-exceeded'))return'تم تجاوز حصة الاستخدام المتاحة في Firebase. راجع Usage في Firebase Console.';
+        if(code.includes('invalid-argument'))return'البيانات المرسلة لفايربيس فيها قيمة غير مقبولة. راجع Console لمعرفة الحقل.';
+        return String(error?.message||'حصل خطأ غير معروف أثناء الاتصال بفايربيس.').slice(0,220);
+      };
+
+      let auth=null,db=null,user=null,subscriptionsStarted=false,signingIn=false,flushBusy=false;
+      let resolveAuthReady;
+      const authReady=new Promise(resolve=>{resolveAuthReady=resolve});
+      const eventQueue=window.LumiFB._pending;
+      try{
+        const saved=JSON.parse(localStorage.getItem('lumi-event-queue-v1')||'[]');
+        if(Array.isArray(saved)&&saved.length){
+          const seen=new Set(eventQueue.map(item=>`${item.event}|${item.at}`));
+          saved.slice(-100).forEach(item=>{const key=`${item?.event}|${item?.at}`;if(!seen.has(key)){eventQueue.push(item);seen.add(key)}});
+        }
+      }catch(_){}
       const persistQueue=()=>{try{localStorage.setItem('lumi-event-queue-v1',JSON.stringify(eventQueue.slice(-120)))}catch(_){}};
+      const retryable=error=>{
+        const code=String(error?.code||'').toLowerCase();
+        return code.includes('unavailable')||code.includes('network')||code.includes('deadline-exceeded')||code.includes('resource-exhausted')||code.includes('aborted');
+      };
+      const cleanDetails=input=>{
+        const output={};
+        if(!input||typeof input!=='object'||Array.isArray(input))return output;
+        for(const [key,value] of Object.entries(input).slice(0,8)){
+          if(value===undefined)continue;
+          if(value===null||typeof value==='boolean')output[String(key).slice(0,50)]=value;
+          else if(typeof value==='number'&&Number.isFinite(value))output[String(key).slice(0,50)]=value;
+          else if(typeof value==='string')output[String(key).slice(0,50)]=value.slice(0,180);
+          else if(Array.isArray(value))output[String(key).slice(0,50)]=value.slice(0,8).map(v=>String(v).slice(0,80));
+          else {let serialized='[بيانات إضافية]';try{serialized=JSON.stringify(value)||serialized}catch(_){}output[String(key).slice(0,50)]=serialized.slice(0,180)}
+        }
+        return output;
+      };
+
+      let firestoreReady=false,probePromise=null;
       const sdk='https://www.gstatic.com/firebasejs/13.3.0/';
       try{
-        const [{initializeApp},A,F]=await Promise.all([import(sdk+'firebase-app.js'),import(sdk+'firebase-auth.js'),import(sdk+'firebase-firestore.js')]);
-        const app=initializeApp({apiKey:'AIzaSyAn542Sinz4gIAVBI2HgMOrCxYacGOfnj0',authDomain:'lumigami-f8d3f.firebaseapp.com',projectId:'lumigami-f8d3f',storageBucket:'lumigami-f8d3f.firebasestorage.app',messagingSenderId:'792712308846',appId:'1:792712308846:web:3c88c3c6e6fdf953da9e7f',measurementId:'G-B0NPDQNFL8'});
-        auth=A.getAuth(app);try{db=F.initializeFirestore(app,{localCache:F.persistentLocalCache({tabManager:F.persistentMultipleTabManager()})})}catch(_){db=F.getFirestore(app)}
-        const waitForUser=async()=>{if(!user)await Promise.race([authReady,new Promise(resolve=>setTimeout(resolve,12000))]);if(!user)throw new Error('لسه بنجهّز معرّف الزائر. جرّب كمان لحظات.')};
-        const logEvent=async item=>{if(!user)return false;try{await F.addDoc(F.collection(db,'activityLogs'),{uid:user.uid,event:String(item.event||'unknown').slice(0,50),details:item.details&&typeof item.details==='object'?item.details:{},page:location.pathname||'/',createdAt:F.serverTimestamp()});return true}catch(error){console.warn('Activity log was not saved',error);return false}};
-        const flushEvents=async()=>{if(flushBusy||!user)return;flushBusy=true;try{while(user&&eventQueue.length){if(!(await logEvent(eventQueue[0])))break;eventQueue.shift();persistQueue()}}finally{flushBusy=false}};
-        window.LumiFB.track=(event,details={})=>{eventQueue.push({event,details,at:Date.now()});if(eventQueue.length>120)eventQueue.splice(0,eventQueue.length-120);persistQueue();flushEvents()};
-        window.LumiFB.vote=async pair=>{
+        const [{initializeApp},A,F]=await Promise.all([
+          import(sdk+'firebase-app.js'),
+          import(sdk+'firebase-auth.js'),
+          import(sdk+'firebase-firestore.js')
+        ]);
+        const app=initializeApp({
+          apiKey:'AIzaSyAn542Sinz4gIAVBI2HgMOrCxYacGOfnj0',
+          authDomain:'lumigami-f8d3f.firebaseapp.com',
+          projectId:'lumigami-f8d3f',
+          storageBucket:'lumigami-f8d3f.firebasestorage.app',
+          messagingSenderId:'792712308846',
+          appId:'1:792712308846:web:3c88c3c6e6fdf953da9e7f',
+          measurementId:'G-B0NPDQNFL8'
+        });
+        auth=A.getAuth(app);
+        try{
+          db=F.initializeFirestore(app,{localCache:F.persistentLocalCache({tabManager:F.persistentMultipleTabManager()})});
+        }catch(initError){
+          console.warn('Firestore persistent cache could not start; using the standard instance.',initError);
+          db=F.getFirestore(app);
+        }
+
+        const waitForUser=async()=>{
+          if(!user)await Promise.race([authReady,new Promise(resolve=>setTimeout(resolve,15000))]);
+          if(!user)throw new Error('معرّف الزائر لم يجهز. تأكد من تفعيل Anonymous Authentication وجرب تاني.');
+        };
+
+        // اختبار حقيقي: كتابة مستند مؤقت باسم UID الزائر ثم قراءته وحذفه.
+        // هذا لا يترك بيانات تجريبية في قاعدة البيانات عند نجاح الاختبار.
+        const verifyFirestoreWrite=async(force=false)=>{
           await waitForUser();
+          if(firestoreReady&&!force)return true;
+          if(probePromise)return probePromise;
+          probePromise=(async()=>{
+            const ref=F.doc(db,'connectionDiagnostics',user.uid,'checks',token);
+            const token=`${Date.now().toString(36)}-${Math.random().toString(36).slice(2,10)}`;
+            let wrote=false;
+            try{
+              status('الزائر اتعرف. بنختبر الكتابة والقراءة في Firestore…','checking');
+              await F.setDoc(ref,{uid:user.uid,check:token,createdAt:F.serverTimestamp()});
+              wrote=true;
+              const snapshot=await F.getDoc(ref);
+              if(!snapshot.exists()||snapshot.data().uid!==user.uid||snapshot.data().check!==token){
+                throw new Error('الكتابة تمت لكن قراءة بيانات الاختبار لم ترجع نفس البيانات.');
+              }
+              await F.deleteDoc(ref);
+              firestoreReady=true;
+              status('الحفظ شغال — اتأكدنا من الكتابة والقراءة في Firebase.','ok');
+              flushEvents();
+              return true;
+            }catch(error){
+              firestoreReady=false;
+              if(wrote){
+                // لا نخفي سبب الفشل لو حذف مستند الفحص نفسه غير مسموح.
+                try{await F.deleteDoc(ref)}catch(cleanupError){console.warn('Could not remove diagnostic document:',cleanupError)}
+              }
+              console.error('Firestore write verification failed:',error);
+              status(explain(error),'error');
+              throw error;
+            }finally{probePromise=null}
+          })();
+          return probePromise;
+        };
+        const waitForDataStore=async()=>{await waitForUser();if(!firestoreReady)await verifyFirestoreWrite()};
+
+        const saveFailedEvent=item=>{
+          try{
+            const key='lumi-event-failures-v1',old=JSON.parse(localStorage.getItem(key)||'[]');
+            old.push({event:String(item?.event||'unknown').slice(0,50),at:Number(item?.at)||Date.now()});
+            localStorage.setItem(key,JSON.stringify(old.slice(-30)));
+          }catch(_){}
+        };
+        const logEvent=async item=>{
+          if(!user)return {ok:false,error:new Error('No authenticated visitor')};
+          try{
+            await F.addDoc(F.collection(db,'activityLogs'),{
+              uid:user.uid,
+              event:String(item?.event||'unknown').slice(0,50),
+              details:cleanDetails(item?.details),
+              page:String(location.pathname||'/').slice(0,200),
+              createdAt:F.serverTimestamp()
+            });
+            return {ok:true};
+          }catch(error){console.warn('Activity log was not saved:',error);return {ok:false,error}}
+        };
+        const flushEvents=async()=>{
+          if(flushBusy||!user||!firestoreReady||!eventQueue.length)return;
+          flushBusy=true;
+          try{
+            let attempts=eventQueue.length;
+            while(user&&firestoreReady&&eventQueue.length&&attempts-->0){
+              const item=eventQueue[0],result=await logEvent(item);
+              if(result.ok){eventQueue.shift();persistQueue();continue}
+              if(retryable(result.error))break;
+              // خطأ غير قابل لإعادة المحاولة لا يوقف بقية السجل إلى الأبد.
+              saveFailedEvent(item);eventQueue.shift();persistQueue();
+              const code=String(result.error?.code||'');
+              if(code.includes('permission-denied')){
+                status('اختبار الاتصال نجح، لكن قواعد activityLogs لا تسمح بحفظ سجل النشاط. راجع قواعد Firestore المنشورة.','error');
+                break;
+              }
+            }
+          }finally{flushBusy=false}
+        };
+        window.LumiFB.track=(event,details={})=>{
+          eventQueue.push({event:String(event||'unknown').slice(0,50),details:cleanDetails(details),at:Date.now()});
+          if(eventQueue.length>120)eventQueue.splice(0,eventQueue.length-120);
+          persistQueue();flushEvents();
+        };
+        window.LumiFB.testConnection=()=>verifyFirestoreWrite(true);
+
+        window.LumiFB.vote=async pair=>{
+          await waitForDataStore();
           try{
             if(pair&&pair.kind==='community'){
-              const designId=String(pair.firestoreId),voteId=`${designId}_${user.uid}`,voteRef=F.doc(db,'communityDesignVotes',voteId),statsRef=F.doc(db,'communityDesignStats',designId),designRef=F.doc(db,'communityDesigns',designId);
+              const designId=String(pair.firestoreId),voteId=`${designId}_${user.uid}`;
+              const voteRef=F.doc(db,'communityDesignVotes',voteId),statsRef=F.doc(db,'communityDesignStats',designId),designRef=F.doc(db,'communityDesigns',designId);
               const result=await F.runTransaction(db,async transaction=>{
                 const [voteSnapshot,statsSnapshot,designSnapshot]=await Promise.all([transaction.get(voteRef),transaction.get(statsRef),transaction.get(designRef)]);
                 if(!designSnapshot.exists())throw new Error('التصميم ده مش موجود دلوقتي.');
                 const current=statsSnapshot.exists()?Math.max(0,Number(statsSnapshot.data().votes)||0):0;
-                if(voteSnapshot.exists()){const next=Math.max(0,current-1);transaction.delete(voteRef);transaction.set(statsRef,{designId,votes:next,updatedAt:F.serverTimestamp()},{merge:true});return{liked:false,votes:next}}
-                const next=current+1;transaction.set(voteRef,{uid:user.uid,designId,createdAt:F.serverTimestamp()});transaction.set(statsRef,{designId,votes:next,updatedAt:F.serverTimestamp()},{merge:true});return{liked:true,votes:next};
+                if(voteSnapshot.exists()){
+                  const next=Math.max(0,current-1);
+                  transaction.delete(voteRef);
+                  transaction.set(statsRef,{designId,votes:next,updatedAt:F.serverTimestamp()},{merge:true});
+                  return{liked:false,votes:next};
+                }
+                const next=current+1;
+                transaction.set(voteRef,{uid:user.uid,designId,createdAt:F.serverTimestamp()});
+                transaction.set(statsRef,{designId,votes:next,updatedAt:F.serverTimestamp()},{merge:true});
+                return{liked:true,votes:next};
               });
               window.LumiFB.track('community_vote',{designId,liked:result.liked});return result;
             }
             if(!pair||!Number.isInteger(pair.id)||!Number.isInteger(pair.displayIndex))throw new Error('التصميم ده مش صحيح.');
-            const pairId=String(pair.id).padStart(3,'0'),voteRef=F.doc(db,'pairVotes',`${pairId}_${user.uid}`),statsRef=F.doc(db,'pairVoteStats',pairId);
+            const pairId=String(pair.id).padStart(3,'0');
+            const voteRef=F.doc(db,'pairVotes',`${pairId}_${user.uid}`),statsRef=F.doc(db,'pairVoteStats',pairId);
             const result=await F.runTransaction(db,async transaction=>{
-              const [voteSnapshot,statsSnapshot]=await Promise.all([transaction.get(voteRef),transaction.get(statsRef)]);const current=statsSnapshot.exists()?Math.max(0,Number(statsSnapshot.data().votes)||0):0;
-              if(voteSnapshot.exists()){const next=Math.max(0,current-1);transaction.delete(voteRef);transaction.set(statsRef,{pairId,votes:next,updatedAt:F.serverTimestamp()},{merge:true});return{liked:false,votes:next}}
-              const next=current+1;transaction.set(voteRef,{uid:user.uid,pairId,createdAt:F.serverTimestamp()});transaction.set(statsRef,{pairId,votes:next,updatedAt:F.serverTimestamp()},{merge:true});return{liked:true,votes:next};
-            });window.LumiFB.track('vote',{pairId,liked:result.liked});return result;
-          }catch(error){console.error('Vote was not saved',error);throw new Error(explain(error)||error.message||'مش قادرين نحفظ اختيارك دلوقتي. جرّب تاني.')}
+              const [voteSnapshot,statsSnapshot]=await Promise.all([transaction.get(voteRef),transaction.get(statsRef)]);
+              const current=statsSnapshot.exists()?Math.max(0,Number(statsSnapshot.data().votes)||0):0;
+              if(voteSnapshot.exists()){
+                const next=Math.max(0,current-1);transaction.delete(voteRef);
+                transaction.set(statsRef,{pairId,votes:next,updatedAt:F.serverTimestamp()},{merge:true});
+                return{liked:false,votes:next};
+              }
+              const next=current+1;
+              transaction.set(voteRef,{uid:user.uid,pairId,createdAt:F.serverTimestamp()});
+              transaction.set(statsRef,{pairId,votes:next,updatedAt:F.serverTimestamp()},{merge:true});
+              return{liked:true,votes:next};
+            });
+            window.LumiFB.track('vote',{pairId,liked:result.liked});return result;
+          }catch(error){console.error('Vote was not saved:',error);throw new Error(explain(error)||error.message||'مش قادرين نحفظ اختيارك دلوقتي. جرّب تاني.')}
         };
+
         window.LumiFB.deleteDesign=async pair=>{
-          await waitForUser();
+          await waitForDataStore();
           if(!pair||pair.kind!=='community'||!pair.firestoreId)throw new Error('التصميم ده مش قابل للحذف.');
           const ref=F.doc(db,'communityDesigns',String(pair.firestoreId));
-          try{const snapshot=await F.getDoc(ref);if(!snapshot.exists())throw new Error('التصميم اتحذف أو مبقاش موجود.');if(snapshot.data().createdBy!==user.uid)throw new Error('تقدر تحذف التصميمات اللي نشرتها بنفسك بس.');await F.deleteDoc(ref);return true}
-          catch(error){console.error('Community design delete failed',error);throw new Error(explain(error)||error.message||'مقدرناش نحذف التصميم. راجع قواعد Firestore وجرب تاني.')}
+          try{
+            const snapshot=await F.getDoc(ref);
+            if(!snapshot.exists())throw new Error('التصميم اتحذف أو مبقاش موجود.');
+            if(snapshot.data().createdBy!==user.uid)throw new Error('تقدر تحذف التصميمات اللي نشرتها بنفسك بس.');
+            await F.deleteDoc(ref);return true;
+          }catch(error){console.error('Community design delete failed:',error);throw new Error(explain(error)||error.message||'مقدرناش نحذف التصميم. راجع قواعد Firestore وجرب تاني.')}
         };
+
         window.LumiFB.publishDesign=async(colors,name='')=>{
-          await waitForUser();const keys=['lightBackground','lightLogo','darkBackground','darkLogo','accent','detail'],clean={};
+          await waitForDataStore();
+          const keys=['lightBackground','lightLogo','darkBackground','darkLogo','accent','detail'],clean={};
           keys.forEach(key=>{const value=colors&&colors[key];if(typeof value!=='string'||!/^#[0-9A-Fa-f]{6}$/.test(value))throw new Error('في لون مش مكتوب بطريقة صحيحة. راجع أكواد الألوان.');clean[key]=value.toUpperCase()});
-          const parts={};for(const mode of ['light','dark']){parts[mode]={};for(const key of ['background','bird1','bird2','bird3','bird4','bird5','bird6','bird7','brandName','letterProtrusions']){const value=colors?.parts?.[mode]?.[key];if(typeof value!=='string'||!/^#[0-9A-Fa-f]{6}$/.test(value))throw new Error('في لون من أجزاء الشعار مش صحيح. راجعه وجرب تاني.');parts[mode][key]=value.toUpperCase()}}clean.parts=parts;
-          const cleanName=String(name||'').trim().slice(0,28);if(cleanName.length>28)throw new Error('اسم التصميم طويل. اختصره شوية.');
-          try{const ref=await F.addDoc(F.collection(db,'communityDesigns'),{name:cleanName,colors:clean,createdBy:user.uid,createdAt:F.serverTimestamp()});const result={id:ref.id,data:{name:cleanName,colors:clean,createdBy:user.uid}};window.LumiFB.track('community_design_published',{designId:ref.id});return result}
-          catch(error){console.error('Custom design was not published',error);throw new Error(explain(error)||'مقدرناش ننشر التصميم. اتأكد من قواعد Firestore وجرب تاني.')}
+          const parts={};
+          for(const mode of ['light','dark']){
+            parts[mode]={};
+            for(const key of ['background','bird1','bird2','bird3','bird4','bird5','bird6','bird7','brandName','letterProtrusions']){
+              const value=colors?.parts?.[mode]?.[key];
+              if(typeof value!=='string'||!/^#[0-9A-Fa-f]{6}$/.test(value))throw new Error('في لون من أجزاء الشعار مش صحيح. راجعه وجرب تاني.');
+              parts[mode][key]=value.toUpperCase();
+            }
+          }
+          clean.parts=parts;
+          const cleanName=String(name||'').trim().slice(0,28);
+          try{
+            const ref=await F.addDoc(F.collection(db,'communityDesigns'),{name:cleanName,colors:clean,createdBy:user.uid,createdAt:F.serverTimestamp()});
+            const result={id:ref.id,data:{name:cleanName,colors:clean,createdBy:user.uid}};
+            window.LumiFB.track('community_design_published',{designId:ref.id});return result;
+          }catch(error){console.error('Custom design was not published:',error);throw new Error(explain(error)||error.message||'مقدرناش ننشر التصميم. اتأكد من قواعد Firestore وجرب تاني.')}
         };
-        window.LumiFB.retry=()=>{if(auth&&!signingIn){signingIn=true;A.signInAnonymously(auth).then(()=>{signingIn=false}).catch(error=>{signingIn=false;status(explain(error)||'معرفناش نوصّل دلوقتي. جرّب تاني.','error')})}};
-        await A.setPersistence(auth,A.browserLocalPersistence).catch(()=>{});
+
+        window.LumiFB.retry=async()=>{
+          try{
+            if(!user){
+              if(!signingIn){signingIn=true;await A.signInAnonymously(auth);signingIn=false;}
+              await waitForUser();
+            }
+            await verifyFirestoreWrite(true);
+            window.LumiApp?.notify?.('اختبار الحفظ نجح. Firebase بيستقبل البيانات دلوقتي.','success','اتأكدنا من الاتصال');
+          }catch(error){signingIn=false;status(explain(error),'error')}
+        };
+
+        await A.setPersistence(auth,A.browserLocalPersistence).catch(error=>console.warn('Auth persistence could not be set:',error));
         A.onAuthStateChanged(auth,visitor=>{
-          if(!visitor){if(!signingIn){signingIn=true;A.signInAnonymously(auth).then(()=>{signingIn=false}).catch(error=>{signingIn=false;resolveAuthReady(false);console.error(error);status(explain(error)||'التصفح شغال، بس الحفظ مش متاح دلوقتي.','error')})}return}
-          user=visitor;signingIn=false;resolveAuthReady(visitor);window.LumiApp?.setVisitorUid?.(visitor.uid);status('متصل — اختياراتك محفوظة على نفس المتصفح.','ok');flushEvents();if(subscriptionsStarted)return;subscriptionsStarted=true;
-          F.onSnapshot(F.collection(db,'pairVoteStats'),snapshot=>{const next=Object.create(null);snapshot.forEach(document=>next[document.id]=Math.max(0,Number(document.data().votes)||0));window.LumiApp.applyVoteData(next,undefined)},error=>status(explain(error)||'مقدرناش نحمّل أعداد الإعجابات.','error'));
-          F.onSnapshot(F.query(F.collection(db,'pairVotes'),F.where('uid','==',visitor.uid)),snapshot=>{const mine=new Set();snapshot.forEach(document=>mine.add(String(document.data().pairId)));window.LumiApp.applyVoteData(undefined,mine)},error=>status(explain(error)||'مقدرناش نأكد اختياراتك.','error'));
-          F.onSnapshot(F.query(F.collection(db,'communityDesigns'),F.orderBy('createdAt','desc')),snapshot=>{window.LumiApp.applyCommunityDesigns(snapshot.docs.map(document=>({id:document.id,data:document.data()})))},error=>status(explain(error)||'مقدرناش نحمّل تصميمات الناس. راجع قواعد Firestore.','error'));
-          F.onSnapshot(F.collection(db,'communityDesignStats'),snapshot=>{const stats=Object.create(null);snapshot.forEach(document=>stats[document.id]=Math.max(0,Number(document.data().votes)||0));window.LumiApp.applyCommunityVoteStats(stats)},error=>status(explain(error)||'مقدرناش نحمّل إعجابات التصميمات الجديدة.','error'));
-          F.onSnapshot(F.query(F.collection(db,'communityDesignVotes'),F.where('uid','==',visitor.uid)),snapshot=>{const mine=new Set();snapshot.forEach(document=>mine.add(`community:${document.data().designId}`));window.LumiApp.applyCommunityMine(mine)},error=>status(explain(error)||'مقدرناش نأكد اختياراتك في التصميمات الجديدة.','error'));
+          if(!visitor){
+            if(!signingIn){
+              signingIn=true;
+              A.signInAnonymously(auth).then(()=>{signingIn=false}).catch(error=>{
+                signingIn=false;console.error('Anonymous sign-in failed:',error);status(explain(error),'error');
+              });
+            }
+            return;
+          }
+          user=visitor;signingIn=false;resolveAuthReady(visitor);
+          window.LumiApp?.setVisitorUid?.(visitor.uid);
+          status('تم التعرف على الزائر. بنختبر حفظ البيانات…','checking');
+          if(!subscriptionsStarted){
+            subscriptionsStarted=true;
+            F.onSnapshot(F.collection(db,'pairVoteStats'),snapshot=>{
+              const next=Object.create(null);snapshot.forEach(document=>next[document.id]=Math.max(0,Number(document.data().votes)||0));window.LumiApp.applyVoteData(next,undefined);
+            },error=>status(explain(error),'error'));
+            F.onSnapshot(F.query(F.collection(db,'pairVotes'),F.where('uid','==',visitor.uid)),snapshot=>{
+              const mine=new Set();snapshot.forEach(document=>mine.add(String(document.data().pairId)));window.LumiApp.applyVoteData(undefined,mine);
+            },error=>status(explain(error),'error'));
+            F.onSnapshot(F.query(F.collection(db,'communityDesigns'),F.orderBy('createdAt','desc')),snapshot=>{
+              window.LumiApp.applyCommunityDesigns(snapshot.docs.map(document=>({id:document.id,data:document.data()})));
+            },error=>status(explain(error),'error'));
+            F.onSnapshot(F.collection(db,'communityDesignStats'),snapshot=>{
+              const stats=Object.create(null);snapshot.forEach(document=>stats[document.id]=Math.max(0,Number(document.data().votes)||0));window.LumiApp.applyCommunityVoteStats(stats);
+            },error=>status(explain(error),'error'));
+            F.onSnapshot(F.query(F.collection(db,'communityDesignVotes'),F.where('uid','==',visitor.uid)),snapshot=>{
+              const mine=new Set();snapshot.forEach(document=>mine.add(`community:${document.data().designId}`));window.LumiApp.applyCommunityMine(mine);
+            },error=>status(explain(error),'error'));
+          }
+          verifyFirestoreWrite().catch(()=>{});
         });
-      }catch(error){console.error('Firebase initialization failed',error);status(explain(error)||'خدمة الحفظ مش متاحة. افتح الموقع من HTTPS وتأكد من إعدادات Firebase.','error')}
-      window.addEventListener('offline',()=>{status('مفيش اتصال — تقدر تتصفح، والحفظ هيرجع مع الإنترنت.','loading');window.LumiApp?.notify?.('الاتصال بالإنترنت انقطع. أول ما يرجع هنكمل حفظ النشاط.','warning','أنت غير متصل')});
-      window.addEventListener('online',()=>{if(user){status('رجع الاتصال — بنحدّث الاختيارات.','ok');flushEvents();window.LumiApp?.notify?.('الاتصال رجع، والموقع بيحدّث البيانات دلوقتي.','success','رجعنا متصلين')}});
+      }catch(error){
+        console.error('Firebase initialization failed:',error);
+        status(explain(error),'error');
+      }
+      window.addEventListener('offline',()=>{
+        firestoreReady=false;
+        status('مفيش اتصال — الحفظ متوقف مؤقتًا لحد ما النت يرجع.','error');
+        window.LumiApp?.notify?.('الاتصال بالإنترنت انقطع.','warning','أنت غير متصل');
+      });
+      window.addEventListener('online',()=>{
+        if(user){verifyFirestoreWrite(true).then(()=>flushEvents()).catch(()=>{});window.LumiApp?.notify?.('رجع الاتصال، بنختبر الحفظ دلوقتي.','info','رجعنا متصلين')}
+      });
     })();
   </script>
 </body>
