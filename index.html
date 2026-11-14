@@ -1234,8 +1234,8 @@
           if(firestoreReady&&!force)return true;
           if(probePromise)return probePromise;
           probePromise=(async()=>{
-            const ref=F.doc(db,'connectionDiagnostics',user.uid,'checks',token);
             const token=`${Date.now().toString(36)}-${Math.random().toString(36).slice(2,10)}`;
+            const ref=F.doc(db,'connectionDiagnostics',user.uid,'checks',token);
             let wrote=false;
             try{
               status('الزائر اتعرف. بنختبر الكتابة والقراءة في Firestore…','checking');
