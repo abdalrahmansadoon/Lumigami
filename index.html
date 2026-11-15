@@ -178,7 +178,7 @@
 
     /* Design cards */
     .design-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 17px; }
-    .design-card { min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 20px; background: var(--surface); box-shadow: 0 4px 16px rgba(25,45,34,.035); cursor: pointer; transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+    .design-card { min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 20px; background: var(--surface); box-shadow: 0 4px 16px rgba(25,45,34,.035); cursor: pointer; transition: transform .34s cubic-bezier(.2,.75,.25,1), box-shadow .34s cubic-bezier(.2,.75,.25,1), border-color .34s ease; backface-visibility:hidden; }
     .design-card:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--brand) 48%, var(--line)); box-shadow: var(--shadow); }
     .design-card:focus-visible { outline-offset: 4px; }
     .card-head { display: flex; align-items: center; gap: 12px; padding: 15px 16px 12px; }
@@ -225,7 +225,7 @@
     .ranking-empty { margin-bottom: 18px; padding: 15px 17px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface-2); color: var(--muted); font-size: 12px; }
 
     /* Modal */
-    .preview-dialog { width: min(1060px, calc(100% - 28px)); max-width: none; max-height: min(94dvh, 1000px); margin: auto; padding: 0; overflow: auto; border: 1px solid var(--line); border-radius: 25px; background: var(--surface); color: var(--ink); box-shadow: 0 30px 100px rgba(0,0,0,.42); scrollbar-color: var(--line) transparent; }
+    .preview-dialog { width: min(1060px, calc(100% - 28px)); max-width: none; max-height: min(94dvh, 1000px); margin: auto; padding: 0; overflow: auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; border: 1px solid var(--line); border-radius: 25px; background: var(--surface); color: var(--ink); box-shadow: 0 30px 100px rgba(0,0,0,.42); scrollbar-color: var(--line) transparent; }
     .preview-dialog::backdrop { background: rgba(6, 14, 10, .72); backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px); }
     .dialog-inner { padding: 22px; }
     .dialog-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 17px; border-bottom: 1px solid var(--line); }
@@ -237,6 +237,9 @@
     .icon-button { width: 42px; height: 42px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); color: var(--ink); font-size: 19px; transition: background .15s, border-color .15s; }
     .icon-button:hover { border-color: var(--brand); background: var(--brand-soft); }
     .dialog-previews { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding-top: 18px; }
+    .dialog-previews.is-swapping .preview-tile { animation:preview-swap .28s cubic-bezier(.2,.75,.25,1) both; }
+    .dialog-previews.is-swapping .preview-tile:nth-child(2) { animation-delay:35ms; }
+    @keyframes preview-swap { from { opacity:.35; transform:translateY(7px) scale(.99); filter:blur(1px); } to { opacity:1; transform:none; filter:blur(0); } }
     .dialog-previews .preview-tile { padding: 11px; border-radius: 16px; }
     .dialog-previews .logo-stage { aspect-ratio: 5 / 3.25; }
     .dialog-previews .preview-label { margin-bottom: 9px; font-size: 12px; }
@@ -289,13 +292,26 @@
     .notification-close:hover { background: var(--brand-soft); border-color: var(--brand); color: var(--ink); }
 
     /* Smooth page and dialog motion */
-    .design-card { animation: card-enter .42s cubic-bezier(.2,.75,.25,1) both; animation-delay: calc(var(--card-index, 0) * 38ms); }
+    .design-card.is-entering { animation: card-enter .48s cubic-bezier(.2,.75,.25,1) both; animation-delay: calc(var(--card-index, 0) * 42ms); }
+    .like-count.is-pulsing { animation: live-pulse .38s cubic-bezier(.2,.8,.25,1); }
+    .card-favorite:active,.vote-button:active,.favorite-dialog-button:active { transform:scale(.97); }
+    .control,.filter-toggle,.icon-button,.action-button,.vote-button,.favorite-dialog-button,.page-button,.part-selector-button,.part-reset-button { transition-timing-function:cubic-bezier(.2,.75,.25,1); transition-duration:.26s; }
     .preview-tile, .summary-card, .podium-card, .palette-swatch, .page-button, .control { transition-duration: .26s; transition-timing-function: cubic-bezier(.2,.75,.25,1); }
     .preview-dialog[open] { animation: dialog-enter .32s cubic-bezier(.2,.8,.25,1) both; }
     .preview-dialog[open]::backdrop { animation: backdrop-enter .28s ease both; }
-    @keyframes card-enter { from { opacity: 0; transform: translateY(13px) scale(.992); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes card-enter { from { opacity: 0; transform: translateY(16px) scale(.99); filter:blur(2px); } to { opacity: 1; transform: translateY(0) scale(1); filter:blur(0); } }
+    @keyframes live-pulse { 0% { transform:scale(1); } 45% { transform:scale(1.045); } 100% { transform:scale(1); } }
     @keyframes dialog-enter { from { opacity: 0; transform: translateY(16px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
     @keyframes backdrop-enter { from { background: rgba(6,14,10,0); backdrop-filter: blur(0); } to { background: rgba(6,14,10,.72); backdrop-filter: blur(7px); } }
+    .preview-dialog,.customizer-dialog,.delete-confirm-dialog { opacity:0; transform:translateY(18px) scale(.985); transition:opacity .26s ease,transform .34s cubic-bezier(.2,.8,.25,1),overlay .26s ease allow-discrete,display .26s allow-discrete; }
+    .preview-dialog[open],.customizer-dialog[open],.delete-confirm-dialog[open] { opacity:1; transform:translateY(0) scale(1); }
+    @starting-style { .preview-dialog[open],.customizer-dialog[open],.delete-confirm-dialog[open] { opacity:0; transform:translateY(18px) scale(.985); } }
+    .customizer-dialog[open] { animation:dialog-enter .36s cubic-bezier(.2,.8,.25,1) both; }
+    .customizer-dialog[open]::backdrop,.delete-confirm-dialog[open]::backdrop { animation:backdrop-enter .28s ease both; }
+    .editor-stage { transition:background-color .28s ease,border-color .28s ease,box-shadow .28s ease; }
+    .editor-stage .part-shape { transition:filter .2s ease,opacity .2s ease; }
+    .customizer-preview-panel,.part-editor-panel { transition:border-color .25s ease,box-shadow .25s ease,transform .25s ease; }
+    .publish-button,.cancel-button,.create-design-button { transition:transform .26s cubic-bezier(.2,.75,.25,1),box-shadow .26s ease,filter .26s ease,background .26s ease; }
 
     @media (max-width: 980px) {
       .hero { grid-template-columns: 1fr; gap: 17px; padding-top: 38px; }
@@ -436,7 +452,7 @@
     .create-design-button { min-height:42px; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:0 15px; border:1px solid color-mix(in srgb,var(--brand) 24%,var(--line)); border-radius:12px; background:var(--brand); color:var(--brand-on); font-size:12px; font-weight:700; box-shadow:0 7px 18px color-mix(in srgb,var(--brand) 16%,transparent); transition:transform .22s ease,filter .22s ease,box-shadow .22s ease; }
     .create-design-button:hover { transform:translateY(-2px); filter:brightness(1.04); box-shadow:0 10px 22px color-mix(in srgb,var(--brand) 22%,transparent); }
     .create-design-button svg { width:17px; height:17px; }
-    .customizer-dialog { width:min(1080px,calc(100% - 24px)); max-width:none; max-height:min(94dvh,1100px); margin:auto; padding:0; overflow:auto; border:1px solid var(--line); border-radius:25px; background:var(--surface); color:var(--ink); box-shadow:0 30px 100px rgba(0,0,0,.42); scrollbar-color:var(--line) transparent; }
+    .customizer-dialog { width:min(1080px,calc(100% - 24px)); max-width:none; max-height:min(94dvh,1100px); margin:auto; padding:0; overflow:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; border:1px solid var(--line); border-radius:25px; background:var(--surface); color:var(--ink); box-shadow:0 30px 100px rgba(0,0,0,.42); scrollbar-color:var(--line) transparent; }
     .customizer-dialog::backdrop { background:rgba(6,14,10,.76); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
     .customizer-inner { padding:24px; }
     .customizer-head { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:18px; padding-bottom:16px; border-bottom:1px solid var(--line); }
@@ -454,7 +470,8 @@
     .editor-mode-switch { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-bottom:12px; padding:4px; border:1px solid var(--line); border-radius:13px; background:var(--surface-2); }
     .editor-mode-button { min-height:39px; border:1px solid transparent; border-radius:9px; background:transparent; color:var(--muted); font-size:11px; font-weight:700; transition:background .18s,color .18s,border-color .18s; }
     .editor-mode-button[aria-pressed="true"] { background:var(--surface); border-color:var(--line); color:var(--ink); box-shadow:0 2px 8px rgba(0,0,0,.06); }
-    .editor-stage { position:relative; overflow:hidden; aspect-ratio:2/1; border:1px solid var(--line); border-radius:14px; background:var(--editor-bg,var(--surface-2)); box-shadow:inset 0 0 0 1px rgba(0,0,0,.025); touch-action:manipulation; }
+    .editor-stage { position:relative; overflow:hidden; aspect-ratio:2/1; border:1px solid var(--line); border-radius:14px; background:var(--editor-bg,var(--surface-2)); box-shadow:inset 0 0 0 1px rgba(0,0,0,.025); touch-action:manipulation; transition:background-color .28s ease,border-color .28s ease,opacity .18s ease; }
+    .editor-stage.is-updating { opacity:.92; }
     .editor-stage > .logo-parts-layer { position:absolute; z-index:1; inset:0; display:block; width:100%; height:100%; }
     .logo-parts-layer { position:absolute; z-index:2; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none; }
     .logo-parts-layer.is-interactive { pointer-events:auto; }
@@ -815,7 +832,7 @@
       brandName:["M 702.28 736.58 C 692.72 736.58 685.32 733.43 680.09 727.13 C 674.85 720.82 672.24 711.47 672.24 699.07 L 672.24 651.03 L 693.43 651.03 L 693.43 700.9 C 693.43 705.98 694.86 710.02 697.7 713.02 C 700.55 716.02 704.41 717.52 709.29 717.52 C 714.17 717.52 718.16 715.94 721.26 712.79 C 724.36 709.64 725.91 705.37 725.91 699.98 L 725.91 651.03 L 747.11 651.03 L 747.11 733.99 L 730.34 733.99 L 730.34 698.76 L 732.01 698.76 C 732.01 707.1 730.95 714.06 728.81 719.65 C 726.68 725.25 723.47 729.47 719.2 732.31 C 714.93 735.16 709.6 736.58 703.19 736.58 L 702.28 736.58 Z","M 1008.64 721.64 C 1012.71 721.64 1016.42 720.72 1019.77 718.89 C 1023.13 717.06 1025.82 714.42 1027.86 710.96 C 1029.89 707.51 1030.91 703.34 1030.91 698.46 L 1030.91 693.12 C 1030.91 688.45 1029.86 684.48 1027.78 681.23 C 1025.7 677.97 1022.98 675.51 1019.62 673.83 C 1016.27 672.15 1012.61 671.31 1008.64 671.31 C 1004.17 671.31 1000.23 672.36 996.82 674.44 C 993.42 676.52 990.75 679.45 988.82 683.21 C 986.89 686.97 985.92 691.44 985.92 696.63 C 985.92 701.71 986.89 706.14 988.82 709.9 C 990.75 713.66 993.42 716.56 996.82 718.59 C 1000.23 720.62 1004.17 721.64 1008.64 721.64 Z M 1002.54 771.81 C 998.58 771.81 994.54 771.66 990.42 771.35 C 986.3 771.05 982.46 770.64 978.91 770.13 L 978.91 752.44 C 982.57 752.85 986.48 753.23 990.65 753.59 C 994.82 753.94 998.73 754.12 1002.39 754.12 C 1009.2 754.12 1014.72 753.3 1018.94 751.68 C 1023.15 750.05 1026.26 747.49 1028.24 743.98 C 1030.22 740.47 1031.21 736.02 1031.21 730.63 L 1031.21 714.32 L 1035.79 703.95 C 1035.48 711.57 1033.9 718.05 1031.06 723.39 C 1028.21 728.73 1024.35 732.8 1019.47 735.59 C 1014.59 738.39 1008.95 739.78 1002.54 739.78 C 996.85 739.78 991.69 738.72 987.06 736.58 C 982.44 734.45 978.47 731.5 975.17 727.74 C 971.86 723.98 969.3 719.56 967.47 714.47 C 965.64 709.39 964.72 703.95 964.72 698.15 L 964.72 694.95 C 964.72 689.16 965.66 683.74 967.55 678.71 C 969.43 673.68 972.09 669.28 975.55 665.52 C 979.01 661.76 983.12 658.86 987.9 656.83 C 992.68 654.79 997.97 653.78 1003.76 653.78 C 1010.57 653.78 1016.5 655.25 1021.53 658.2 C 1026.56 661.15 1030.5 665.42 1033.35 671.01 C 1036.19 676.6 1037.77 683.46 1038.07 691.6 L 1034.41 692.21 L 1034.41 656.37 L 1051.19 656.37 L 1051.19 729.41 C 1051.19 739.48 1049.46 747.61 1046 753.81 C 1042.55 760.01 1037.24 764.57 1030.07 767.46 C 1022.9 770.36 1013.73 771.81 1002.54 771.81 Z","M 1124.54 734.45 L 1124.54 709.89 L 1121.03 709.89 L 1121.03 682.6 C 1121.03 677.82 1119.86 674.26 1117.52 671.92 C 1115.18 669.59 1111.58 668.42 1106.7 668.42 C 1104.16 668.42 1101.11 668.47 1097.55 668.57 C 1093.99 668.67 1090.4 668.8 1086.8 668.95 C 1083.19 669.1 1079.96 669.28 1077.11 669.48 L 1077.11 651.49 C 1079.45 651.29 1082.09 651.08 1085.04 650.88 C 1087.99 650.68 1091.01 650.55 1094.12 650.5 C 1097.22 650.45 1100.14 650.42 1102.88 650.42 C 1111.42 650.42 1118.52 651.54 1124.16 653.78 C 1129.8 656.01 1134.07 659.52 1136.97 664.3 C 1139.86 669.08 1141.31 675.33 1141.31 683.05 L 1141.31 734.45 L 1124.54 734.45 Z M 1097.85 736.58 C 1091.85 736.58 1086.59 735.51 1082.07 733.38 C 1077.54 731.24 1074.04 728.19 1071.55 724.23 C 1069.05 720.26 1067.81 715.49 1067.81 709.89 C 1067.81 703.79 1069.31 698.81 1072.31 694.95 C 1075.31 691.09 1079.53 688.19 1084.97 686.26 C 1090.4 684.33 1096.78 683.36 1104.1 683.36 L 1123.32 683.36 L 1123.32 696.02 L 1103.8 696.02 C 1098.92 696.02 1095.18 697.21 1092.59 699.6 C 1090 701.99 1088.7 705.07 1088.7 708.83 C 1088.7 712.59 1090 715.64 1092.59 717.98 C 1095.18 720.32 1098.92 721.48 1103.8 721.48 C 1106.75 721.48 1109.47 720.95 1111.96 719.88 C 1114.45 718.82 1116.53 716.99 1118.21 714.39 C 1119.89 711.8 1120.83 708.27 1121.03 703.79 L 1126.22 709.74 C 1125.71 715.54 1124.31 720.42 1122.02 724.38 C 1119.74 728.35 1116.58 731.37 1112.57 733.46 C 1108.55 735.54 1103.65 736.58 1097.85 736.58 Z","M 1317.14 653.78 L 1338.34 653.78 L 1338.34 736.58 L 1317.14 736.58 Z","M 924.61 653.78 L 945.81 653.78 L 945.81 736.58 L 924.61 736.58 Z","M 771.51 736.58 L 771.51 653.78 L 788.29 653.78 L 788.29 689.31 L 786.76 689.31 C 786.76 680.97 787.83 673.98 789.96 668.34 C 792.1 662.7 795.27 658.43 799.49 655.53 C 803.71 652.63 808.97 651.18 815.28 651.18 L 816.19 651.18 C 822.6 651.18 827.91 652.63 832.13 655.53 C 836.34 658.43 839.5 662.7 841.58 668.34 C 843.67 673.98 844.71 680.97 844.71 689.31 L 839.37 689.31 C 839.37 680.97 840.46 673.98 842.65 668.34 C 844.84 662.7 848.04 658.43 852.26 655.53 C 856.47 652.63 861.74 651.18 868.04 651.18 L 868.96 651.18 C 875.36 651.18 880.7 652.63 884.97 655.53 C 889.24 658.43 892.46 662.7 894.65 668.34 C 896.84 673.98 897.93 680.97 897.93 689.31 L 897.93 736.58 L 876.73 736.58 L 876.73 687.32 C 876.73 682.14 875.41 678 872.77 674.9 C 870.12 671.8 866.36 670.25 861.48 670.25 C 856.6 670.25 852.69 671.85 849.74 675.05 C 846.79 678.25 845.32 682.55 845.32 687.94 L 845.32 736.58 L 824.12 736.58 L 824.12 687.32 C 824.12 682.14 822.8 678 820.16 674.9 C 817.51 671.8 813.75 670.25 808.87 670.25 C 803.99 670.25 800.08 671.85 797.13 675.05 C 794.18 678.25 792.71 682.55 792.71 687.94 L 792.71 736.58 L 771.51 736.58 Z","M 1164.04 736.58 L 1164.04 653.78 L 1180.81 653.78 L 1180.81 689.31 L 1179.29 689.31 C 1179.29 680.97 1180.35 673.98 1182.49 668.34 C 1184.62 662.7 1187.8 658.43 1192.02 655.53 C 1196.24 652.63 1201.5 651.18 1207.8 651.18 L 1208.72 651.18 C 1215.12 651.18 1220.43 652.63 1224.65 655.53 C 1228.87 658.43 1232.02 662.7 1234.11 668.34 C 1236.19 673.98 1237.23 680.97 1237.23 689.31 L 1231.9 689.31 C 1231.9 680.97 1232.99 673.98 1235.18 668.34 C 1237.36 662.7 1240.56 658.43 1244.78 655.53 C 1249 652.63 1254.26 651.18 1260.57 651.18 L 1261.48 651.18 C 1267.89 651.18 1273.22 652.63 1277.49 655.53 C 1281.76 658.43 1284.99 662.7 1287.18 668.34 C 1289.36 673.98 1290.46 680.97 1290.46 689.31 L 1290.46 736.58 L 1269.26 736.58 L 1269.26 687.32 C 1269.26 682.14 1267.94 678 1265.29 674.9 C 1262.65 671.8 1258.89 670.25 1254.01 670.25 C 1249.13 670.25 1245.21 671.85 1242.27 675.05 C 1239.32 678.25 1237.84 682.55 1237.84 687.94 L 1237.84 736.58 L 1216.65 736.58 L 1216.65 687.32 C 1216.65 682.14 1215.33 678 1212.68 674.9 C 1210.04 671.8 1206.28 670.25 1201.4 670.25 C 1196.52 670.25 1192.6 671.85 1189.66 675.05 C 1186.71 678.25 1185.23 682.55 1185.23 687.94 L 1185.23 736.58 L 1164.04 736.58 Z","M 611.85 717.52 L 611.85 736.58 L 659.88 736.58 L 659.88 717.52 Z M 593.24 625.26 L 593.24 736.58 L 614.9 736.58 L 614.9 625.26 Z"]
     };
     const HEX_PATTERN=/^#[0-9A-Fa-f]{6}$/;
-    const state={view:'gallery',page:1,active:null,shown:[],community:[],votes:Object.create(null),mine:new Set(),favorites:new Set(),visitorUid:'',remotePreferences:null,preferencesTouched:false,toastTimer:null,voteBusy:false,favoriteBusy:false,publishBusy:false,deleteBusy:false};
+    const state={view:'gallery',page:1,active:null,shown:[],community:[],communitySignature:'',votes:Object.create(null),mine:new Set(),favorites:new Set(),visitorUid:'',remotePreferences:null,preferencesTouched:false,toastTimer:null,voteBusy:false,favoriteBusy:false,publishBusy:false,deleteBusy:false,liveRenderFrame:0};
 
     const PENDING_PREFS_KEY='lumi-pending-preferences-v2';
     let preferenceSaveTimer=null;
@@ -1008,7 +1025,7 @@
     window.LumiFB.track=(event,details={})=>{const queue=window.LumiFB._pending;queue.push({event,details,at:Date.now()});if(queue.length>120)queue.splice(0,queue.length-120);try{localStorage.setItem('lumi-event-queue-v1',JSON.stringify(queue))}catch(_){}};
     window.LumiFB.vote=async()=>{throw new Error('لسه بنجهّز حفظ الاختيارات. جرّب كمان لحظات.')};
     window.LumiFB.publishDesign=async()=>{throw new Error('لسه بنجهّز نشر التصميمات. جرّب كمان لحظات.')};
-    window.LumiFB.retry=()=>location.reload();$('#firebase-retry').addEventListener('click',()=>window.LumiFB.retry());
+    window.LumiFB.retry=()=>toast('لسه بنجهّز الاتصال بفايربيس. جرّب بعد لحظات.','info');$('#firebase-retry').addEventListener('click',()=>window.LumiFB.retry?.());
     function firebaseCall(method,...args){return window.LumiFB.call(method,...args)}
     function track(event,details={}){try{window.LumiFB.track(event,details)}catch(_){}}
 
@@ -1065,7 +1082,7 @@
       return`<article class="design-card" style="--card-index:${index}" data-open="${escapeHtml(token)}" tabindex="0" role="button" aria-label="افتح ${escapeHtml(label)}">
         <div class="card-head"><span class="card-number">${pair.kind==='community'?'✦':displayNumber(pair)}</span><div class="card-info"><b>${escapeHtml(label)}</b><small>${escapeHtml(displaySubtitle(pair))}</small></div>${pair.kind==='community'?'<span class="community-label">من المجتمع</span>':''}${rank?`<span class="rank-label">#${rank}</span>`:''}<button class="card-favorite ${favorite?'is-favorite':''}" type="button" data-favorite-design="${escapeHtml(token)}" aria-pressed="${favorite}" aria-label="${favorite?'إزالة من المفضلة':'إضافة للمفضلة'}" title="${favorite?'إزالة من المفضلة':'إضافة للمفضلة'}">${favorite?'♥':'♡'}</button></div>
         <div class="preview-pair">${previewTile(pair,'light')}${previewTile(pair,'dark')}</div>
-        <div class="card-footer"><span class="like-count ${selected?'is-liked':''}">${selected?'♥':'♡'} <b>${votes.toLocaleString('en-US')}</b> إعجاب</span><span class="open-hint">اضغط للمعاينة ←</span></div>
+        <div class="card-footer"><span class="like-count ${selected?'is-liked':''}"><span data-like-symbol aria-hidden="true">${selected?'♥':'♡'}</span><b data-like-count>${votes.toLocaleString('en-US')}</b><span>إعجاب</span></span><span class="open-hint">اضغط للمعاينة ←</span></div>
       </article>`;
     }
     function filteredPairs(){
@@ -1085,11 +1102,75 @@
     function updateSummary(){const designs=allDesigns(),values=designs.map(votesOf),total=values.reduce((sum,value)=>sum+value,0);$('#stat-votes').textContent=total.toLocaleString('en-US');$('#summary-total').textContent=total.toLocaleString('en-US');$('#summary-voted').textContent=values.filter(value=>value>0).length.toLocaleString('en-US');const leader=[...designs].sort((a,b)=>votesOf(b)-votesOf(a))[0];$('#summary-leader').textContent=total&&leader?(leader.kind==='community'?(leader.name||'مجتمع'):displayNumber(leader)):'—';$('#stat-designs').textContent=designs.length.toLocaleString('en-US')}
     function rankedDesigns(){return allDesigns().sort((a,b)=>votesOf(b)-votesOf(a)||((Number.isFinite(a.recommendation)?a.recommendation:2000)-(Number.isFinite(b.recommendation)?b.recommendation:2000)))}
     function renderPodium(){const ranked=rankedDesigns().slice(0,3);$('#podium').innerHTML=ranked.map((pair,index)=>`<article class="podium-card ${index===0?'first':''}" data-open="${escapeHtml(slugToken(pair))}" tabindex="0" role="button"><div class="podium-top"><span class="podium-place">${['الأول','الثاني','الثالث'][index]}</span><span class="podium-votes">${votesOf(pair)} ♥</span></div><div class="podium-swatches"><span style="background:${pair.light.background}"></span><span style="background:${pair.light.primary}"></span><span style="background:${pair.accent.hex}"></span><span style="background:${pair.detail.hex}"></span></div><div class="podium-name">${escapeHtml(displayTitle(pair))}</div><div class="podium-sub">${escapeHtml(displaySubtitle(pair))}</div></article>`).join('')}
-    function render(resetPage=false){
-      if(resetPage)state.page=1;state.shown=state.view==='ranking'?rankedDesigns():filteredPairs();const totalPages=Math.max(1,Math.ceil(state.shown.length/PAGE_SIZE));state.page=Math.min(state.page,totalPages);const start=(state.page-1)*PAGE_SIZE,items=state.shown.slice(start,start+PAGE_SIZE);
+    function render(resetPage=false,options={}){
+      if(resetPage)state.page=1;
+      state.shown=state.view==='ranking'?rankedDesigns():filteredPairs();
+      const totalPages=Math.max(1,Math.ceil(state.shown.length/PAGE_SIZE));
+      state.page=Math.min(state.page,totalPages);
+      const start=(state.page-1)*PAGE_SIZE,items=state.shown.slice(start,start+PAGE_SIZE);
       $('#design-grid').innerHTML=items.length?items.map((pair,index)=>designCard(pair,state.view==='ranking'?start+index+1:0,index)).join(''):'<div class="empty-state">ملقيناش حاجة بالمواصفات دي.<br>غيّر البحث أو الفلاتر وجرب تاني.</div>';
-      $('#result-count').textContent=state.shown.length?`${state.shown.length} تصميم · عرض ${start+1}–${Math.min(start+PAGE_SIZE,state.shown.length)}`:'مفيش نتائج';$('#heading-count').textContent=`${state.shown.length} تصميم`;
-      renderPagination(totalPages);updateSummary();if(state.view==='ranking'){renderPodium();$('#ranking-empty').hidden=allDesigns().some(pair=>votesOf(pair)>0)}
+      if(options.animate!==false)$('#design-grid').querySelectorAll('.design-card').forEach(card=>card.classList.add('is-entering'));
+      $('#result-count').textContent=state.shown.length?`${state.shown.length} تصميم · عرض ${start+1}–${Math.min(start+PAGE_SIZE,state.shown.length)}`:'مفيش نتائج';
+      $('#heading-count').textContent=`${state.shown.length} تصميم`;
+      renderPagination(totalPages);updateSummary();
+      if(state.view==='ranking'){
+        renderPodium();
+        $('#ranking-empty').hidden=allDesigns().some(pair=>votesOf(pair)>0);
+      }
+    }
+    function pulseLiveElement(element){
+      if(!element)return;
+      element.classList.remove('is-pulsing');
+      void element.offsetWidth;
+      element.classList.add('is-pulsing');
+      element.addEventListener('animationend',()=>element.classList.remove('is-pulsing'),{once:true});
+    }
+    function updateCardLiveState(pulse=false){
+      document.querySelectorAll('.design-card').forEach(card=>{
+        const pair=findDesign(card.dataset.open);if(!pair)return;
+        const liked=hasVoted(pair),favorite=isFavorite(pair),count=designVotes(pair);
+        const like=card.querySelector('.like-count'),countNode=card.querySelector('[data-like-count]'),symbol=card.querySelector('[data-like-symbol]');
+        if(like){like.classList.toggle('is-liked',liked);if(symbol)symbol.textContent=liked?'♥':'♡';if(countNode){const next=count.toLocaleString('en-US');if(countNode.textContent!==next){countNode.textContent=next;if(pulse)pulseLiveElement(like)}}}
+        const favoriteButton=card.querySelector('[data-favorite-design]');
+        if(favoriteButton){favoriteButton.classList.toggle('is-favorite',favorite);favoriteButton.setAttribute('aria-pressed',String(favorite));favoriteButton.setAttribute('aria-label',favorite?'إزالة من المفضلة':'إضافة للمفضلة');favoriteButton.title=favorite?'إزالة من المفضلة':'إضافة للمفضلة';favoriteButton.textContent=favorite?'♥':'♡'}
+      });
+      document.querySelectorAll('.podium-card').forEach(card=>{
+        const pair=findDesign(card.dataset.open),node=card.querySelector('.podium-votes');
+        if(pair&&node)node.textContent=`${designVotes(pair).toLocaleString('en-US')} ♥`;
+      });
+      updateSummary();
+      if(state.active){updateVoteButton();updateFavoriteButton()}
+    }
+    function scheduleLiveOrderRefresh(){
+      if(state.liveRenderFrame)return;
+      state.liveRenderFrame=requestAnimationFrame(()=>{
+        state.liveRenderFrame=0;
+        // Keep the currently visible card in the same viewport position while the ranking changes.
+        const visible=[...document.querySelectorAll('#design-grid .design-card')].find(card=>{
+          const rect=card.getBoundingClientRect();return rect.bottom>0&&rect.top<window.innerHeight;
+        });
+        const token=visible?.dataset.open,oldTop=visible?.getBoundingClientRect().top;
+        render(false,{animate:false});
+        if(token&&Number.isFinite(oldTop)){
+          const escaped=window.CSS&&CSS.escape?CSS.escape(token):token.replace(/[^a-zA-Z0-9_-]/g,'\\$&');
+          const next=document.querySelector(`#design-grid .design-card[data-open="${escaped}"]`);
+          if(next){const delta=next.getBoundingClientRect().top-oldTop;if(Math.abs(delta)>1)window.scrollBy({top:delta,left:0,behavior:'instant'})}
+        }
+      });
+    }
+    function refreshAfterLiveData({votesChanged=false,mineChanged=false,favoritesChanged=false}={}){
+      updateCardLiveState(votesChanged);
+      const needsOrder=(votesChanged&&(state.view==='ranking'||$('#sort-filter').value==='votes'))||
+        (mineChanged&&state.view==='gallery'&&$('#mine-filter').checked)||
+        (favoritesChanged&&state.view==='favorites');
+      if(needsOrder)scheduleLiveOrderRefresh();
+    }
+    function sameSet(a,b){return a.size===b.size&&[...a].every(value=>b.has(value))}
+    function communitySignature(pairs){
+      return pairs.map(pair=>{
+        const created=pair.createdAt&&typeof pair.createdAt.toMillis==='function'?pair.createdAt.toMillis():Number(pair.createdAt?.seconds||0)*1000;
+        return `${pair.firestoreId}|${pair.name||''}|${pair.createdBy||''}|${created}|${JSON.stringify(pair.parts||{})}`;
+      }).join('::');
     }
     function setView(view,options={}){
       if(!['gallery','ranking','favorites'].includes(view)||view===state.view)return;
@@ -1117,9 +1198,10 @@
     async function toggleFavorite(pair=state.active,source='preview'){
       if(!pair||state.favoriteBusy)return;
       const key=favoriteKey(pair),was=state.favorites.has(key);
+      let failed=false;
       state.favoriteBusy=true;
       if(was)state.favorites.delete(key);else state.favorites.add(key);
-      render();updateFavoriteButton();
+      if(state.view==='favorites')render(false,{animate:false});else updateCardLiveState(true);
       const buttons=[...document.querySelectorAll('#favorite-button,[data-favorite-design]')];buttons.forEach(button=>button.disabled=true);
       try{
         const result=await firebaseCall('setFavorite',pair,!was);
@@ -1127,18 +1209,23 @@
         toast(result.favorited?'اتضاف للمفضلة واتحفظ على حساب الزائر.':'اتشال من المفضلة واتحفظ التغيير.','success');
         track('favorite_change',{design:key,favorited:result.favorited,source});
       }catch(error){
+        failed=true;
         if(was)state.favorites.add(key);else state.favorites.delete(key);
         toast(String(error?.message||'مقدرناش نحفظ التفضيل. جرّب تاني.'),'error','التفضيل لم يُحفظ');
       }finally{
-        state.favoriteBusy=false;render();updateFavoriteButton();
+        state.favoriteBusy=false;
+        if(failed&&state.view==='favorites')render(false,{animate:false});else updateCardLiveState();
         buttons.forEach(button=>button.disabled=false);
       }
     }
     function colorDetail(label,hex){return`<div class="color-detail"><i style="background:${hex}"></i><span><b>${label}</b><code>${hex}</code></span></div>`}
     function openDesign(token,updateHash=true){
-      const pair=typeof token==='object'?token:findDesign(token);if(!pair)return;state.active=pair;
+      const pair=typeof token==='object'?token:findDesign(token);if(!pair)return;
+      const previousToken=state.active?slugToken(state.active):'',nextToken=slugToken(pair),switching=dialog.open&&previousToken&&previousToken!==nextToken;
+      state.active=pair;
       $('#dialog-title').textContent=displayTitle(pair);$('#dialog-subtitle').textContent=pair.kind==='community'?'تصميم جديد من المجتمع — شوفه فاتح وداكن.':`${pair.base.name} مع ${pair.accent.name} — شوفه فاتح وداكن.`;
-      $('#dialog-previews').innerHTML=previewTile(pair,'light',true)+previewTile(pair,'dark',true);
+      const previewHost=$('#dialog-previews');previewHost.innerHTML=previewTile(pair,'light',true)+previewTile(pair,'dark',true);
+      if(switching){previewHost.classList.remove('is-swapping');void previewHost.offsetWidth;previewHost.classList.add('is-swapping');setTimeout(()=>previewHost.classList.remove('is-swapping'),420)}
       $('#dialog-details').innerHTML=[colorDetail('خلفية فاتحة',pair.light.background),colorDetail('لون الشعار الفاتح',pair.light.primary),colorDetail('خلفية داكنة',pair.dark.background),colorDetail('لون الشعار الداكن',pair.dark.primary),colorDetail('لون إضافي',pair.accent.hex),colorDetail('لون مساعد',pair.detail.hex)].join('');
       $('#contrast-note').textContent=`أقل تباين للشعار في النسختين ${pair.contrast.toFixed(2)}:1. تقدر تصوّت أو تحفظه في المفضلة أو تنزّله.`;$('#delete-design').hidden=!(pair.kind==='community'&&pair.createdBy&&pair.createdBy===state.visitorUid);updateVoteButton();updateFavoriteButton();if(!dialog.open)dialog.showModal();
       if(updateHash)history.replaceState(null,'',`${location.pathname}${location.search}#${slugToken(pair)}`);track('preview_open',{design:pair.kind==='community'?pair.firestoreId:pair.id,kind:pair.kind||'preset'});
@@ -1150,20 +1237,73 @@
     /* التصويت: نفس المعرّفات القديمة للتصميمات العشرة، ومجموعة منفصلة لتصميمات المجتمع. */
     async function submitVote(){
       if(!state.active||state.voteBusy)return;const pair=state.active,key=voteKey(pair),wasSelected=state.mine.has(key),oldCount=designVotes(pair);state.voteBusy=true;$('#vote-button').disabled=true;
-      if(wasSelected)state.mine.delete(key);else state.mine.add(key);state.votes[key]=Math.max(0,oldCount+(wasSelected?-1:1));render();updateVoteButton();
-      try{const result=await firebaseCall('vote',pair);state.votes[key]=Math.max(0,Number(result.votes)||0);if(result.liked)state.mine.add(key);else state.mine.delete(key);toast(result.liked?'اتسجل إعجابك، شكرًا!':'شيلنا اختيارك.');}
-      catch(error){if(wasSelected)state.mine.add(key);else state.mine.delete(key);state.votes[key]=oldCount;const message=String(error&&error.message||'');toast(/[\u0600-\u06FF]/.test(message)?message:'مقدرناش نحفظ اختيارك دلوقتي. جرّب تاني.','error')}
-      finally{state.voteBusy=false;$('#vote-button').disabled=false;render();updateVoteButton()}
+      if(wasSelected)state.mine.delete(key);else state.mine.add(key);
+      state.votes[key]=Math.max(0,oldCount+(wasSelected?-1:1));
+      updateCardLiveState(true);
+      if(state.view==='ranking'||$('#sort-filter').value==='votes')scheduleLiveOrderRefresh();
+      try{
+        const result=await firebaseCall('vote',pair);
+        state.votes[key]=Math.max(0,Number(result.votes)||0);
+        if(result.liked)state.mine.add(key);else state.mine.delete(key);
+        updateCardLiveState(true);
+        if(state.view==='ranking'||$('#sort-filter').value==='votes')scheduleLiveOrderRefresh();
+        toast(result.liked?'اتسجل إعجابك، شكرًا!':'شيلنا اختيارك.');
+      }
+      catch(error){
+        if(wasSelected)state.mine.add(key);else state.mine.delete(key);
+        state.votes[key]=oldCount;updateCardLiveState();
+        if(state.view==='ranking'||$('#sort-filter').value==='votes')scheduleLiveOrderRefresh();
+        const message=String(error&&error.message||'');
+        toast(/[\u0600-\u06FF]/.test(message)?message:'مقدرناش نحفظ اختيارك دلوقتي. جرّب تاني.','error');
+      }
+      finally{state.voteBusy=false;$('#vote-button').disabled=false;updateCardLiveState()}
     }
     window.LumiApp={
       notify(message,type='info',title=''){toast(message,type,title)},
       setVisitorUid(uid){state.visitorUid=String(uid||'');if(state.active)$('#delete-design').hidden=!(state.active.kind==='community'&&state.active.createdBy&&state.active.createdBy===state.visitorUid)},
-      applyVoteData(stats,selected){if(stats!==undefined){Object.keys(state.votes).filter(key=>/^\d{3}$/.test(key)).forEach(key=>delete state.votes[key]);Object.assign(state.votes,stats||{})}if(selected!==undefined){state.mine=new Set([...state.mine].filter(key=>key.startsWith('community:')));new Set(selected||[]).forEach(key=>state.mine.add(String(key)))}render();if(state.active)updateVoteButton()},
-      applyCommunityDesigns(items){const toMillis=value=>value&&typeof value.toMillis==='function'?value.toMillis():value instanceof Date?value.getTime():Number(value&&value.seconds||0)*1000;state.community=(items||[]).map(item=>createCommunityPair(item.id,item.data||{})).sort((a,b)=>toMillis(b.createdAt)-toMillis(a.createdAt));renderPalette();render(true);if(state.active&&state.active.kind==='community'){const current=state.community.find(pair=>pair.firestoreId===state.active.firestoreId);if(current){state.active=current;if(dialog.open)openDesign(current,false)}else closeDesign()}
-        const match=location.hash.match(/^#community-([A-Za-z0-9_-]{1,100})$/);if(match&&!dialog.open){const pair=state.community.find(item=>item.firestoreId===match[1]);if(pair)openDesign(pair,false)}},
-      applyCommunityVoteStats(stats){Object.keys(state.votes).filter(key=>key.startsWith('community:')).forEach(key=>delete state.votes[key]);Object.entries(stats||{}).forEach(([id,count])=>state.votes[`community:${id}`]=Math.max(0,Number(count)||0));render();if(state.active)updateVoteButton()},
-      applyCommunityMine(selected){state.mine=new Set([...state.mine].filter(key=>!key.startsWith('community:')));new Set(selected||[]).forEach(key=>state.mine.add(String(key)));render();if(state.active)updateVoteButton()},
-      applyFavorites(keys){state.favorites=new Set(keys||[]);render();if(state.active)updateFavoriteButton()},
+      applyVoteData(stats,selected){
+        let votesChanged=false,mineChanged=false;
+        if(stats!==undefined){
+          const incoming=stats||{};
+          Object.keys(state.votes).filter(key=>/^\d{3}$/.test(key)&&!Object.prototype.hasOwnProperty.call(incoming,key)).forEach(key=>{delete state.votes[key];votesChanged=true});
+          Object.entries(incoming).forEach(([key,value])=>{const next=Math.max(0,Number(value)||0);if(state.votes[key]!==next){state.votes[key]=next;votesChanged=true}});
+        }
+        if(selected!==undefined){
+          const next=new Set([...state.mine].filter(key=>key.startsWith('community:')));
+          new Set(selected||[]).forEach(key=>next.add(String(key)));
+          mineChanged=!sameSet(state.mine,next);if(mineChanged)state.mine=next;
+        }
+        if(votesChanged||mineChanged)refreshAfterLiveData({votesChanged,mineChanged});
+      },
+      applyCommunityDesigns(items){
+        const toMillis=value=>value&&typeof value.toMillis==='function'?value.toMillis():value instanceof Date?value.getTime():Number(value&&value.seconds||0)*1000;
+        const next=(items||[]).map(item=>createCommunityPair(item.id,item.data||{})).sort((a,b)=>toMillis(b.createdAt)-toMillis(a.createdAt));
+        const signature=communitySignature(next);if(signature===state.communitySignature)return;
+        const previousActive=state.active,previousActiveSignature=previousActive&&previousActive.kind==='community'?communitySignature([previousActive]):'';
+        state.community=next;state.communitySignature=signature;renderPalette();render(false,{animate:false});
+        if(previousActive&&previousActive.kind==='community'){
+          const current=state.community.find(pair=>pair.firestoreId===previousActive.firestoreId);
+          if(current){state.active=current;if(dialog.open&&communitySignature([current])!==previousActiveSignature)openDesign(current,false)}else closeDesign();
+        }
+        const match=location.hash.match(/^#community-([A-Za-z0-9_-]{1,100})$/);
+        if(match&&!dialog.open){const pair=state.community.find(item=>item.firestoreId===match[1]);if(pair)openDesign(pair,false)}
+      },
+      applyCommunityVoteStats(stats){
+        const incoming=stats||{};let changed=false;
+        const existing=Object.keys(state.votes).filter(key=>key.startsWith('community:'));
+        existing.forEach(key=>{const id=key.slice(10);if(!Object.prototype.hasOwnProperty.call(incoming,id)){delete state.votes[key];changed=true}});
+        Object.entries(incoming).forEach(([id,count])=>{const key=`community:${id}`,next=Math.max(0,Number(count)||0);if(state.votes[key]!==next){state.votes[key]=next;changed=true}});
+        if(changed)refreshAfterLiveData({votesChanged:true});
+      },
+      applyCommunityMine(selected){
+        const next=new Set([...state.mine].filter(key=>!key.startsWith('community:')));
+        new Set(selected||[]).forEach(key=>next.add(String(key)));
+        if(!sameSet(state.mine,next)){state.mine=next;refreshAfterLiveData({mineChanged:true})}
+      },
+      applyFavorites(keys){
+        const next=new Set(keys||[]);
+        if(!sameSet(state.favorites,next)){state.favorites=next;refreshAfterLiveData({favoritesChanged:true})}
+      },
       applyPreferences(prefs){
         state.remotePreferences=prefs||{};
         if(state.preferencesTouched)return;
@@ -1180,7 +1320,7 @@
         if(['gallery','ranking','favorites'].includes(prefs?.view)&&prefs.view!==state.view)setView(prefs.view,{persist:false,log:false});
         render(true);
       },
-      addCommunityDesign(item){const pair=createCommunityPair(item.id,item.data||item);state.community=[pair,...state.community.filter(old=>old.firestoreId!==pair.firestoreId)];renderPalette();render(true);return pair},
+      addCommunityDesign(item){const pair=createCommunityPair(item.id,item.data||item);state.community=[pair,...state.community.filter(old=>old.firestoreId!==pair.firestoreId)];state.communitySignature=communitySignature(state.community);renderPalette();render(true);return pair},
       async migrateLegacyFavorites(ids){
         const wanted=new Set((Array.isArray(ids)?ids:[]).map(Number).filter(Number.isFinite));
         const matches=PAIRS.filter(pair=>wanted.has(pair.id));
@@ -1188,7 +1328,8 @@
           await firebaseCall('setFavorite',pair,true);
           state.favorites.add(favoriteKey(pair));
         }
-        render();
+        updateCardLiveState();
+        if(state.view==='favorites')render(false,{animate:false});
         return matches.length;
       }
     };
@@ -1256,6 +1397,7 @@
       try{
         await firebaseCall('deleteDesign',pair);
         state.community=state.community.filter(item=>item.firestoreId!==pair.firestoreId);
+        state.communitySignature=communitySignature(state.community);
         state.favorites.delete(favoriteKey(pair));
         delete state.votes[`community:${pair.firestoreId}`];state.mine.delete(`community:${pair.firestoreId}`);
         if(deleteDialog.open)deleteDialog.close();pendingDeletePair=null;
@@ -1281,22 +1423,48 @@
       ['light','dark'].forEach(mode=>LOGO_PART_KEYS.forEach(key=>{if(!HEX_PATTERN.test(editorState.draft[mode][key]))throw new Error('في لون مش مكتوب بطريقة صحيحة. راجع الجزء المحدد.')}));
       return editorColors();
     }
-    function renderEditorStage(){
-      const colors=readCustomColors(),draftPair=createCommunityPair('editor-preview',{name:$('#custom-design-name').value.trim(),colors});
-      const mode=editorState.mode,parts=partsFor(draftPair,mode),selected=editorState.selected;
-      $('#editor-stage').style.setProperty('--editor-bg',parts.background);
-      $('#editor-stage').innerHTML=logoPartOverlay(draftPair,mode,true,selected);
-      $('#editor-stage').style.background=parts.background;
+    function updateEditorControls(parts){
+      const mode=editorState.mode,selected=editorState.selected,selectedKeys=editorKeysForSelection(selected);
+      const selectedColors=selectedKeys.map(key=>parts[key]),color=selectedColors[0],sameColor=selectedColors.every(hex=>hex===color);
       document.querySelectorAll('[data-editor-mode]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.editorMode===mode)));
-      const selectedKeys=editorKeysForSelection(selected),selectedColors=selectedKeys.map(key=>parts[key]),color=selectedColors[0];
-      const sameColor=selectedColors.every(hex=>hex===color);
       $('#selected-part-title').textContent=editorSelectionLabel(selected);
       $('#selected-part-subtitle').textContent=(mode==='light'?'لون المجموعة في الشكل الفاتح':'لون المجموعة في الشكل الداكن')+(selectedKeys.length>1?(sameColor?' · الأجزاء الثلاثة بنفس اللون':' · ألوان مختلفة؛ اختيار لون جديد يوحّدها'):'');
       $('#selected-part-swatch').style.setProperty('--selected-color',color);$('#selected-part-swatch').style.background=color;
       $('#part-color-picker').value=color;$('#part-color-hex').value=color;
-      $('#part-selector-grid').innerHTML=EDITOR_PART_KEYS.map(key=>{const keys=editorKeysForSelection(key),swatch=parts[keys[0]],mixed=keys.length>1&&!keys.every(part=>parts[part]===swatch);return `<button class="part-selector-button" type="button" data-part-choice="${key}" aria-pressed="${key===selected}" style="--part-color:${swatch}"><i></i><span>${EDITOR_PART_LABELS[key]}</span>${mixed?'<small class="part-mixed-badge">متعدد</small>':''}</button>`}).join('');
+      $('#part-selector-grid').querySelectorAll('[data-part-choice]').forEach(button=>{
+        const key=button.dataset.partChoice,keys=editorKeysForSelection(key),swatch=parts[keys[0]],mixed=keys.length>1&&!keys.every(part=>parts[part]===swatch);
+        button.setAttribute('aria-pressed',String(key===selected));button.style.setProperty('--part-color',swatch);
+        let badge=button.querySelector('.part-mixed-badge');
+        if(mixed&&!badge){badge=document.createElement('small');badge.className='part-mixed-badge';badge.textContent='متعدد';button.append(badge)}
+        else if(!mixed&&badge)badge.remove();
+      });
     }
-    function updateEditorColor(value){if(!HEX_PATTERN.test(value))return;const hex=value.toUpperCase();editorKeysForSelection(editorState.selected).forEach(key=>{editorState.draft[editorState.mode][key]=hex});renderEditorStage();persistEditorDraftSoon();track('logo_part_color_change',{part:editorState.selected,parts:editorKeysForSelection(editorState.selected),mode:editorState.mode,hex})}
+    function renderEditorStage(){
+      const colors=readCustomColors(),draftPair=createCommunityPair('editor-preview',{name:$('#custom-design-name').value.trim(),colors});
+      const mode=editorState.mode,parts=partsFor(draftPair,mode),stage=$('#editor-stage');
+      stage.style.setProperty('--editor-bg',parts.background);stage.style.background=parts.background;
+      stage.innerHTML=logoPartOverlay(draftPair,mode,true,editorState.selected);
+      updateEditorControls(parts);
+    }
+    function patchEditorStage(){
+      const colors=readCustomColors(),draftPair=createCommunityPair('editor-preview',{name:$('#custom-design-name').value.trim(),colors});
+      const mode=editorState.mode,parts=partsFor(draftPair,mode),stage=$('#editor-stage'),svg=stage.querySelector('.logo-parts-layer');
+      stage.style.setProperty('--editor-bg',parts.background);stage.style.background=parts.background;
+      if(svg){
+        const selectedKeys=new Set(editorKeysForSelection(editorState.selected));
+        svg.querySelectorAll('[data-logo-part]').forEach(node=>{
+          const key=node.dataset.logoPart;
+          if(key!=='background'&&parts[key])node.setAttribute('fill',parts[key]);
+          node.classList.toggle('is-selected',selectedKeys.has(key));
+        });
+      }
+      updateEditorControls(parts);
+    }
+    function updateEditorColor(value){
+      if(!HEX_PATTERN.test(value))return;
+      const hex=value.toUpperCase();editorKeysForSelection(editorState.selected).forEach(key=>{editorState.draft[editorState.mode][key]=hex});
+      patchEditorStage();persistEditorDraftSoon();track('logo_part_color_change',{part:editorState.selected,parts:editorKeysForSelection(editorState.selected),mode:editorState.mode,hex});
+    }
     function resetCustomizer(){
       const remote=state.remotePreferences||{};editorState.mode=['light','dark'].includes(remote.editorMode)?remote.editorMode:'light';editorState.selected=EDITOR_PART_KEYS.includes(remote.selectedPart)?remote.selectedPart:(LOGO_PART_KEYS.includes(remote.selectedPart)?editorSelectionForPart(remote.selectedPart):'background');
       const saved=remote.editorDraft;
@@ -1314,15 +1482,15 @@
       catch(error){toast(String(error&&error.message||'مقدرناش ننشر التصميم دلوقتي. جرّب تاني.'),'error','تعذر نشر التصميم')}
       finally{state.publishBusy=false;$('#publish-custom-design').disabled=false;$('#publish-custom-design').textContent='نشر النسخة'}
     }
-    $('#editor-stage').addEventListener('click',event=>{const target=event.target.closest('[data-logo-part]');const rawPart=target?.dataset.logoPart;if(rawPart&&LOGO_PART_KEYS.includes(rawPart)){const selection=editorSelectionForPart(rawPart);editorState.selected=selection;renderEditorStage();persistEditorDraftSoon();track('logo_part_selected',{part:selection,sourceParts:editorKeysForSelection(selection),mode:editorState.mode});return}editorState.selected='background';renderEditorStage();persistEditorDraftSoon()});
-    $('#part-selector-grid').addEventListener('click',event=>{const button=event.target.closest('[data-part-choice]');const selection=button?.dataset.partChoice;if(selection&&EDITOR_PART_KEYS.includes(selection)){editorState.selected=selection;renderEditorStage();persistEditorDraftSoon();track('logo_part_selected',{part:selection,sourceParts:editorKeysForSelection(selection),mode:editorState.mode,source:'list'})}});
-    document.querySelectorAll('[data-editor-mode]').forEach(button=>button.addEventListener('click',()=>{editorState.mode=button.dataset.editorMode;renderEditorStage();persistEditorDraftSoon();track('logo_editor_mode',{mode:editorState.mode})}));
+    $('#editor-stage').addEventListener('click',event=>{const target=event.target.closest('[data-logo-part]');const rawPart=target?.dataset.logoPart;if(rawPart&&LOGO_PART_KEYS.includes(rawPart)){const selection=editorSelectionForPart(rawPart);editorState.selected=selection;patchEditorStage();persistEditorDraftSoon();track('logo_part_selected',{part:selection,sourceParts:editorKeysForSelection(selection),mode:editorState.mode});return}editorState.selected='background';patchEditorStage();persistEditorDraftSoon()});
+    $('#part-selector-grid').addEventListener('click',event=>{const button=event.target.closest('[data-part-choice]');const selection=button?.dataset.partChoice;if(selection&&EDITOR_PART_KEYS.includes(selection)){editorState.selected=selection;patchEditorStage();persistEditorDraftSoon();track('logo_part_selected',{part:selection,sourceParts:editorKeysForSelection(selection),mode:editorState.mode,source:'list'})}});
+    document.querySelectorAll('[data-editor-mode]').forEach(button=>button.addEventListener('click',()=>{editorState.mode=button.dataset.editorMode;patchEditorStage();persistEditorDraftSoon();track('logo_editor_mode',{mode:editorState.mode})}));
     $('#part-color-picker').addEventListener('input',event=>updateEditorColor(event.target.value));
     $('#part-color-hex').addEventListener('input',event=>{const value=event.target.value.trim();if(HEX_PATTERN.test(value))updateEditorColor(value)});
     $('#part-color-hex').addEventListener('blur',event=>{const value=event.target.value.trim();if(!HEX_PATTERN.test(value)){event.target.value=editorState.draft[editorState.mode][editorState.selected];toast('اكتب كود لون صحيح بالشكل #A1B2C3.','warning')}});
-    $('#reset-current-part').addEventListener('click',()=>{editorKeysForSelection(editorState.selected).forEach(key=>{editorState.draft[editorState.mode][key]=DEFAULT_PARTS[editorState.mode][key]});renderEditorStage();persistEditorDraftSoon();track('logo_part_reset',{part:editorState.selected,parts:editorKeysForSelection(editorState.selected),mode:editorState.mode});toast('رجّعنا لون الجزء أو المجموعة زي الأول.','success')});
-    $('#reset-current-mode').addEventListener('click',()=>{editorState.draft[editorState.mode]={...DEFAULT_PARTS[editorState.mode]};renderEditorStage();persistEditorDraftSoon();track('logo_mode_reset',{mode:editorState.mode});toast('رجّعنا ألوان الشكل ده.','success')});
-    $('#custom-design-name').addEventListener('input',()=>{renderEditorStage();persistEditorDraftSoon()});
+    $('#reset-current-part').addEventListener('click',()=>{editorKeysForSelection(editorState.selected).forEach(key=>{editorState.draft[editorState.mode][key]=DEFAULT_PARTS[editorState.mode][key]});patchEditorStage();persistEditorDraftSoon();track('logo_part_reset',{part:editorState.selected,parts:editorKeysForSelection(editorState.selected),mode:editorState.mode});toast('رجّعنا لون الجزء أو المجموعة زي الأول.','success')});
+    $('#reset-current-mode').addEventListener('click',()=>{editorState.draft[editorState.mode]={...DEFAULT_PARTS[editorState.mode]};patchEditorStage();persistEditorDraftSoon();track('logo_mode_reset',{mode:editorState.mode});toast('رجّعنا ألوان الشكل ده.','success')});
+    $('#custom-design-name').addEventListener('input',()=>{persistEditorDraftSoon()});
     $('#customizer-form').addEventListener('submit',publishCustomDesign);
     $('#open-customizer').addEventListener('click',openCustomizer);$('#customizer-close').addEventListener('click',closeCustomizer);$('#cancel-customizer').addEventListener('click',closeCustomizer);
     customizer.addEventListener('click',event=>{if(event.target===customizer)closeCustomizer()});
@@ -1355,7 +1523,6 @@
   <script type="module">
     (async()=>{
       const $=selector=>document.querySelector(selector);
-      $('#firebase-retry').addEventListener('click',()=>{if(window.LumiFB?.retry)window.LumiFB.retry();else location.reload()});
       let lastNotifiedError='';
       const status=(message,state)=>{
         $('#firebase-message').textContent=message;
