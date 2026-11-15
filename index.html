@@ -303,11 +303,10 @@
     @keyframes live-pulse { 0% { transform:scale(1); } 45% { transform:scale(1.045); } 100% { transform:scale(1); } }
     @keyframes dialog-enter { from { opacity: 0; transform: translateY(16px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
     @keyframes backdrop-enter { from { background: rgba(6,14,10,0); backdrop-filter: blur(0); } to { background: rgba(6,14,10,.72); backdrop-filter: blur(7px); } }
-    .preview-dialog,.customizer-dialog,.delete-confirm-dialog { opacity:0; transform:translateY(18px) scale(.985); transition:opacity .26s ease,transform .34s cubic-bezier(.2,.8,.25,1),overlay .26s ease allow-discrete,display .26s allow-discrete; }
-    .preview-dialog[open],.customizer-dialog[open],.delete-confirm-dialog[open] { opacity:1; transform:translateY(0) scale(1); }
-    @starting-style { .preview-dialog[open],.customizer-dialog[open],.delete-confirm-dialog[open] { opacity:0; transform:translateY(18px) scale(.985); } }
-    .customizer-dialog[open] { animation:dialog-enter .36s cubic-bezier(.2,.8,.25,1) both; }
-    .customizer-dialog[open]::backdrop,.delete-confirm-dialog[open]::backdrop { animation:backdrop-enter .28s ease both; }
+    .preview-dialog,.delete-confirm-dialog { opacity:0; transform:translateY(18px) scale(.985); transition:opacity .26s ease,transform .34s cubic-bezier(.2,.8,.25,1),overlay .26s ease allow-discrete,display .26s allow-discrete; }
+    .preview-dialog[open],.delete-confirm-dialog[open] { opacity:1; transform:translateY(0) scale(1); }
+    @starting-style { .preview-dialog[open],.delete-confirm-dialog[open] { opacity:0; transform:translateY(18px) scale(.985); } }
+    .delete-confirm-dialog[open]::backdrop { animation:backdrop-enter .28s ease both; }
     .editor-stage { transition:background-color .28s ease,border-color .28s ease,box-shadow .28s ease; }
     .editor-stage .part-shape { transition:filter .2s ease,opacity .2s ease; }
     .customizer-preview-panel,.part-editor-panel { transition:border-color .25s ease,box-shadow .25s ease,transform .25s ease; }
@@ -452,8 +451,6 @@
     .create-design-button { min-height:42px; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:0 15px; border:1px solid color-mix(in srgb,var(--brand) 24%,var(--line)); border-radius:12px; background:var(--brand); color:var(--brand-on); font-size:12px; font-weight:700; box-shadow:0 7px 18px color-mix(in srgb,var(--brand) 16%,transparent); transition:transform .22s ease,filter .22s ease,box-shadow .22s ease; }
     .create-design-button:hover { transform:translateY(-2px); filter:brightness(1.04); box-shadow:0 10px 22px color-mix(in srgb,var(--brand) 22%,transparent); }
     .create-design-button svg { width:17px; height:17px; }
-    .customizer-dialog { width:min(1080px,calc(100% - 24px)); max-width:none; max-height:min(94dvh,1100px); margin:auto; padding:0; overflow:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; border:1px solid var(--line); border-radius:25px; background:var(--surface); color:var(--ink); box-shadow:0 30px 100px rgba(0,0,0,.42); scrollbar-color:var(--line) transparent; }
-    .customizer-dialog::backdrop { background:rgba(6,14,10,.76); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
     .customizer-inner { padding:24px; }
     .customizer-head { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:18px; padding-bottom:16px; border-bottom:1px solid var(--line); }
     .customizer-head h2 { margin:4px 0 3px; font-size:23px; }
@@ -480,7 +477,7 @@
     .logo-parts-layer:not(.is-interactive) [data-logo-part] { pointer-events:none; }
     .logo-parts-layer .part-visual { pointer-events:none; }
     .logo-parts-layer .part-shape { stroke:transparent; stroke-width:5; stroke-linejoin:round; vector-effect:non-scaling-stroke; transition:filter .2s ease,stroke .2s ease,opacity .2s ease; }
-    .logo-parts-layer .part-shape.is-selected { stroke:color-mix(in srgb,var(--brand) 78%,#fff 22%); stroke-width:7; filter:drop-shadow(0 0 4px color-mix(in srgb,var(--brand) 55%,transparent)); }
+    .logo-parts-layer .part-shape.is-selected { stroke:color-mix(in srgb,var(--brand) 72%,#fff 28%); stroke-width:1.5; filter:drop-shadow(0 0 .6px color-mix(in srgb,var(--brand) 18%,transparent)); }
     .part-selector-wrap { margin-top:12px; }
     .part-selector-title { margin-bottom:7px; color:var(--muted); font-size:10px; font-weight:700; }
     .part-selector-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; }
@@ -512,7 +509,6 @@
     .publish-button:hover { transform:translateY(-1px); filter:brightness(1.06); }
     .cancel-button { background:var(--surface-2); color:var(--ink); }
     .customizer-notifications { position:relative; inset:auto; width:auto; margin:0 18px 15px; pointer-events:none; }
-    .customizer-dialog { width:min(1160px,calc(100% - 24px)); }
     .customizer-inner { padding:clamp(16px,2.3vw,28px); }
     .customizer-head { align-items:center; }
     .customizer-head h2 { letter-spacing:-.02em; }
@@ -540,7 +536,6 @@
     @media(max-width:760px) {
       .customizer-layout { grid-template-columns:1fr; }
       .customizer-preview-panel { position:static; }
-      .customizer-dialog { width:min(760px,calc(100% - 18px)); }
       .editor-stage { aspect-ratio:2/1; }
     }
     @media(max-width:560px) {
@@ -550,7 +545,6 @@
       .heading-count { flex:0 0 auto; }
       .customizer-notifications { margin-inline:10px; }
       .create-design-button { min-height:42px; flex:1; }
-      .customizer-dialog { width:calc(100% - 12px); max-height:calc(100dvh - 12px - var(--safe-top) - var(--safe-bottom)); border-radius:18px; overscroll-behavior:contain; }
       .customizer-inner { padding:14px; }
       .customizer-head { position:sticky; top:-1px; z-index:3; padding:7px 0 12px; background:var(--surface); }
       .customizer-head h2 { font-size:19px; }
@@ -581,6 +575,60 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
     }
+  
+    .card-head { min-width:0; }
+    .card-info { flex:1; min-width:0; }
+    .card-owner-actions { display:inline-flex; align-items:center; gap:6px; flex:0 0 auto; }
+    .card-delete { width:33px; height:33px; display:grid; place-items:center; padding:0; border:1px solid color-mix(in srgb,var(--danger) 30%,var(--line)); border-radius:10px; background:color-mix(in srgb,var(--danger) 5%,var(--surface)); color:var(--danger); transition:background .2s,border-color .2s,transform .2s; }
+    .card-delete svg { width:16px; height:16px; }
+    .card-delete:hover { background:color-mix(in srgb,var(--danger) 12%,var(--surface)); border-color:var(--danger); transform:translateY(-1px); }
+    .variation-action { border-color:color-mix(in srgb,var(--brand) 35%,var(--line)); background:var(--brand-soft); color:var(--brand); }
+    .comments-panel { margin-top:20px; padding:18px; border:1px solid var(--line); border-radius:18px; background:var(--surface-2); }
+    .comments-heading { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; }
+    .comments-heading h3 { margin:0; font-size:15px; }
+    .comments-count { padding:3px 9px; border:1px solid var(--line); border-radius:99px; color:var(--muted); font-size:10px; }
+    .comment-form { display:grid; gap:9px; margin-bottom:14px; }
+    .comment-input { width:100%; min-height:76px; resize:vertical; padding:12px 13px; border:1px solid var(--line); border-radius:13px; background:var(--surface); color:var(--ink); font:inherit; font-size:12px; line-height:1.7; outline:none; }
+    .comment-input:focus { border-color:var(--brand); box-shadow:0 0 0 3px color-mix(in srgb,var(--brand) 10%,transparent); }
+    .comment-form-foot { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .comment-hint { color:var(--muted); font-size:10px; }
+    .comment-submit { min-height:39px; padding:0 15px; border:1px solid var(--brand); border-radius:10px; background:var(--brand); color:var(--brand-on); font:inherit; font-size:11px; font-weight:700; transition:filter .2s,transform .2s; }
+    .comment-submit:hover { filter:brightness(1.06); transform:translateY(-1px); }
+    .comment-submit:disabled { opacity:.55; cursor:wait; transform:none; }
+    .comments-list { display:grid; gap:9px; }
+    .comments-empty,.comments-loading { padding:17px 12px; border:1px dashed var(--line); border-radius:12px; color:var(--muted); text-align:center; font-size:11px; }
+    .comment-item { padding:12px 13px; border:1px solid var(--line); border-radius:13px; background:var(--surface); animation:comment-enter .22s ease both; }
+    .comment-top { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px; }
+    .comment-author { color:var(--brand); font-size:11px; font-weight:700; }
+    .comment-date { margin-inline-start:8px; color:var(--muted); font-size:9px; font-weight:400; }
+    .comment-delete { min-height:27px; padding:3px 8px; border:1px solid color-mix(in srgb,var(--danger) 25%,var(--line)); border-radius:8px; background:transparent; color:var(--danger); font-size:9px; }
+    .comment-text { margin:0; color:var(--ink); font-size:12px; line-height:1.8; white-space:pre-wrap; overflow-wrap:anywhere; }
+    @keyframes comment-enter { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:translateY(0); } }
+    .editor-page { position:relative; display:block; width:min(1160px,calc(100% - 32px)); max-height:none!important; height:auto; margin:clamp(16px,3vw,34px) auto 55px; padding:0; overflow:visible; overscroll-behavior:auto; border:1px solid var(--line); border-radius:24px; background:var(--surface); color:var(--ink); box-shadow:var(--shadow); animation:editor-page-enter .3s cubic-bezier(.2,.8,.25,1) both; }
+    .editor-page[hidden] { display:none!important; }
+    @keyframes editor-page-enter { from { opacity:0; transform:translateY(9px); } to { opacity:1; transform:translateY(0); } }
+    .editor-page .customizer-inner { padding:clamp(17px,2.4vw,30px); }
+    .editor-page .customizer-layout { grid-template-columns:minmax(0,1.18fr) minmax(300px,.82fr); }
+    .editor-page .editor-back-button { min-height:42px; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:0 13px; border:1px solid var(--line); border-radius:11px; background:var(--surface-2); color:var(--ink); font:inherit; font-size:11px; font-weight:700; white-space:nowrap; }
+    .editor-page .editor-back-button:hover { border-color:var(--brand); color:var(--brand); }
+    .editor-page .customizer-actions { margin-top:22px; }
+    @media(max-width:760px) {
+      .editor-page { width:calc(100% - 20px); margin:12px auto 30px; border-radius:18px; }
+      .editor-page .customizer-layout { grid-template-columns:1fr; }
+    }
+    @media(max-width:560px) {
+      .comments-panel { margin-top:14px; padding:12px; }
+      .comment-form-foot { align-items:flex-end; }
+      .comment-hint { max-width:22ch; line-height:1.6; }
+      .editor-page { width:calc(100% - 12px); margin:8px auto 22px; border-radius:17px; }
+      .editor-page .customizer-inner { padding:13px; }
+      .editor-page .customizer-head { align-items:center; }
+      .editor-page .customizer-head h2 { font-size:20px; }
+      .editor-page .customizer-head p { font-size:11px; }
+      .editor-page .editor-stage { aspect-ratio:1.55/1; }
+      .editor-page .customizer-actions { position:sticky; bottom:0; padding:12px 0 max(8px,var(--safe-bottom)); background:linear-gradient(180deg,transparent,var(--surface) 20%); }
+    }
+
   </style>
 </head>
 <body>
@@ -681,7 +729,7 @@
     </section>
   </main>
 
-  <footer class="footer">
+  <footer class="footer" id="site-footer">
     <div class="container footer-inner">
       <span><b>كل فكرة ليها مكان.</b> جرّب ألوانك وشاركها مع الكل.</span>
       <span>اختياراتك بتتحفظ على نفس المتصفح، من غير ما نطلب اسمك أو إيميلك.</span>
@@ -711,9 +759,18 @@
           <button class="favorite-dialog-button" id="favorite-button" type="button" aria-pressed="false"><span id="favorite-label">☆ ضيف للمفضلة</span></button>
         </div>
       </div>
+      <section class="comments-panel" aria-labelledby="comments-title">
+        <div class="comments-heading"><h3 id="comments-title">رأيك يهمنا</h3><span class="comments-count" id="comments-count">0 تعليق</span></div>
+        <form class="comment-form" id="comment-form">
+          <textarea class="comment-input" id="comment-input" maxlength="500" rows="2" placeholder="اكتب تعليقك على التصميم…" aria-label="اكتب تعليقك" required></textarea>
+          <div class="comment-form-foot"><small class="comment-hint">شاركنا رأيك في الألوان أو أي تفصيلة عجبتك.</small><button class="comment-submit" id="comment-submit" type="submit">إرسال التعليق</button></div>
+        </form>
+        <div class="comments-list" id="comments-list" aria-live="polite"><div class="comments-loading">التعليقات هتظهر هنا.</div></div>
+      </section>
       <div class="dialog-footer">
         <span class="dialog-footer-note">تقدر تغيّر اختيارك في أي وقت بالضغط مرة تانية.</span>
         <div class="download-actions">
+          <button class="action-button variation-action" id="make-variation" type="button">اعمل نسخة وعدّل عليها</button>
           <button class="action-button danger-action" id="delete-design" type="button" hidden>حذف تصميمي</button>
           <button class="action-button" id="share-design" type="button">نسخ رابط التصميم</button>
           <button class="action-button" id="download-svg" type="button">تحميل SVG</button>
@@ -736,7 +793,7 @@
     </div>
   </dialog>
 
-  <dialog class="customizer-dialog" id="customizer-dialog" aria-labelledby="customizer-title">
+  <section class="editor-page" id="editor-page" aria-labelledby="customizer-title" hidden>
     <div class="customizer-inner">
       <header class="customizer-head">
         <div>
@@ -744,7 +801,7 @@
           <h2 id="customizer-title">ابدأ تصميمك</h2>
           <p>الشعار هو الرسم الأصلي نفسه. اضغط على الجزء اللي عايز تغيّر لونه، وشوف النتيجة فورًا.</p>
         </div>
-        <button class="icon-button" id="customizer-close" type="button" aria-label="إغلاق محرر الألوان">×</button>
+        <button class="editor-back-button" id="customizer-close" type="button" aria-label="الرجوع للمعرض">← رجوع للمعرض</button>
       </header>
       <form id="customizer-form">
         <label class="custom-name-field" for="custom-design-name">
@@ -780,12 +837,12 @@
         </div>
         <div class="customizer-actions">
           <button class="publish-button" id="publish-custom-design" type="submit">نشر النسخة</button>
-          <button class="cancel-button" id="cancel-customizer" type="button">رجوع</button>
+          <button class="cancel-button" id="cancel-customizer" type="button">حفظ المسودة والرجوع</button>
         </div>
       </form>
     </div>
     <div class="notification-host customizer-notifications" id="customizer-notification-host" aria-live="polite" aria-relevant="additions"></div>
-  </dialog>
+  </section>
 
   <div class="notification-host" id="notification-host" aria-live="polite" aria-relevant="additions"></div>
 
@@ -832,7 +889,7 @@
       brandName:["M 702.28 736.58 C 692.72 736.58 685.32 733.43 680.09 727.13 C 674.85 720.82 672.24 711.47 672.24 699.07 L 672.24 651.03 L 693.43 651.03 L 693.43 700.9 C 693.43 705.98 694.86 710.02 697.7 713.02 C 700.55 716.02 704.41 717.52 709.29 717.52 C 714.17 717.52 718.16 715.94 721.26 712.79 C 724.36 709.64 725.91 705.37 725.91 699.98 L 725.91 651.03 L 747.11 651.03 L 747.11 733.99 L 730.34 733.99 L 730.34 698.76 L 732.01 698.76 C 732.01 707.1 730.95 714.06 728.81 719.65 C 726.68 725.25 723.47 729.47 719.2 732.31 C 714.93 735.16 709.6 736.58 703.19 736.58 L 702.28 736.58 Z","M 1008.64 721.64 C 1012.71 721.64 1016.42 720.72 1019.77 718.89 C 1023.13 717.06 1025.82 714.42 1027.86 710.96 C 1029.89 707.51 1030.91 703.34 1030.91 698.46 L 1030.91 693.12 C 1030.91 688.45 1029.86 684.48 1027.78 681.23 C 1025.7 677.97 1022.98 675.51 1019.62 673.83 C 1016.27 672.15 1012.61 671.31 1008.64 671.31 C 1004.17 671.31 1000.23 672.36 996.82 674.44 C 993.42 676.52 990.75 679.45 988.82 683.21 C 986.89 686.97 985.92 691.44 985.92 696.63 C 985.92 701.71 986.89 706.14 988.82 709.9 C 990.75 713.66 993.42 716.56 996.82 718.59 C 1000.23 720.62 1004.17 721.64 1008.64 721.64 Z M 1002.54 771.81 C 998.58 771.81 994.54 771.66 990.42 771.35 C 986.3 771.05 982.46 770.64 978.91 770.13 L 978.91 752.44 C 982.57 752.85 986.48 753.23 990.65 753.59 C 994.82 753.94 998.73 754.12 1002.39 754.12 C 1009.2 754.12 1014.72 753.3 1018.94 751.68 C 1023.15 750.05 1026.26 747.49 1028.24 743.98 C 1030.22 740.47 1031.21 736.02 1031.21 730.63 L 1031.21 714.32 L 1035.79 703.95 C 1035.48 711.57 1033.9 718.05 1031.06 723.39 C 1028.21 728.73 1024.35 732.8 1019.47 735.59 C 1014.59 738.39 1008.95 739.78 1002.54 739.78 C 996.85 739.78 991.69 738.72 987.06 736.58 C 982.44 734.45 978.47 731.5 975.17 727.74 C 971.86 723.98 969.3 719.56 967.47 714.47 C 965.64 709.39 964.72 703.95 964.72 698.15 L 964.72 694.95 C 964.72 689.16 965.66 683.74 967.55 678.71 C 969.43 673.68 972.09 669.28 975.55 665.52 C 979.01 661.76 983.12 658.86 987.9 656.83 C 992.68 654.79 997.97 653.78 1003.76 653.78 C 1010.57 653.78 1016.5 655.25 1021.53 658.2 C 1026.56 661.15 1030.5 665.42 1033.35 671.01 C 1036.19 676.6 1037.77 683.46 1038.07 691.6 L 1034.41 692.21 L 1034.41 656.37 L 1051.19 656.37 L 1051.19 729.41 C 1051.19 739.48 1049.46 747.61 1046 753.81 C 1042.55 760.01 1037.24 764.57 1030.07 767.46 C 1022.9 770.36 1013.73 771.81 1002.54 771.81 Z","M 1124.54 734.45 L 1124.54 709.89 L 1121.03 709.89 L 1121.03 682.6 C 1121.03 677.82 1119.86 674.26 1117.52 671.92 C 1115.18 669.59 1111.58 668.42 1106.7 668.42 C 1104.16 668.42 1101.11 668.47 1097.55 668.57 C 1093.99 668.67 1090.4 668.8 1086.8 668.95 C 1083.19 669.1 1079.96 669.28 1077.11 669.48 L 1077.11 651.49 C 1079.45 651.29 1082.09 651.08 1085.04 650.88 C 1087.99 650.68 1091.01 650.55 1094.12 650.5 C 1097.22 650.45 1100.14 650.42 1102.88 650.42 C 1111.42 650.42 1118.52 651.54 1124.16 653.78 C 1129.8 656.01 1134.07 659.52 1136.97 664.3 C 1139.86 669.08 1141.31 675.33 1141.31 683.05 L 1141.31 734.45 L 1124.54 734.45 Z M 1097.85 736.58 C 1091.85 736.58 1086.59 735.51 1082.07 733.38 C 1077.54 731.24 1074.04 728.19 1071.55 724.23 C 1069.05 720.26 1067.81 715.49 1067.81 709.89 C 1067.81 703.79 1069.31 698.81 1072.31 694.95 C 1075.31 691.09 1079.53 688.19 1084.97 686.26 C 1090.4 684.33 1096.78 683.36 1104.1 683.36 L 1123.32 683.36 L 1123.32 696.02 L 1103.8 696.02 C 1098.92 696.02 1095.18 697.21 1092.59 699.6 C 1090 701.99 1088.7 705.07 1088.7 708.83 C 1088.7 712.59 1090 715.64 1092.59 717.98 C 1095.18 720.32 1098.92 721.48 1103.8 721.48 C 1106.75 721.48 1109.47 720.95 1111.96 719.88 C 1114.45 718.82 1116.53 716.99 1118.21 714.39 C 1119.89 711.8 1120.83 708.27 1121.03 703.79 L 1126.22 709.74 C 1125.71 715.54 1124.31 720.42 1122.02 724.38 C 1119.74 728.35 1116.58 731.37 1112.57 733.46 C 1108.55 735.54 1103.65 736.58 1097.85 736.58 Z","M 1317.14 653.78 L 1338.34 653.78 L 1338.34 736.58 L 1317.14 736.58 Z","M 924.61 653.78 L 945.81 653.78 L 945.81 736.58 L 924.61 736.58 Z","M 771.51 736.58 L 771.51 653.78 L 788.29 653.78 L 788.29 689.31 L 786.76 689.31 C 786.76 680.97 787.83 673.98 789.96 668.34 C 792.1 662.7 795.27 658.43 799.49 655.53 C 803.71 652.63 808.97 651.18 815.28 651.18 L 816.19 651.18 C 822.6 651.18 827.91 652.63 832.13 655.53 C 836.34 658.43 839.5 662.7 841.58 668.34 C 843.67 673.98 844.71 680.97 844.71 689.31 L 839.37 689.31 C 839.37 680.97 840.46 673.98 842.65 668.34 C 844.84 662.7 848.04 658.43 852.26 655.53 C 856.47 652.63 861.74 651.18 868.04 651.18 L 868.96 651.18 C 875.36 651.18 880.7 652.63 884.97 655.53 C 889.24 658.43 892.46 662.7 894.65 668.34 C 896.84 673.98 897.93 680.97 897.93 689.31 L 897.93 736.58 L 876.73 736.58 L 876.73 687.32 C 876.73 682.14 875.41 678 872.77 674.9 C 870.12 671.8 866.36 670.25 861.48 670.25 C 856.6 670.25 852.69 671.85 849.74 675.05 C 846.79 678.25 845.32 682.55 845.32 687.94 L 845.32 736.58 L 824.12 736.58 L 824.12 687.32 C 824.12 682.14 822.8 678 820.16 674.9 C 817.51 671.8 813.75 670.25 808.87 670.25 C 803.99 670.25 800.08 671.85 797.13 675.05 C 794.18 678.25 792.71 682.55 792.71 687.94 L 792.71 736.58 L 771.51 736.58 Z","M 1164.04 736.58 L 1164.04 653.78 L 1180.81 653.78 L 1180.81 689.31 L 1179.29 689.31 C 1179.29 680.97 1180.35 673.98 1182.49 668.34 C 1184.62 662.7 1187.8 658.43 1192.02 655.53 C 1196.24 652.63 1201.5 651.18 1207.8 651.18 L 1208.72 651.18 C 1215.12 651.18 1220.43 652.63 1224.65 655.53 C 1228.87 658.43 1232.02 662.7 1234.11 668.34 C 1236.19 673.98 1237.23 680.97 1237.23 689.31 L 1231.9 689.31 C 1231.9 680.97 1232.99 673.98 1235.18 668.34 C 1237.36 662.7 1240.56 658.43 1244.78 655.53 C 1249 652.63 1254.26 651.18 1260.57 651.18 L 1261.48 651.18 C 1267.89 651.18 1273.22 652.63 1277.49 655.53 C 1281.76 658.43 1284.99 662.7 1287.18 668.34 C 1289.36 673.98 1290.46 680.97 1290.46 689.31 L 1290.46 736.58 L 1269.26 736.58 L 1269.26 687.32 C 1269.26 682.14 1267.94 678 1265.29 674.9 C 1262.65 671.8 1258.89 670.25 1254.01 670.25 C 1249.13 670.25 1245.21 671.85 1242.27 675.05 C 1239.32 678.25 1237.84 682.55 1237.84 687.94 L 1237.84 736.58 L 1216.65 736.58 L 1216.65 687.32 C 1216.65 682.14 1215.33 678 1212.68 674.9 C 1210.04 671.8 1206.28 670.25 1201.4 670.25 C 1196.52 670.25 1192.6 671.85 1189.66 675.05 C 1186.71 678.25 1185.23 682.55 1185.23 687.94 L 1185.23 736.58 L 1164.04 736.58 Z","M 611.85 717.52 L 611.85 736.58 L 659.88 736.58 L 659.88 717.52 Z M 593.24 625.26 L 593.24 736.58 L 614.9 736.58 L 614.9 625.26 Z"]
     };
     const HEX_PATTERN=/^#[0-9A-Fa-f]{6}$/;
-    const state={view:'gallery',page:1,active:null,shown:[],community:[],communitySignature:'',votes:Object.create(null),mine:new Set(),favorites:new Set(),visitorUid:'',remotePreferences:null,preferencesTouched:false,toastTimer:null,voteBusy:false,favoriteBusy:false,publishBusy:false,deleteBusy:false,liveRenderFrame:0};
+    const state={view:'gallery',page:1,active:null,shown:[],community:[],communitySignature:'',votes:Object.create(null),mine:new Set(),favorites:new Set(),visitorUid:'',remotePreferences:null,preferencesTouched:false,toastTimer:null,voteBusy:false,favoriteBusy:false,publishBusy:false,deleteBusy:false,liveRenderFrame:0,editorOpen:false,comments:[],commentBusy:false};
 
     const PENDING_PREFS_KEY='lumi-pending-preferences-v2';
     let preferenceSaveTimer=null;
@@ -1037,7 +1094,7 @@
       info:{title:'معلومة',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-8h.01"/></svg>'}
     };
     function toast(message,type='success',customTitle=''){
-      const host=$('#customizer-dialog').open?$('#customizer-notification-host'):$('#preview-dialog').open?$('#dialog-notification-host'):$('#notification-host');if(!host)return;
+      const host=!$('#editor-page').hidden?$('#customizer-notification-host'):$('#preview-dialog').open?$('#dialog-notification-host'):$('#notification-host');if(!host)return;
       const kind=noticeMeta[type]?type:'info',meta=noticeMeta[kind],node=document.createElement('section');node.className=`app-notification ${kind}`;node.setAttribute('role',kind==='error'?'alert':'status');
       node.innerHTML=`<span class="notification-icon">${meta.icon}</span><div class="notification-copy"><b></b><p></p></div><button class="notification-close" type="button" aria-label="إغلاق التنبيه">×</button>`;
       node.querySelector('.notification-copy b').textContent=customTitle||meta.title;node.querySelector('.notification-copy p').textContent=String(message||'');
@@ -1080,7 +1137,7 @@
       const selected=hasVoted(pair),votes=designVotes(pair),label=pair.kind==='community'?(pair.name||'تصميم من المجتمع'):`التصميم ${displayNumber(pair)}`,token=slugToken(pair);
       const favorite=isFavorite(pair);
       return`<article class="design-card" style="--card-index:${index}" data-open="${escapeHtml(token)}" tabindex="0" role="button" aria-label="افتح ${escapeHtml(label)}">
-        <div class="card-head"><span class="card-number">${pair.kind==='community'?'✦':displayNumber(pair)}</span><div class="card-info"><b>${escapeHtml(label)}</b><small>${escapeHtml(displaySubtitle(pair))}</small></div>${pair.kind==='community'?'<span class="community-label">من المجتمع</span>':''}${rank?`<span class="rank-label">#${rank}</span>`:''}<button class="card-favorite ${favorite?'is-favorite':''}" type="button" data-favorite-design="${escapeHtml(token)}" aria-pressed="${favorite}" aria-label="${favorite?'إزالة من المفضلة':'إضافة للمفضلة'}" title="${favorite?'إزالة من المفضلة':'إضافة للمفضلة'}">${favorite?'♥':'♡'}</button></div>
+        <div class="card-head"><span class="card-number">${pair.kind==='community'?'✦':displayNumber(pair)}</span><div class="card-info"><b>${escapeHtml(label)}</b><small>${escapeHtml(displaySubtitle(pair))}</small></div>${pair.kind==='community'?'<span class="community-label">من المجتمع</span>':''}${rank?`<span class="rank-label">#${rank}</span>`:''}<span class="card-owner-actions">${pair.kind==='community'&&pair.createdBy&&pair.createdBy===state.visitorUid?`<button class="card-delete" type="button" data-delete-card="${escapeHtml(token)}" aria-label="حذف التصميم" title="حذف التصميم"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6m4-6v6M5.5 7l1 14h11l1-14M9 7V4h6v3"/></svg></button>`:''}<button class="card-favorite ${favorite?'is-favorite':''}" type="button" data-favorite-design="${escapeHtml(token)}" aria-pressed="${favorite}" aria-label="${favorite?'إزالة من المفضلة':'إضافة للمفضلة'}" title="${favorite?'إزالة من المفضلة':'إضافة للمفضلة'}">${favorite?'♥':'♡'}</button></span></div>
         <div class="preview-pair">${previewTile(pair,'light')}${previewTile(pair,'dark')}</div>
         <div class="card-footer"><span class="like-count ${selected?'is-liked':''}"><span data-like-symbol aria-hidden="true">${selected?'♥':'♡'}</span><b data-like-count>${votes.toLocaleString('en-US')}</b><span>إعجاب</span></span><span class="open-hint">اضغط للمعاينة ←</span></div>
       </article>`;
@@ -1176,11 +1233,12 @@
       if(!['gallery','ranking','favorites'].includes(view)||view===state.view)return;
       state.view=view;state.page=1;if(options.persist!==false)state.preferencesTouched=true;
       document.querySelectorAll('.nav-tab').forEach(tab=>tab.setAttribute('aria-selected',String(tab.dataset.view===view)));
-      const ranking=view==='ranking',favorites=view==='favorites';
-      $('#hero').hidden=ranking||favorites;$('#palette-section').hidden=ranking||favorites;
-      $('#toolbar').hidden=ranking;$('#filter-row').hidden=ranking;
+      const ranking=view==='ranking',favorites=view==='favorites',editing=state.editorOpen;
+      $('#hero').hidden=editing||ranking||favorites;$('#palette-section').hidden=editing||ranking||favorites;
+      $('#main-section').hidden=editing;$('#editor-page').hidden=!editing;$('#site-footer').hidden=editing;
+      $('#toolbar').hidden=editing||ranking;$('#filter-row').hidden=editing||ranking;
       $('#ranking-summary').hidden=!ranking;$('#podium').hidden=!ranking;$('#ranking-empty').hidden=!ranking;
-      $('#open-customizer').hidden=favorites;
+      $('#open-customizer').hidden=favorites||editing;
       $('#section-title').textContent=ranking?'الناس اختارت إيه؟':favorites?'التصميمات اللي حفظتها':'شوف التصميمات';
       $('#section-subtitle').textContent=ranking?'الترتيب بيتحدّث مع كل تصويت جديد.':favorites?'كل التصميمات اللي ضفتها للمفضلة هتلاقيها هنا، وتقدر تشيلها في أي وقت.':'اضغط على البطاقة نفسها عشان تفتح المعاينة أو اعمل تصميمك.';
       if(options.log!==false)track('view_change',{view});if(options.persist!==false)persistPreferencesSoon();render(true);window.scrollTo({top:0,behavior:'smooth'});
@@ -1219,6 +1277,48 @@
       }
     }
     function colorDetail(label,hex){return`<div class="color-detail"><i style="background:${hex}"></i><span><b>${label}</b><code>${hex}</code></span></div>`}
+    let commentsUnsubscribe=null,commentsGeneration=0;
+    function commentKey(pair){return pair.kind==='community'?`community-${pair.firestoreId}`:`preset-${pad(pair.id)}`}
+    function commentDate(value){
+      try{const date=value&&typeof value.toDate==='function'?value.toDate():value&&Number.isFinite(value.seconds)?new Date(value.seconds*1000):null;return date?date.toLocaleString('ar-EG',{dateStyle:'medium',timeStyle:'short'}):'الآن'}catch(_){return'الآن'}
+    }
+    function renderComments(items){
+      const host=$('#comments-list');$('#comments-count').textContent=`${items.length.toLocaleString('en-US')} تعليق`;
+      if(!items.length){host.innerHTML='<div class="comments-empty">لسه مفيش تعليقات. اكتب أول رأي!</div>';return}
+      host.innerHTML=items.map(item=>`<article class="comment-item"><div class="comment-top"><span class="comment-author">${item.uid===state.visitorUid?'أنت':'زائر'}<small class="comment-date">${escapeHtml(commentDate(item.createdAt))}</small></span>${item.uid===state.visitorUid?`<button class="comment-delete" type="button" data-delete-comment="${escapeHtml(item.id)}">حذف تعليقي</button>`:''}</div><p class="comment-text">${escapeHtml(item.text)}</p></article>`).join('');
+    }
+    function stopComments(){
+      commentsGeneration++;if(commentsUnsubscribe){try{commentsUnsubscribe()}catch(_){}commentsUnsubscribe=null}
+      state.comments=[];if($('#comments-list'))renderComments([]);
+    }
+    function watchDesignComments(pair){
+      stopComments();const generation=commentsGeneration;$('#comments-list').innerHTML='<div class="comments-loading">بنحمّل التعليقات…</div>';
+      firebaseCall('watchComments',pair,items=>{if(generation!==commentsGeneration)return;state.comments=items||[];renderComments(state.comments)},error=>{
+        if(generation!==commentsGeneration)return;$('#comments-list').innerHTML='<div class="comments-empty">مش قادرين نحمّل التعليقات دلوقتي.</div>';
+        toast(String(error?.message||'تعذر تحميل التعليقات.'),'error');
+      }).then(unsubscribe=>{if(generation===commentsGeneration)commentsUnsubscribe=unsubscribe;else if(typeof unsubscribe==='function')unsubscribe()})
+        .catch(error=>{if(generation===commentsGeneration){$('#comments-list').innerHTML='<div class="comments-empty">التعليقات مش متاحة حاليًا.</div>';toast(String(error?.message||'التعليقات مش متاحة.'),'error')}});
+    }
+    async function submitComment(event){
+      event.preventDefault();if(!state.active||state.commentBusy)return;
+      const text=$('#comment-input').value.trim();if(!text){toast('اكتب تعليقك الأول.','warning');return}
+      if(text.length>500){toast('التعليق طويل؛ الحد الأقصى 500 حرف.','warning');return}
+      state.commentBusy=true;$('#comment-submit').disabled=true;$('#comment-submit').textContent='بنرسل…';
+      try{await firebaseCall('addComment',state.active,text);$('#comment-input').value='';track('design_comment_added',{design:commentKey(state.active)});toast('تعليقك اتضاف.','success')}
+      catch(error){toast(String(error?.message||'مقدرناش نضيف تعليقك.'),'error','التعليق ما اتحفظش')}
+      finally{state.commentBusy=false;$('#comment-submit').disabled=false;$('#comment-submit').textContent='إرسال التعليق'}
+    }
+    async function deleteComment(commentId){
+      if(!commentId||state.commentBusy)return;const item=state.comments.find(comment=>comment.id===commentId);
+      if(!item||item.uid!==state.visitorUid){toast('تقدر تحذف تعليقاتك أنت بس.','warning');return}
+      state.commentBusy=true;
+      try{await firebaseCall('deleteComment',commentId);track('design_comment_deleted',{commentId});toast('تم حذف تعليقك.','success')}
+      catch(error){toast(String(error?.message||'مقدرناش نحذف التعليق.'),'error')}
+      finally{state.commentBusy=false}
+    }
+    $('#comment-form').addEventListener('submit',submitComment);
+    $('#comments-list').addEventListener('click',event=>{const button=event.target.closest('[data-delete-comment]');if(button)deleteComment(button.dataset.deleteComment)});
+
     function openDesign(token,updateHash=true){
       const pair=typeof token==='object'?token:findDesign(token);if(!pair)return;
       const previousToken=state.active?slugToken(state.active):'',nextToken=slugToken(pair),switching=dialog.open&&previousToken&&previousToken!==nextToken;
@@ -1227,12 +1327,12 @@
       const previewHost=$('#dialog-previews');previewHost.innerHTML=previewTile(pair,'light',true)+previewTile(pair,'dark',true);
       if(switching){previewHost.classList.remove('is-swapping');void previewHost.offsetWidth;previewHost.classList.add('is-swapping');setTimeout(()=>previewHost.classList.remove('is-swapping'),420)}
       $('#dialog-details').innerHTML=[colorDetail('خلفية فاتحة',pair.light.background),colorDetail('لون الشعار الفاتح',pair.light.primary),colorDetail('خلفية داكنة',pair.dark.background),colorDetail('لون الشعار الداكن',pair.dark.primary),colorDetail('لون إضافي',pair.accent.hex),colorDetail('لون مساعد',pair.detail.hex)].join('');
-      $('#contrast-note').textContent=`أقل تباين للشعار في النسختين ${pair.contrast.toFixed(2)}:1. تقدر تصوّت أو تحفظه في المفضلة أو تنزّله.`;$('#delete-design').hidden=!(pair.kind==='community'&&pair.createdBy&&pair.createdBy===state.visitorUid);updateVoteButton();updateFavoriteButton();if(!dialog.open)dialog.showModal();
+      $('#contrast-note').textContent=`أقل تباين للشعار في النسختين ${pair.contrast.toFixed(2)}:1. تقدر تصوّت أو تحفظه في المفضلة أو تنزّله.`;$('#delete-design').hidden=!(pair.kind==='community'&&pair.createdBy&&pair.createdBy===state.visitorUid);updateVoteButton();updateFavoriteButton();if(!dialog.open)dialog.showModal();watchDesignComments(pair);
       if(updateHash)history.replaceState(null,'',`${location.pathname}${location.search}#${slugToken(pair)}`);track('preview_open',{design:pair.kind==='community'?pair.firestoreId:pair.id,kind:pair.kind||'preset'});
     }
     function closeDesign(){if(dialog.open)dialog.close()}
     function stepDesign(direction){if(!state.active)return;const list=state.view==='ranking'?rankedDesigns():state.shown,index=list.findIndex(pair=>pair===state.active||slugToken(pair)===slugToken(state.active)),next=list[index+direction];if(next)openDesign(next)}
-    dialog.addEventListener('close',()=>{if(state.active)track('preview_close',{design:state.active.kind==='community'?state.active.firestoreId:state.active.id});state.active=null;history.replaceState(null,'',location.pathname+location.search)});
+    dialog.addEventListener('close',()=>{stopComments();if(state.active)track('preview_close',{design:state.active.kind==='community'?state.active.firestoreId:state.active.id});state.active=null;if(location.hash!=='#editor')history.replaceState(history.state,'',location.pathname+location.search)});
 
     /* التصويت: نفس المعرّفات القديمة للتصميمات العشرة، ومجموعة منفصلة لتصميمات المجتمع. */
     async function submitVote(){
@@ -1260,7 +1360,7 @@
     }
     window.LumiApp={
       notify(message,type='info',title=''){toast(message,type,title)},
-      setVisitorUid(uid){state.visitorUid=String(uid||'');if(state.active)$('#delete-design').hidden=!(state.active.kind==='community'&&state.active.createdBy&&state.active.createdBy===state.visitorUid)},
+      setVisitorUid(uid){state.visitorUid=String(uid||'');if(state.active)$('#delete-design').hidden=!(state.active.kind==='community'&&state.active.createdBy&&state.active.createdBy===state.visitorUid);if(state.community.length)render(false,{animate:false})},
       applyVoteData(stats,selected){
         let votesChanged=false,mineChanged=false;
         if(stats!==undefined){
@@ -1385,8 +1485,7 @@
     /* حذف تصميمات المجتمع: صاحب التصميم فقط يقدر يحذفه. */
     let pendingDeletePair=null;
     const deleteDialog=$('#delete-confirm-dialog');
-    function requestDeleteDesign(){
-      const pair=state.active;
+    function requestDeleteDesign(pair=state.active){
       if(!pair||pair.kind!=='community'||!pair.createdBy||pair.createdBy!==state.visitorUid){toast('تقدر تحذف التصميمات اللي نشرتها بنفسك بس.','warning');return}
       pendingDeletePair=pair;$('#delete-confirm-title').textContent=`تحذف «${displayTitle(pair)}»؟`;$('#delete-confirm-note').textContent='التصميم هيختفي من المعرض ومش هتقدر ترجّعه من الموقع.';$('#confirm-delete-design').disabled=false;$('#confirm-delete-design').textContent='احذف التصميم';
       if(!deleteDialog.open)deleteDialog.showModal();
@@ -1395,24 +1494,23 @@
       const pair=pendingDeletePair;if(!pair||state.deleteBusy)return;
       state.deleteBusy=true;$('#confirm-delete-design').disabled=true;$('#confirm-delete-design').textContent='بنحذف…';
       try{
-        await firebaseCall('deleteDesign',pair);
+        const deletionResult=await firebaseCall('deleteDesign',pair);
         state.community=state.community.filter(item=>item.firestoreId!==pair.firestoreId);
         state.communitySignature=communitySignature(state.community);
         state.favorites.delete(favoriteKey(pair));
         delete state.votes[`community:${pair.firestoreId}`];state.mine.delete(`community:${pair.firestoreId}`);
         if(deleteDialog.open)deleteDialog.close();pendingDeletePair=null;
-        if(dialog.open)closeDesign();renderPalette();render(true);
-        toast('اتحذف تصميمك من المعرض.','success');track('community_design_deleted',{designId:pair.firestoreId});
+        if(dialog.open&&state.active&&slugToken(state.active)===slugToken(pair))closeDesign();renderPalette();render(true);
+        toast(deletionResult?.cleanupComplete===false?'التصميم اتحذف، لكن بعض البيانات القديمة المرتبطة به محتاجة تنظيف.':'اتحذف تصميمك من المعرض.','success');track('community_design_deleted',{designId:pair.firestoreId,cleanupComplete:deletionResult?.cleanupComplete!==false});
       }catch(error){toast(String(error&&error.message||'مقدرناش نحذف التصميم دلوقتي. جرّب تاني.'),'error','تعذر الحذف')}
       finally{state.deleteBusy=false;$('#confirm-delete-design').disabled=false;$('#confirm-delete-design').textContent='احذف التصميم'}
     }
-    $('#delete-design').addEventListener('click',requestDeleteDesign);
+    $('#delete-design').addEventListener('click',()=>requestDeleteDesign());
     $('#cancel-delete-design').addEventListener('click',()=>{pendingDeletePair=null;if(deleteDialog.open)deleteDialog.close()});
     $('#confirm-delete-design').addEventListener('click',confirmDeleteDesign);
     deleteDialog.addEventListener('click',event=>{if(event.target===deleteDialog){pendingDeletePair=null;deleteDialog.close()}});
 
     /* محرر الأجزاء: اضغط على منطقة الشعار ثم غيّر لونها. */
-    const customizer=$('#customizer-dialog');
     const editorState={mode:'light',selected:'background',draft:null};
     const cloneDefaultParts=()=>({light:{...DEFAULT_PARTS.light},dark:{...DEFAULT_PARTS.dark}});
     function editorColors(){
@@ -1475,8 +1573,40 @@
     function renderPartQuickColors(){
       const colors=allSharedColors();$('#part-quick-colors').innerHTML=colors.map(color=>`<button class="part-quick-color" type="button" data-editor-quick="${color.hex}" style="--swatch:${color.hex}" aria-label="استخدم اللون ${escapeHtml(color.name)} ${color.hex}" title="${escapeHtml(color.name)} ${color.hex}"></button>`).join('');
     }
-    function openCustomizer(){resetCustomizer();if(!customizer.open)customizer.showModal();track('customizer_open',{})}
-    function closeCustomizer(){if(customizer.open)customizer.close()}
+    function updateEditorPageVisibility(){
+      const editing=state.editorOpen,ranking=state.view==='ranking',favorites=state.view==='favorites';
+      $('#hero').hidden=editing||ranking||favorites;$('#palette-section').hidden=editing||ranking||favorites;
+      $('#main-section').hidden=editing;$('#editor-page').hidden=!editing;$('#site-footer').hidden=editing;
+      $('#toolbar').hidden=editing||ranking;$('#filter-row').hidden=editing||ranking;$('#open-customizer').hidden=editing||favorites;
+    }
+    function openEditorPage(sourcePair=null,updateUrl=true){
+      if(sourcePair){
+        editorState.mode='light';editorState.selected='background';
+        editorState.draft={light:{...partsFor(sourcePair,'light')},dark:{...partsFor(sourcePair,'dark')}};
+        $('#custom-design-name').value=`نسخة من ${displayTitle(sourcePair)}`.slice(0,28);
+        renderQuickColors();renderPartQuickColors();renderEditorStage();
+        track('editor_open_from_design',{source:slugToken(sourcePair)});
+      }else{
+        resetCustomizer();track('customizer_open',{});
+      }
+      state.editorOpen=true;updateEditorPageVisibility();
+      if(updateUrl&&location.hash!=='#editor')history.pushState({lumiEditor:true},'',`${location.pathname}${location.search}#editor`);
+      window.scrollTo({top:0,behavior:'smooth'});
+      requestAnimationFrame(()=>$('#custom-design-name').focus({preventScroll:true}));
+    }
+    function openCustomizer(){openEditorPage(null,true)}
+    function openEditorFromDesign(){if(!state.active)return;const source=state.active;closeDesign();openEditorPage(source,true)}
+    function closeEditorPage(updateUrl=true){
+      if(!state.editorOpen)return;
+      clearTimeout(editorSaveTimer);persistEditorDraftSoon();state.editorOpen=false;updateEditorPageVisibility();
+      if(updateUrl&&location.hash==='#editor')history.replaceState(history.state,'',`${location.pathname}${location.search}`);
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+    function closeCustomizer(){closeEditorPage(true)}
+    window.addEventListener('popstate',()=>{
+      if(state.editorOpen&&location.hash!=='#editor')closeEditorPage(false);
+      else if(!state.editorOpen&&location.hash==='#editor')openEditorPage(null,false);
+    });
     async function publishCustomDesign(event){event.preventDefault();if(state.publishBusy)return;let colors;try{colors=readCustomColors()}catch(error){toast(error.message,'warning');return}const name=$('#custom-design-name').value.trim().slice(0,28);state.publishBusy=true;$('#publish-custom-design').disabled=true;$('#publish-custom-design').textContent='بننشر التصميم…';
       try{const result=await firebaseCall('publishDesign',colors,name);const pair=window.LumiApp.addCommunityDesign(result);closeCustomizer();setView('gallery');toast('تصميمك اتنشر وبقى ظاهر للكل!','success');openDesign(pair);track('community_design_published',{designId:result.id})}
       catch(error){toast(String(error&&error.message||'مقدرناش ننشر التصميم دلوقتي. جرّب تاني.'),'error','تعذر نشر التصميم')}
@@ -1493,12 +1623,12 @@
     $('#custom-design-name').addEventListener('input',()=>{persistEditorDraftSoon()});
     $('#customizer-form').addEventListener('submit',publishCustomDesign);
     $('#open-customizer').addEventListener('click',openCustomizer);$('#customizer-close').addEventListener('click',closeCustomizer);$('#cancel-customizer').addEventListener('click',closeCustomizer);
-    customizer.addEventListener('click',event=>{if(event.target===customizer)closeCustomizer()});
 
     /* الأحداث العامة */
     document.addEventListener('click',event=>{
       const target=event.target,copyButton=target.closest('[data-copy]');if(copyButton){track('copy_color',{hex:copyButton.dataset.copy});copyText(copyButton.dataset.copy,'كود اللون اتنسخ.');return}
-      const quick=target.closest('[data-editor-quick]');if(quick){const hex=quick.dataset.editorQuick;if(customizer.open&&HEX_PATTERN.test(hex)){updateEditorColor(hex);track('logo_part_color_preset',{part:editorState.selected,mode:editorState.mode,hex});}return}
+      const quick=target.closest('[data-editor-quick]');if(quick){const hex=quick.dataset.editorQuick;if(state.editorOpen&&HEX_PATTERN.test(hex)){updateEditorColor(hex);track('logo_part_color_preset',{part:editorState.selected,mode:editorState.mode,hex});}return}
+      const deleteCard=target.closest('[data-delete-card]');if(deleteCard){event.preventDefault();event.stopPropagation();const pair=findDesign(deleteCard.dataset.deleteCard);if(pair)requestDeleteDesign(pair);return}
       const favoriteButton=target.closest('[data-favorite-design]');if(favoriteButton){event.preventDefault();event.stopPropagation();const pair=findDesign(favoriteButton.dataset.favoriteDesign);if(pair)toggleFavorite(pair,'card');return}
       const openButton=target.closest('[data-open]');if(openButton){openDesign(openButton.dataset.open);return}
       const pageButton=target.closest('[data-page]');if(pageButton&&!pageButton.disabled){state.preferencesTouched=true;state.page=Number(pageButton.dataset.page);track('pagination_change',{page:state.page,view:state.view});persistPreferencesSoon();render();$('#main-section').scrollIntoView({behavior:'smooth',block:'start'});return}
@@ -1510,12 +1640,12 @@
     });
     window.addEventListener('error',event=>{if(event.error)toast('حصل خطأ غير متوقع. حدّث الصفحة وجرب تاني.','error','حصلت مشكلة')});
     window.addEventListener('unhandledrejection',event=>{const message=String(event.reason&&event.reason.message||'');toast(/[\u0600-\u06FF]/.test(message)?message:'حصلت مشكلة أثناء تنفيذ العملية. جرّب تاني.','error','حصلت مشكلة')});
-    $('#dialog-close').addEventListener('click',closeDesign);$('#dialog-prev').addEventListener('click',()=>stepDesign(-1));$('#dialog-next').addEventListener('click',()=>stepDesign(1));$('#vote-button').addEventListener('click',submitVote);$('#favorite-button').addEventListener('click',()=>toggleFavorite(state.active,'preview'));$('#download-svg').addEventListener('click',()=>download('svg'));$('#download-png').addEventListener('click',()=>download('png'));$('#share-design').addEventListener('click',shareDesign);
+    $('#dialog-close').addEventListener('click',closeDesign);$('#dialog-prev').addEventListener('click',()=>stepDesign(-1));$('#dialog-next').addEventListener('click',()=>stepDesign(1));$('#vote-button').addEventListener('click',submitVote);$('#favorite-button').addEventListener('click',()=>toggleFavorite(state.active,'preview'));$('#make-variation').addEventListener('click',openEditorFromDesign);$('#download-svg').addEventListener('click',()=>download('svg'));$('#download-png').addEventListener('click',()=>download('png'));$('#share-design').addEventListener('click',shareDesign);
     ['base-filter','accent-filter','sort-filter','mine-filter'].forEach(id=>$('#'+id).addEventListener('change',()=>{state.preferencesTouched=true;track('filter_change',{filter:id,value:id==='mine-filter'?$('#'+id).checked:$('#'+id).value});persistPreferencesSoon();render(true)}));
     let searchLogged=false;$('#search').addEventListener('input',()=>{state.preferencesTouched=true;render(true);persistPreferencesSoon();if(!searchLogged&&$('#search').value.trim()){track('search_used',{query:$('#search').value.trim().slice(0,80)});searchLogged=true}if(!$('#search').value.trim())searchLogged=false});
 
     /* بداية التشغيل وروابط المشاركة المباشرة */
-    installLegacyFilters();renderPalette();render(true);track('page_view',{path:location.pathname||'/'});
+    installLegacyFilters();renderPalette();render(true);updateEditorPageVisibility();track('page_view',{path:location.pathname||'/'});
     const direct=location.hash.match(/^#design-(\d{1,2})$/);if(direct){const pair=PAIRS.find(item=>item.displayIndex===Number(direct[1]));if(pair)openDesign(pair,false)}
     const shared=location.hash.match(/^#community-([A-Za-z0-9_-]{1,100})$/);if(shared){const pair=state.community.find(item=>item.firestoreId===shared[1]);if(pair)openDesign(pair,false)}
   </script>
@@ -1767,6 +1897,55 @@
           }catch(error){console.error('Vote was not saved:',error);throw new Error(explain(error)||error.message||'مش قادرين نحفظ اختيارك دلوقتي. جرّب تاني.')}
         };
 
+        function commentDesignFields(pair){
+          if(!pair)throw new Error('التصميم غير موجود.');
+          if(pair.kind==='community'){
+            const designId=String(pair.firestoreId||'');
+            if(!/^[A-Za-z0-9_-]{1,100}$/.test(designId))throw new Error('معرّف التصميم غير صحيح.');
+            return{designKey:`community-${designId}`,designType:'community',designId};
+          }
+          if(!Number.isInteger(pair.id))throw new Error('رقم التصميم غير صحيح.');
+          const designId=String(pair.id).padStart(3,'0');
+          return{designKey:`preset-${designId}`,designType:'preset',designId};
+        }
+        window.LumiFB.watchComments=async(pair,onItems,onError)=>{
+          await waitForDataStore();
+          const {designKey}=commentDesignFields(pair);
+          const query=F.query(F.collection(db,'designComments'),F.where('designKey','==',designKey),F.limit(100));
+          return F.onSnapshot(query,snapshot=>{
+            const items=snapshot.docs.map(document=>({id:document.id,...document.data()}));
+            const millis=value=>value&&typeof value.toMillis==='function'?value.toMillis():Number(value?.seconds||0)*1000;
+            items.sort((a,b)=>millis(a.createdAt)-millis(b.createdAt));
+            onItems?.(items);
+          },error=>{console.error('Comments listener failed:',error);onError?.(new Error(explain(error)||error.message||'تعذر تحميل التعليقات.'))});
+        };
+        window.LumiFB.addComment=async(pair,text)=>{
+          await waitForDataStore();
+          const cleanText=String(text||'').trim();
+          if(!cleanText||cleanText.length>500)throw new Error('اكتب تعليقًا من حرف واحد إلى 500 حرف.');
+          const fields=commentDesignFields(pair);
+          if(fields.designType==='community'){
+            const parent=await F.getDocFromServer(F.doc(db,'communityDesigns',fields.designId));
+            if(!parent.exists())throw new Error('التصميم لم يعد موجودًا.');
+          }
+          try{
+            const ref=F.doc(F.collection(db,'designComments'));
+            await F.setDoc(ref,{...fields,uid:user.uid,text:cleanText,createdAt:F.serverTimestamp()});
+            return ref.id;
+          }catch(error){console.error('Comment was not saved:',error);throw new Error(explain(error)||error.message||'مقدرناش نحفظ التعليق. راجع قواعد Firestore.')}
+        };
+        window.LumiFB.deleteComment=async(commentId)=>{
+          await waitForDataStore();
+          if(typeof commentId!=='string'||!commentId)throw new Error('التعليق غير صحيح.');
+          const ref=F.doc(db,'designComments',commentId);
+          try{
+            const snapshot=await F.getDocFromServer(ref);
+            if(!snapshot.exists())return true;
+            if(snapshot.data().uid!==user.uid)throw new Error('تقدر تحذف تعليقاتك أنت بس.');
+            await F.deleteDoc(ref);return true;
+          }catch(error){console.error('Comment delete failed:',error);throw new Error(explain(error)||error.message||'مقدرناش نحذف التعليق.')}
+        };
+
         window.LumiFB.deleteDesign=async pair=>{
           await waitForDataStore();
           if(!pair||pair.kind!=='community'||!pair.firestoreId)throw new Error('التصميم ده مش قابل للحذف.');
@@ -1775,24 +1954,31 @@
             const snapshot=await F.getDocFromServer(ref);
             if(!snapshot.exists())throw new Error('التصميم اتحذف أو مبقاش موجود.');
             if(snapshot.data().createdBy!==user.uid)throw new Error('تقدر تحذف التصميمات اللي نشرتها بنفسك بس.');
-            // deleteDoc resolves when Firestore acknowledges the delete. Avoid a second read that can fail independently.
+            // احذف المستند الأساسي أولًا؛ ثم تسمح القواعد بتنظيف بياناته التابعة دون فتح بيانات مستخدمين آخرين.
             await F.deleteDoc(ref);
-            // تنظيف العدادات والتصويتات القديمة بعد حذف التصميم. لو فشل التنظيف، يظل حذف التصميم نفسه ناجحًا.
+            const cleanupErrors=[];
+            const cleanupQueries=[
+              F.query(F.collection(db,'communityDesignVotes'),F.where('designId','==',designId)),
+              F.query(F.collection(db,'designComments'),F.where('designKey','==',`community-${designId}`)),
+              // يمكن لصاحب التصميم تنظيف مفضلته هو فقط؛ مفضلات بقية الزوار تظل خاصة بأصحابها.
+              F.query(F.collection(db,'designFavorites'),F.where('designType','==','community'),F.where('designId','==',designId),F.where('uid','==',user.uid))
+            ];
+            for(const cleanupQuery of cleanupQueries){
+              try{
+                const related=await F.getDocs(cleanupQuery);
+                for(let offset=0;offset<related.docs.length;offset+=450){
+                  const batch=F.writeBatch(db);
+                  related.docs.slice(offset,offset+450).forEach(document=>batch.delete(document.ref));
+                  await batch.commit();
+                }
+              }catch(cleanupError){cleanupErrors.push(cleanupError);console.warn('A related collection still needs cleanup:',cleanupError)}
+            }
             try{
-              const voteQuery=F.query(F.collection(db,'communityDesignVotes'),F.where('designId','==',designId));
-              const voteSnapshot=await F.getDocs(voteQuery);
-              for(let offset=0;offset<voteSnapshot.docs.length;offset+=450){
-                const batch=F.writeBatch(db);
-                voteSnapshot.docs.slice(offset,offset+450).forEach(doc=>batch.delete(doc.ref));
-                await batch.commit();
-              }
-              const statsRef=F.doc(db,'communityDesignStats',designId),statsSnapshot=await F.getDoc(statsRef);
+              const statsRef=F.doc(db,'communityDesignStats',designId),statsSnapshot=await F.getDocFromServer(statsRef);
               if(statsSnapshot.exists())await F.deleteDoc(statsRef);
-              const ownFavoriteRef=F.doc(db,'designFavorites',`community-${designId}_${user.uid}`),ownFavorite=await F.getDocFromServer(ownFavoriteRef);
-              if(ownFavorite.exists())await F.deleteDoc(ownFavoriteRef);
-            }catch(cleanupError){console.warn('Design deleted; vote cleanup needs a retry:',cleanupError)}
-            window.LumiFB.track('community_design_deleted',{designId});
-            return true;
+            }catch(cleanupError){cleanupErrors.push(cleanupError);console.warn('Design stats still need cleanup:',cleanupError)}
+            window.LumiFB.track('community_design_deleted',{designId,cleanupComplete:cleanupErrors.length===0});
+            return {deleted:true,cleanupComplete:cleanupErrors.length===0};
           }catch(error){console.error('Community design delete failed:',error);throw new Error(explain(error)||error.message||'مقدرناش نحذف التصميم. راجع قواعد Firestore وجرب تاني.')}
         };
 
