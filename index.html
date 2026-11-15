@@ -191,7 +191,7 @@
     .preview-tile { min-width: 0; padding: 8px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface-2); }
     .preview-label { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 7px; color: var(--muted); font-size: 10px; font-weight: 600; }
     .preview-label code { color: var(--muted); font: 10px/1 Arial, sans-serif; direction: ltr; }
-    .logo-stage { position: relative; isolation: isolate; overflow: hidden; aspect-ratio: 2 / 1; border: 1px solid var(--stage-border, var(--line)); border-radius: 9px; background: var(--stage-bg); }
+    .logo-stage { position: relative; isolation: isolate; overflow: hidden; aspect-ratio: 5 / 3; border: 1px solid var(--stage-border, var(--line)); border-radius: 9px; background: var(--stage-bg); }
     .logo-stage::after { position: absolute; inset: 0; border: 1px solid rgba(0,0,0,.045); border-radius: inherit; content: ""; pointer-events: none; }
     .logo-stage img { position: relative; z-index: 1; display: block; width: 100%; height: 100%; object-fit: contain; }
     .logo-stage > .logo-parts-layer { position:absolute; inset:0; display:block; width:100%; height:100%; }
@@ -238,7 +238,7 @@
     .icon-button:hover { border-color: var(--brand); background: var(--brand-soft); }
     .dialog-previews { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding-top: 18px; }
     .dialog-previews .preview-tile { padding: 11px; border-radius: 16px; }
-    .dialog-previews .logo-stage { aspect-ratio: 2 / 1; }
+    .dialog-previews .logo-stage { aspect-ratio: 5 / 3.25; }
     .dialog-previews .preview-label { margin-bottom: 9px; font-size: 12px; }
     .dialog-details { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 9px; margin-top: 16px; }
     .color-detail { min-width: 0; display: flex; align-items: center; gap: 9px; padding: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); }
@@ -252,6 +252,13 @@
     .vote-button:hover { border-color: var(--accent); transform: translateY(-1px); }
     .vote-button[aria-pressed="true"] { border-color: var(--success); background: color-mix(in srgb, var(--success) 13%, var(--surface)); }
     .vote-button strong { min-width: 37px; padding: 6px 9px; border-radius: 9px; background: color-mix(in srgb, var(--ink) 8%, transparent); font: 700 13px/1 Arial, sans-serif; direction: ltr; }
+    .dialog-choice-actions { display:grid; grid-template-columns:1fr 1fr; gap:8px; min-width:0; }
+    .favorite-dialog-button { min-height:54px; padding:0 14px; border:1px solid var(--line); border-radius:14px; background:var(--surface-2); color:var(--ink); font-size:12px; font-weight:700; transition:background .2s,border-color .2s,transform .2s; }
+    .favorite-dialog-button:hover { border-color:var(--accent); transform:translateY(-1px); }
+    .favorite-dialog-button[aria-pressed="true"] { border-color:var(--accent); background:var(--accent-soft); color:var(--accent); }
+    .card-favorite { width:34px; height:34px; flex:0 0 34px; display:grid; place-items:center; border:1px solid var(--line); border-radius:11px; background:var(--surface-2); color:var(--muted); font-size:19px; line-height:1; transition:background .18s,border-color .18s,color .18s,transform .18s; }
+    .card-favorite:hover { transform:translateY(-1px); border-color:var(--accent); }
+    .card-favorite.is-favorite { color:var(--accent); background:var(--accent-soft); border-color:color-mix(in srgb,var(--accent) 45%,var(--line)); }
     .dialog-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; }
     .dialog-footer-note { color: var(--muted); font-size: 10px; }
     .download-actions { display: flex; flex-wrap: wrap; gap: 7px; }
@@ -362,6 +369,7 @@
       .contrast-note { font-size: 10px; }
       .vote-button { min-height: 48px; font-size: 12px; }
       .dialog-footer { align-items: flex-start; flex-direction: column; }
+      .dialog-choice-actions { grid-template-columns:1fr; }
       .download-actions { width: 100%; }
       .download-actions .action-button { flex: 1; }
       .footer-inner { align-items: flex-start; flex-direction: column; gap: 5px; }
@@ -376,7 +384,7 @@
       .theme-choice { width: 42px; min-height: 42px; padding: 0; }
       .theme-choice span { display: none; }
       .dialog-previews { grid-template-columns: 1fr; }
-      .dialog-previews .logo-stage { aspect-ratio: 2 / 1; }
+      .dialog-previews .logo-stage { aspect-ratio: 5 / 3.25; }
       .dialog-head { position: sticky; top: -1px; z-index: 3; padding: 10px 0 12px; background: var(--surface); }
       .dialog-inner { padding: 12px; }
       .dialog-actions .icon-button { width: 44px; height: 44px; }
@@ -405,7 +413,7 @@
     @media (max-width: 350px) {
       .container { width: calc(100% - 18px); }
       .preview-pair { grid-template-columns: 1fr; }
-      .preview-pair .logo-stage { aspect-ratio: 2 / 1; }
+      .preview-pair .logo-stage { aspect-ratio: 5 / 2.8; }
       .nav-tab { padding-inline: 6px; }
       .notification-icon { width: 38px; height: 38px; }
       .app-notification { grid-template-columns: 38px minmax(0,1fr) 32px; gap: 8px; padding: 10px; }
@@ -570,6 +578,7 @@
         <nav class="nav" aria-label="أقسام الموقع">
           <button class="nav-tab" type="button" data-view="gallery" aria-selected="true">التصميمات</button>
           <button class="nav-tab" type="button" data-view="ranking" aria-selected="false">الأكثر إعجابًا</button>
+          <button class="nav-tab" type="button" data-view="favorites" aria-selected="false">المفضلة</button>
         </nav>
         <div class="theme-control" role="group" aria-label="اختار مظهر الموقع">
           <button class="theme-choice" type="button" data-theme-choice="system" aria-pressed="true" title="حسب الجهاز" aria-label="استخدم مظهر الجهاز">
@@ -679,13 +688,13 @@
       <div class="dialog-details" id="dialog-details"></div>
       <div class="dialog-bottom">
         <p class="contrast-note" id="contrast-note"></p>
-        <button class="vote-button" id="vote-button" type="button" aria-pressed="false">
-          <span id="vote-label">♡ التصميم ده عجبني</span><strong id="vote-count">0</strong>
-        </button>
-        <button class="action-button danger-action" id="unvote-button" type="button" style="width:100%;margin-top:8px" hidden>✕ إلغاء اختياري لهذا التصميم</button>
+        <div class="dialog-choice-actions">
+          <button class="vote-button" id="vote-button" type="button" aria-pressed="false"><span id="vote-label">♡ التصميم ده عجبني</span><strong id="vote-count">0</strong></button>
+          <button class="favorite-dialog-button" id="favorite-button" type="button" aria-pressed="false"><span id="favorite-label">☆ ضيف للمفضلة</span></button>
+        </div>
       </div>
       <div class="dialog-footer">
-        <span class="dialog-footer-note">تقدر تلغي اختيارك لأي تصميم في أي وقت بزرار «إلغاء اختياري».</span>
+        <span class="dialog-footer-note">تقدر تغيّر اختيارك في أي وقت بالضغط مرة تانية.</span>
         <div class="download-actions">
           <button class="action-button danger-action" id="delete-design" type="button" hidden>حذف تصميمي</button>
           <button class="action-button" id="share-design" type="button">نسخ رابط التصميم</button>
@@ -770,8 +779,9 @@
       {name:'بني داكن',hex:'#4B372E'},{name:'حجري',hex:'#BEBEB2'},{name:'سيج',hex:'#9BAA95'}
     ];
     const BASES=[PALETTE[0],PALETTE[2],PALETTE[4],PALETTE[5]],DARK_BASE=PALETTE[3];
-    const TEAM_PICKS=[1,19,32,57,13,7,44,25,2,76];
     const PAGE_SIZE=10;
+    const LOGO_URL='https://i.postimg.cc/2yTCkhsr/Asset-766.png';
+    const SOURCE_COLORS=[[1,155,149],[255,232,143],[224,230,245]];
     const pad=value=>String(value).padStart(3,'0'); // لا نغير مفاتيح التصويت القديمة
     const displayNumber=value=>String(Number(typeof value==='object'?value.displayIndex:value));
     const COLOR_KEYS=['lightBackground','lightLogo','darkBackground','darkLogo','accent','detail'];
@@ -797,12 +807,60 @@
       brandName:["M 702.28 736.58 C 692.72 736.58 685.32 733.43 680.09 727.13 C 674.85 720.82 672.24 711.47 672.24 699.07 L 672.24 651.03 L 693.43 651.03 L 693.43 700.9 C 693.43 705.98 694.86 710.02 697.7 713.02 C 700.55 716.02 704.41 717.52 709.29 717.52 C 714.17 717.52 718.16 715.94 721.26 712.79 C 724.36 709.64 725.91 705.37 725.91 699.98 L 725.91 651.03 L 747.11 651.03 L 747.11 733.99 L 730.34 733.99 L 730.34 698.76 L 732.01 698.76 C 732.01 707.1 730.95 714.06 728.81 719.65 C 726.68 725.25 723.47 729.47 719.2 732.31 C 714.93 735.16 709.6 736.58 703.19 736.58 L 702.28 736.58 Z","M 1008.64 721.64 C 1012.71 721.64 1016.42 720.72 1019.77 718.89 C 1023.13 717.06 1025.82 714.42 1027.86 710.96 C 1029.89 707.51 1030.91 703.34 1030.91 698.46 L 1030.91 693.12 C 1030.91 688.45 1029.86 684.48 1027.78 681.23 C 1025.7 677.97 1022.98 675.51 1019.62 673.83 C 1016.27 672.15 1012.61 671.31 1008.64 671.31 C 1004.17 671.31 1000.23 672.36 996.82 674.44 C 993.42 676.52 990.75 679.45 988.82 683.21 C 986.89 686.97 985.92 691.44 985.92 696.63 C 985.92 701.71 986.89 706.14 988.82 709.9 C 990.75 713.66 993.42 716.56 996.82 718.59 C 1000.23 720.62 1004.17 721.64 1008.64 721.64 Z M 1002.54 771.81 C 998.58 771.81 994.54 771.66 990.42 771.35 C 986.3 771.05 982.46 770.64 978.91 770.13 L 978.91 752.44 C 982.57 752.85 986.48 753.23 990.65 753.59 C 994.82 753.94 998.73 754.12 1002.39 754.12 C 1009.2 754.12 1014.72 753.3 1018.94 751.68 C 1023.15 750.05 1026.26 747.49 1028.24 743.98 C 1030.22 740.47 1031.21 736.02 1031.21 730.63 L 1031.21 714.32 L 1035.79 703.95 C 1035.48 711.57 1033.9 718.05 1031.06 723.39 C 1028.21 728.73 1024.35 732.8 1019.47 735.59 C 1014.59 738.39 1008.95 739.78 1002.54 739.78 C 996.85 739.78 991.69 738.72 987.06 736.58 C 982.44 734.45 978.47 731.5 975.17 727.74 C 971.86 723.98 969.3 719.56 967.47 714.47 C 965.64 709.39 964.72 703.95 964.72 698.15 L 964.72 694.95 C 964.72 689.16 965.66 683.74 967.55 678.71 C 969.43 673.68 972.09 669.28 975.55 665.52 C 979.01 661.76 983.12 658.86 987.9 656.83 C 992.68 654.79 997.97 653.78 1003.76 653.78 C 1010.57 653.78 1016.5 655.25 1021.53 658.2 C 1026.56 661.15 1030.5 665.42 1033.35 671.01 C 1036.19 676.6 1037.77 683.46 1038.07 691.6 L 1034.41 692.21 L 1034.41 656.37 L 1051.19 656.37 L 1051.19 729.41 C 1051.19 739.48 1049.46 747.61 1046 753.81 C 1042.55 760.01 1037.24 764.57 1030.07 767.46 C 1022.9 770.36 1013.73 771.81 1002.54 771.81 Z","M 1124.54 734.45 L 1124.54 709.89 L 1121.03 709.89 L 1121.03 682.6 C 1121.03 677.82 1119.86 674.26 1117.52 671.92 C 1115.18 669.59 1111.58 668.42 1106.7 668.42 C 1104.16 668.42 1101.11 668.47 1097.55 668.57 C 1093.99 668.67 1090.4 668.8 1086.8 668.95 C 1083.19 669.1 1079.96 669.28 1077.11 669.48 L 1077.11 651.49 C 1079.45 651.29 1082.09 651.08 1085.04 650.88 C 1087.99 650.68 1091.01 650.55 1094.12 650.5 C 1097.22 650.45 1100.14 650.42 1102.88 650.42 C 1111.42 650.42 1118.52 651.54 1124.16 653.78 C 1129.8 656.01 1134.07 659.52 1136.97 664.3 C 1139.86 669.08 1141.31 675.33 1141.31 683.05 L 1141.31 734.45 L 1124.54 734.45 Z M 1097.85 736.58 C 1091.85 736.58 1086.59 735.51 1082.07 733.38 C 1077.54 731.24 1074.04 728.19 1071.55 724.23 C 1069.05 720.26 1067.81 715.49 1067.81 709.89 C 1067.81 703.79 1069.31 698.81 1072.31 694.95 C 1075.31 691.09 1079.53 688.19 1084.97 686.26 C 1090.4 684.33 1096.78 683.36 1104.1 683.36 L 1123.32 683.36 L 1123.32 696.02 L 1103.8 696.02 C 1098.92 696.02 1095.18 697.21 1092.59 699.6 C 1090 701.99 1088.7 705.07 1088.7 708.83 C 1088.7 712.59 1090 715.64 1092.59 717.98 C 1095.18 720.32 1098.92 721.48 1103.8 721.48 C 1106.75 721.48 1109.47 720.95 1111.96 719.88 C 1114.45 718.82 1116.53 716.99 1118.21 714.39 C 1119.89 711.8 1120.83 708.27 1121.03 703.79 L 1126.22 709.74 C 1125.71 715.54 1124.31 720.42 1122.02 724.38 C 1119.74 728.35 1116.58 731.37 1112.57 733.46 C 1108.55 735.54 1103.65 736.58 1097.85 736.58 Z","M 1317.14 653.78 L 1338.34 653.78 L 1338.34 736.58 L 1317.14 736.58 Z","M 924.61 653.78 L 945.81 653.78 L 945.81 736.58 L 924.61 736.58 Z","M 771.51 736.58 L 771.51 653.78 L 788.29 653.78 L 788.29 689.31 L 786.76 689.31 C 786.76 680.97 787.83 673.98 789.96 668.34 C 792.1 662.7 795.27 658.43 799.49 655.53 C 803.71 652.63 808.97 651.18 815.28 651.18 L 816.19 651.18 C 822.6 651.18 827.91 652.63 832.13 655.53 C 836.34 658.43 839.5 662.7 841.58 668.34 C 843.67 673.98 844.71 680.97 844.71 689.31 L 839.37 689.31 C 839.37 680.97 840.46 673.98 842.65 668.34 C 844.84 662.7 848.04 658.43 852.26 655.53 C 856.47 652.63 861.74 651.18 868.04 651.18 L 868.96 651.18 C 875.36 651.18 880.7 652.63 884.97 655.53 C 889.24 658.43 892.46 662.7 894.65 668.34 C 896.84 673.98 897.93 680.97 897.93 689.31 L 897.93 736.58 L 876.73 736.58 L 876.73 687.32 C 876.73 682.14 875.41 678 872.77 674.9 C 870.12 671.8 866.36 670.25 861.48 670.25 C 856.6 670.25 852.69 671.85 849.74 675.05 C 846.79 678.25 845.32 682.55 845.32 687.94 L 845.32 736.58 L 824.12 736.58 L 824.12 687.32 C 824.12 682.14 822.8 678 820.16 674.9 C 817.51 671.8 813.75 670.25 808.87 670.25 C 803.99 670.25 800.08 671.85 797.13 675.05 C 794.18 678.25 792.71 682.55 792.71 687.94 L 792.71 736.58 L 771.51 736.58 Z","M 1164.04 736.58 L 1164.04 653.78 L 1180.81 653.78 L 1180.81 689.31 L 1179.29 689.31 C 1179.29 680.97 1180.35 673.98 1182.49 668.34 C 1184.62 662.7 1187.8 658.43 1192.02 655.53 C 1196.24 652.63 1201.5 651.18 1207.8 651.18 L 1208.72 651.18 C 1215.12 651.18 1220.43 652.63 1224.65 655.53 C 1228.87 658.43 1232.02 662.7 1234.11 668.34 C 1236.19 673.98 1237.23 680.97 1237.23 689.31 L 1231.9 689.31 C 1231.9 680.97 1232.99 673.98 1235.18 668.34 C 1237.36 662.7 1240.56 658.43 1244.78 655.53 C 1249 652.63 1254.26 651.18 1260.57 651.18 L 1261.48 651.18 C 1267.89 651.18 1273.22 652.63 1277.49 655.53 C 1281.76 658.43 1284.99 662.7 1287.18 668.34 C 1289.36 673.98 1290.46 680.97 1290.46 689.31 L 1290.46 736.58 L 1269.26 736.58 L 1269.26 687.32 C 1269.26 682.14 1267.94 678 1265.29 674.9 C 1262.65 671.8 1258.89 670.25 1254.01 670.25 C 1249.13 670.25 1245.21 671.85 1242.27 675.05 C 1239.32 678.25 1237.84 682.55 1237.84 687.94 L 1237.84 736.58 L 1216.65 736.58 L 1216.65 687.32 C 1216.65 682.14 1215.33 678 1212.68 674.9 C 1210.04 671.8 1206.28 670.25 1201.4 670.25 C 1196.52 670.25 1192.6 671.85 1189.66 675.05 C 1186.71 678.25 1185.23 682.55 1185.23 687.94 L 1185.23 736.58 L 1164.04 736.58 Z","M 611.85 717.52 L 611.85 736.58 L 659.88 736.58 L 659.88 717.52 Z M 593.24 625.26 L 593.24 736.58 L 614.9 736.58 L 614.9 625.26 Z"]
     };
     const HEX_PATTERN=/^#[0-9A-Fa-f]{6}$/;
-    const state={view:'gallery',page:1,active:null,shown:[],community:[],votes:Object.create(null),mine:new Set(),visitorUid:'',toastTimer:null,voteBusy:false,publishBusy:false,deleteBusy:false};
+    const state={view:'gallery',page:1,active:null,shown:[],community:[],votes:Object.create(null),mine:new Set(),favorites:new Set(),visitorUid:'',remotePreferences:null,preferencesTouched:false,toastTimer:null,voteBusy:false,favoriteBusy:false,publishBusy:false,deleteBusy:false};
+
+    const PENDING_PREFS_KEY='lumi-pending-preferences-v2';
+    let preferenceSaveTimer=null;
+    function readPendingPreferences(){try{const value=JSON.parse(localStorage.getItem(PENDING_PREFS_KEY)||'{}');return value&&typeof value==='object'&&!Array.isArray(value)?value:{}}catch(_){return{}}}
+    function storePendingPreferences(patch){const pending=readPendingPreferences();Object.assign(pending,patch||{});try{localStorage.setItem(PENDING_PREFS_KEY,JSON.stringify(pending))}catch(_){}return pending}
+    function clearPendingPreferences(saved){const pending=readPendingPreferences();Object.entries(saved||{}).forEach(([key,value])=>{if(JSON.stringify(pending[key])===JSON.stringify(value))delete pending[key]});try{if(Object.keys(pending).length)localStorage.setItem(PENDING_PREFS_KEY,JSON.stringify(pending));else localStorage.removeItem(PENDING_PREFS_KEY)}catch(_){}}
+    let preferenceSaveWarned=false;
+    async function savePreferencePatch(patch){
+      const pending=storePendingPreferences(patch);
+      try{
+        await firebaseCall('savePreferences',pending);
+        clearPendingPreferences(pending);
+        preferenceSaveWarned=false;
+        return true;
+      }catch(error){
+        console.warn('Preferences are queued until Firebase is available:',error);
+        if(!preferenceSaveWarned){
+          preferenceSaveWarned=true;
+          toast(String(error?.message||'التغييرات اتحفظت مؤقتًا على الجهاز، لكن Firebase لم يؤكد حفظها بعد.'),'warning','الحفظ السحابي متوقف مؤقتًا');
+        }
+        return false;
+      }
+    }
+    function preferenceSnapshot(){
+      return {view:state.view,themeMode,filters:{search:$('#search')?.value||'',base:$('#base-filter')?.value||'all',accent:$('#accent-filter')?.value||'all',sort:$('#sort-filter')?.value||'recommended',mineOnly:!!$('#mine-filter')?.checked,page:state.page}};
+    }
+    function persistPreferencesSoon(extra={}){
+      clearTimeout(preferenceSaveTimer);
+      preferenceSaveTimer=setTimeout(()=>{savePreferencePatch({...preferenceSnapshot(),...extra})},450);
+    }
+    let editorSaveTimer=null;
+    function persistEditorDraftSoon(){
+      clearTimeout(editorSaveTimer);
+      editorSaveTimer=setTimeout(()=>{
+        savePreferencePatch({editorDraft:{light:{...editorState.draft.light},dark:{...editorState.draft.dark}},editorName:$('#custom-design-name').value.trim().slice(0,28),editorMode:editorState.mode,selectedPart:editorState.selected});
+      },650);
+    }
+    function persistBeforeLeaving(){
+      clearTimeout(preferenceSaveTimer);clearTimeout(editorSaveTimer);
+      savePreferencePatch(preferenceSnapshot());
+      if(editorState.draft){
+        savePreferencePatch({editorDraft:{light:{...editorState.draft.light},dark:{...editorState.draft.dark}},editorName:$('#custom-design-name').value.trim().slice(0,28),editorMode:editorState.mode,selectedPart:editorState.selected});
+      }
+    }
+    // Pending patches are written to localStorage before the async Firebase call,
+    // so a fast tab close does not lose the last change.
+    window.addEventListener('pagehide',persistBeforeLeaving);
+    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')persistBeforeLeaving()});
 
     /* المظهر: حسب الجهاز تلقائيًا، أو اختيار يدوي محفوظ. */
     const themeMedia=window.matchMedia('(prefers-color-scheme: dark)'),THEME_KEY='lumi-theme-v2';
     const themeNames={system:'حسب الجهاز',light:'الوضع الفاتح',dark:'الوضع الداكن'};
-    let themeMode='system';
+    let themeMode='system';state.themeTouched=false;
     try{themeMode=localStorage.getItem(THEME_KEY)||'system'}catch(_){themeMode='system'}
     if(!['system','light','dark'].includes(themeMode))themeMode='system';
     function applyTheme(){
@@ -815,8 +873,8 @@
       });
     }
     document.querySelectorAll('[data-theme-choice]').forEach(button=>button.addEventListener('click',()=>{
-      themeMode=button.dataset.themeChoice;try{localStorage.setItem(THEME_KEY,themeMode)}catch(_){}
-      applyTheme();track('theme_change',{mode:themeMode});toast(themeMode==='system'?'الموقع هيتبع مظهر جهازك.':`اتفعّل ${themeNames[themeMode]}.`,'info');
+      themeMode=button.dataset.themeChoice;state.themeTouched=true;try{localStorage.setItem(THEME_KEY,themeMode)}catch(_){}
+      applyTheme();persistPreferencesSoon();track('theme_change',{mode:themeMode});toast(themeMode==='system'?'الموقع هيتبع مظهر جهازك.':`اتفعّل ${themeNames[themeMode]}.`,'info');
     }));
     if(themeMedia.addEventListener)themeMedia.addEventListener('change',applyTheme);else if(themeMedia.addListener)themeMedia.addListener(applyTheme);
     applyTheme();
@@ -826,12 +884,35 @@
     function luminance(hex){const rgb=hexToRgb(hex).map(value=>value/255).map(value=>value<=.04045?value/12.92:Math.pow((value+.055)/1.055,2.4));return .2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2]}
     function contrastRatio(a,b){const x=luminance(a),y=luminance(b);return(Math.max(x,y)+.05)/(Math.min(x,y)+.05)}
     function mixHex(a,b,amount){const x=hexToRgb(a),y=hexToRgb(b);return '#'+x.map((v,i)=>Math.round(v*(1-amount)+y[i]*amount).toString(16).padStart(2,'0')).join('').toUpperCase()}
+    function invert3(matrix){
+      const [[a,b,c],[d,e,f],[g,h,i]]=matrix;
+      const A=e*i-f*h,B=c*h-b*i,C=b*f-c*e,D=f*g-d*i,E=a*i-c*g,F=c*d-a*f,G=d*h-e*g,H=b*g-a*h,I=a*e-b*d;
+      const determinant=a*A+b*D+c*G;
+      if(Math.abs(determinant)<1e-10)throw new Error('تعذر تجهيز ألوان الشعار.');
+      return [[A,B,C],[D,E,F],[G,H,I]].map(row=>row.map(value=>value/determinant));
+    }
+    const multiply3=(a,b)=>a.map(row=>b[0].map((_,column)=>row.reduce((sum,value,index)=>sum+value*b[index][column],0)));
+    function makeColorMatrix(theme){
+      const source=[0,1,2].map(channel=>SOURCE_COLORS.map(color=>color[channel]/255));
+      const targets=[theme.background,theme.primary,theme.accent].map(hexToRgb);
+      const target=[0,1,2].map(channel=>targets.map(color=>color[channel]/255));
+      const matrix=multiply3(target,invert3(source)),values=[];
+      matrix.forEach(row=>values.push(...row,0,0));values.push(0,0,0,1,0);
+      return values.map(value=>(Math.abs(value)<1e-8?0:value).toFixed(6)).join(' ');
+    }
+    function legacyFilterId(pair,mode){return `legacy-${pair.id}-${mode}`}
+    function installLegacyFilters(){
+      const filters=PAIRS.map(pair=>['light','dark'].map(mode=>`<filter id="${legacyFilterId(pair,mode)}" color-interpolation-filters="sRGB" x="-3%" y="-3%" width="106%" height="106%"><feColorMatrix type="matrix" values="${makeColorMatrix({background:pair[mode].background,primary:pair[mode].primary,accent:pair[mode].accent})}"/></filter>`).join('')).join('');
+      $('#svg-filters').innerHTML=filters;
+    }
     function backgroundCss(pair,mode){const base=pair[mode].background;if(pair.style===1)return`linear-gradient(135deg,${base},${mixHex(base,pair.detail.hex,mode==='light'?.16:.24)})`;if(pair.style===2)return`radial-gradient(ellipse at 18% 12%,${mixHex(base,pair.accent.hex,mode==='light'?.15:.25)},${base} 68%)`;return base}
     function paletteName(hex){return PALETTE.find(c=>c.hex.toUpperCase()===hex.toUpperCase())?.name||'لون مخصص'}
     function safeHex(value,fallback){return typeof value==='string'&&HEX_PATTERN.test(value)?value.toUpperCase():fallback}
     function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]))}
     function slugToken(pair){return pair.kind==='community'?`community-${pair.firestoreId}`:`design-${displayNumber(pair)}`}
     function voteKey(pair){return pair.kind==='community'?`community:${pair.firestoreId}`:pad(pair.id)}
+    function favoriteKey(pair){return pair.kind==='community'?`community-${pair.firestoreId}`:`preset-${pad(pair.id)}`}
+    function isFavorite(pair){return state.favorites.has(favoriteKey(pair))}
     function designVotes(pair){return Math.max(0,Number(state.votes[voteKey(pair)])||0)}
     function hasVoted(pair){return state.mine.has(voteKey(pair))}
     function displayTitle(pair){return pair.kind==='community'?(pair.name||'تصميم من المجتمع'):`التصميم ${displayNumber(pair)}`}
@@ -843,16 +924,27 @@
       const id=Number(value.replace(/^design-/,''));return PAIRS.find(pair=>pair.displayIndex===id);
     }
 
-    /* 10 تصميمات ثابتة، مع إبقاء أرقامها القديمة كمفاتيح Firebase. */
+    /* التصميمات العشرة الأصلية كما كانت في النسخة المعتمدة. نحافظ على رقم كل تصميم القديم داخل Firebase. */
+    const ORIGINAL_TEN=[
+      {id:1,base:0,accent:1,detail:2,style:0},
+      {id:19,base:0,accent:5,detail:1,style:0},
+      {id:32,base:2,accent:1,detail:0,style:0},
+      {id:57,base:4,accent:1,detail:0,style:0},
+      {id:13,base:0,accent:4,detail:1,style:0},
+      {id:7,base:0,accent:2,detail:1,style:0},
+      {id:44,base:2,accent:5,detail:0,style:0},
+      {id:25,base:0,accent:1,detail:2,style:2},
+      {id:2,base:0,accent:1,detail:2,style:1},
+      {id:76,base:5,accent:0,detail:1,style:0}
+    ];
     function buildPairs(){
-      const pairs=[];
-      BASES.forEach((lightColor,baseIndex)=>{
-        const choices=PALETTE.filter(color=>color.hex!==lightColor.hex&&color.hex!==DARK_BASE.hex),combinations=[];
-        choices.forEach(accent=>choices.forEach(detail=>{if(accent.hex!==detail.hex)combinations.push({accent,detail})}));
-        const add=(choice,style)=>{const id=pairs.length+1,light={background:lightColor.hex,primary:DARK_BASE.hex,accent:choice.accent.hex},dark={background:DARK_BASE.hex,primary:lightColor.hex,accent:choice.accent.hex};pairs.push({id,base:lightColor,accent:choice.accent,detail:choice.detail,style,light,dark,contrast:contrastRatio(light.background,light.primary),recommendation:999+id,baseIndex})};
-        combinations.forEach(choice=>[0,1].forEach(style=>add(choice,style)));add(combinations[0],2);
+      return ORIGINAL_TEN.map((item,index)=>{
+        const base=PALETTE[item.base],accent=PALETTE[item.accent],detail=PALETTE[item.detail];
+        const light={background:base.hex,primary:DARK_BASE.hex,accent:accent.hex};
+        const dark={background:DARK_BASE.hex,primary:base.hex,accent:accent.hex};
+        return {id:item.id,displayIndex:index+1,base,accent,detail,style:item.style,light,dark,
+          contrast:contrastRatio(light.background,light.primary),recommendation:index,baseIndex:item.base};
       });
-      return TEAM_PICKS.map((id,index)=>({...pairs[id-1],displayIndex:index+1,recommendation:index}));
     }
     const PAIRS=buildPairs();
     function normalizeLogoParts(rawParts,legacy){
@@ -863,19 +955,10 @@
         result[mode]={};LOGO_PART_KEYS.forEach(key=>result[mode][key]=safeHex(source[key],fallback[key]||fallback.background));
       });return result;
     }
-    /* التصميمات العشرة الأصلية: نفس معادلة إعادة التلوين الأصلية (خلفية/أساسي/إضافي) مطبّقة على ألوان كل جزء. */
-    const SRC_COLORS=[[1,155,149],[255,232,143],[224,230,245]];
-    function inv3(m){const[[a,b,c],[d,e,f],[g,i,j]]=m,A=e*j-f*i,B=c*i-b*j,C=b*f-c*e,D=f*g-d*j,E=a*j-c*g,F=c*d-a*f,G=d*i-e*g,H=b*g-a*i,I=a*e-b*d,det=a*A+b*D+c*G;return[[A,B,C],[D,E,F],[G,H,I]].map(r=>r.map(v=>v/det))}
-    function recolor(theme,hex){
-      const S=[0,1,2].map(ch=>SRC_COLORS.map(c=>c[ch]/255)),I=inv3(S),T=[0,1,2].map(ch=>[theme.background,theme.primary,theme.accent].map(x=>hexToRgb(x)[ch]/255));
-      const M=T.map(r=>[0,1,2].map(j=>r.reduce((s,v,k)=>s+v*I[k][j],0))),v=hexToRgb(hex).map(x=>x/255);
-      return '#'+M.map(r=>Math.round(Math.max(0,Math.min(1,r[0]*v[0]+r[1]*v[1]+r[2]*v[2]))*255).toString(16).padStart(2,'0')).join('').toUpperCase();
-    }
     function partsFor(pair,mode){
       if(pair.parts&&pair.parts[mode])return pair.parts[mode];
-      pair._parts=pair._parts||{};
-      if(!pair._parts[mode]){const out={};LOGO_PART_KEYS.forEach(key=>{out[key]=recolor(pair[mode],key==='background'?'#019B95':DEFAULT_PARTS.light[key])});pair._parts[mode]=out}
-      return pair._parts[mode];
+      const primary=pair[mode].primary,accent=pair[mode].accent||pair.accent.hex;
+      return {background:pair[mode].background,bird1:accent,bird2:accent,bird3:accent,bird4:accent,bird5:primary,bird6:accent,bird7:accent,brandName:primary,letterProtrusions:accent};
     }
     function createCommunityPair(id,data){
       const raw=data&&data.colors||{},colors={};COLOR_KEYS.forEach(key=>colors[key]=safeHex(raw[key],DEFAULT_CUSTOM[key]));
@@ -901,10 +984,24 @@
 
     /* Firebase bridge: يحتفظ بالأحداث لحد ما الاتصال يجهز. */
     window.LumiFB=window.LumiFB||{};window.LumiFB._pending=window.LumiFB._pending||[];
+    window.LumiFB._bridgeReady=false;
+    let resolveFirebaseBridge;
+    window.LumiFB._bridgePromise=new Promise(resolve=>{resolveFirebaseBridge=resolve});
+    window.LumiFB._markBridgeReady=()=>{if(window.LumiFB._bridgeReady)return;window.LumiFB._bridgeReady=true;resolveFirebaseBridge(true)};
+    window.LumiFB._markBridgeFailed=()=>{if(window.LumiFB._bridgeReady)return;resolveFirebaseBridge(false)};
+    window.LumiFB.call=async(method,...args)=>{
+      if(!window.LumiFB._bridgeReady){
+        const ready=await Promise.race([window.LumiFB._bridgePromise,new Promise(resolve=>setTimeout(()=>resolve(false),12000))]);
+        if(!ready)throw new Error('لسه بنوصل بفايربيس. جرّب تاني بعد لحظات أو اضغط «اختبر الحفظ».');
+      }
+      const fn=window.LumiFB[method];if(typeof fn!=='function')throw new Error('العملية دي مش متاحة حاليًا. حدّث الصفحة وجرب تاني.');
+      return fn(...args);
+    };
     window.LumiFB.track=(event,details={})=>{const queue=window.LumiFB._pending;queue.push({event,details,at:Date.now()});if(queue.length>120)queue.splice(0,queue.length-120);try{localStorage.setItem('lumi-event-queue-v1',JSON.stringify(queue))}catch(_){}};
     window.LumiFB.vote=async()=>{throw new Error('لسه بنجهّز حفظ الاختيارات. جرّب كمان لحظات.')};
     window.LumiFB.publishDesign=async()=>{throw new Error('لسه بنجهّز نشر التصميمات. جرّب كمان لحظات.')};
     window.LumiFB.retry=()=>location.reload();$('#firebase-retry').addEventListener('click',()=>window.LumiFB.retry());
+    function firebaseCall(method,...args){return window.LumiFB.call(method,...args)}
     function track(event,details={}){try{window.LumiFB.track(event,details)}catch(_){}}
 
     /* إشعارات مدمجة مع ألوان الموقع. */
@@ -946,11 +1043,19 @@
     function logoPartOverlay(pair,mode,interactive=false,selectedPart=''){
       return `<svg class="logo-parts-layer ${interactive?'is-interactive':''}" viewBox="${LOGO_VECTOR.viewBox}" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" role="${interactive?'group':'img'}" aria-label="${interactive?'اختيار أجزاء الشعار':'شعار LUMIGAMI الأصلي'}">${vectorArtworkMarkup(pair,mode,interactive,selectedPart)}</svg>`;
     }
-    function previewTile(pair,mode,large=false){const label=mode==='light'?'فاتح':'داكن',parts=partsFor(pair,mode);return`<section class="preview-tile"><div class="preview-label"><span>${label}</span><code>${parts.background}</code></div><div class="logo-stage" style="--stage-bg:${backgroundCss(pair,mode)};--stage-border:${pair.detail.hex};background:${backgroundCss(pair,mode)}">${logoPartOverlay(pair,mode,false)}</div></section>`}
+    function previewTile(pair,mode,large=false){
+      const label=mode==='light'?'فاتح':'داكن',parts=pair.kind==='community'?partsFor(pair,mode):null;
+      const artwork=pair.kind==='community'
+        ?logoPartOverlay(pair,mode,false)
+        :`<img src="${LOGO_URL}" alt="شعار LUMIGAMI — ${label}" ${large?'':'loading="lazy"'} style="display:block;width:100%;height:100%;object-fit:contain;filter:url(#${legacyFilterId(pair,mode)})">`;
+      const background=backgroundCss(pair,mode),backgroundHex=pair.kind==='community'?parts.background:pair[mode].background;
+      return `<section class="preview-tile"><div class="preview-label"><span>${label}</span><code>${backgroundHex}</code></div><div class="logo-stage" style="--stage-bg:${background};--stage-border:${pair.detail.hex};background:${background}">${artwork}</div></section>`;
+    }
     function designCard(pair,rank=0,index=0){
       const selected=hasVoted(pair),votes=designVotes(pair),label=pair.kind==='community'?(pair.name||'تصميم من المجتمع'):`التصميم ${displayNumber(pair)}`,token=slugToken(pair);
+      const favorite=isFavorite(pair);
       return`<article class="design-card" style="--card-index:${index}" data-open="${escapeHtml(token)}" tabindex="0" role="button" aria-label="افتح ${escapeHtml(label)}">
-        <div class="card-head"><span class="card-number">${pair.kind==='community'?'✦':displayNumber(pair)}</span><div class="card-info"><b>${escapeHtml(label)}</b><small>${escapeHtml(displaySubtitle(pair))}</small></div>${pair.kind==='community'?'<span class="community-label">من المجتمع</span>':''}${rank?`<span class="rank-label">#${rank}</span>`:''}</div>
+        <div class="card-head"><span class="card-number">${pair.kind==='community'?'✦':displayNumber(pair)}</span><div class="card-info"><b>${escapeHtml(label)}</b><small>${escapeHtml(displaySubtitle(pair))}</small></div>${pair.kind==='community'?'<span class="community-label">من المجتمع</span>':''}${rank?`<span class="rank-label">#${rank}</span>`:''}<button class="card-favorite ${favorite?'is-favorite':''}" type="button" data-favorite-design="${escapeHtml(token)}" aria-pressed="${favorite}" aria-label="${favorite?'إزالة من المفضلة':'إضافة للمفضلة'}" title="${favorite?'إزالة من المفضلة':'إضافة للمفضلة'}">${favorite?'♥':'♡'}</button></div>
         <div class="preview-pair">${previewTile(pair,'light')}${previewTile(pair,'dark')}</div>
         <div class="card-footer"><span class="like-count ${selected?'is-liked':''}">${selected?'♥':'♡'} <b>${votes.toLocaleString('en-US')}</b> إعجاب</span><span class="open-hint">اضغط للمعاينة ←</span></div>
       </article>`;
@@ -958,6 +1063,7 @@
     function filteredPairs(){
       const query=$('#search').value.trim().toLowerCase(),base=$('#base-filter').value,accent=$('#accent-filter').value,sort=$('#sort-filter').value,mineOnly=$('#mine-filter').checked;
       let list=allDesigns().filter(pair=>{
+        if(state.view==='favorites'&&!isFavorite(pair))return false;
         const haystack=[pair.kind==='community'?pair.name:displayNumber(pair),pair.base.name,pair.accent.name,pair.detail.name,pair.light.background,pair.light.primary,pair.dark.background,pair.dark.primary,pair.accent.hex,pair.detail.hex].join(' ').toLowerCase();
         return(!query||haystack.includes(query))&&(base==='all'||pair.light.background===base)&&(accent==='all'||pair.accent.hex===accent)&&(!mineOnly||hasVoted(pair));
       });
@@ -977,18 +1083,56 @@
       $('#result-count').textContent=state.shown.length?`${state.shown.length} تصميم · عرض ${start+1}–${Math.min(start+PAGE_SIZE,state.shown.length)}`:'مفيش نتائج';$('#heading-count').textContent=`${state.shown.length} تصميم`;
       renderPagination(totalPages);updateSummary();if(state.view==='ranking'){renderPodium();$('#ranking-empty').hidden=allDesigns().some(pair=>votesOf(pair)>0)}
     }
-    function setView(view){if(!['gallery','ranking'].includes(view)||view===state.view)return;state.view=view;state.page=1;document.querySelectorAll('.nav-tab').forEach(tab=>tab.setAttribute('aria-selected',String(tab.dataset.view===view)));const ranking=view==='ranking';$('#hero').hidden=ranking;$('#palette-section').hidden=ranking;$('#toolbar').hidden=ranking;$('#filter-row').hidden=ranking;$('#ranking-summary').hidden=!ranking;$('#podium').hidden=!ranking;$('#ranking-empty').hidden=!ranking;$('#section-title').textContent=ranking?'الناس اختارت إيه؟':'شوف التصميمات';$('#section-subtitle').textContent=ranking?'الترتيب بيتحدّث مع كل تصويت جديد.':'اضغط على البطاقة نفسها عشان تفتح المعاينة أو اعمل تصميمك.';track('view_change',{view});render(true);window.scrollTo({top:0,behavior:'smooth'})}
+    function setView(view,options={}){
+      if(!['gallery','ranking','favorites'].includes(view)||view===state.view)return;
+      state.view=view;state.page=1;if(options.persist!==false)state.preferencesTouched=true;
+      document.querySelectorAll('.nav-tab').forEach(tab=>tab.setAttribute('aria-selected',String(tab.dataset.view===view)));
+      const ranking=view==='ranking',favorites=view==='favorites';
+      $('#hero').hidden=ranking||favorites;$('#palette-section').hidden=ranking||favorites;
+      $('#toolbar').hidden=ranking;$('#filter-row').hidden=ranking;
+      $('#ranking-summary').hidden=!ranking;$('#podium').hidden=!ranking;$('#ranking-empty').hidden=!ranking;
+      $('#open-customizer').hidden=favorites;
+      $('#section-title').textContent=ranking?'الناس اختارت إيه؟':favorites?'التصميمات اللي حفظتها':'شوف التصميمات';
+      $('#section-subtitle').textContent=ranking?'الترتيب بيتحدّث مع كل تصويت جديد.':favorites?'كل التصميمات اللي ضفتها للمفضلة هتلاقيها هنا، وتقدر تشيلها في أي وقت.':'اضغط على البطاقة نفسها عشان تفتح المعاينة أو اعمل تصميمك.';
+      if(options.log!==false)track('view_change',{view});if(options.persist!==false)persistPreferencesSoon();render(true);window.scrollTo({top:0,behavior:'smooth'});
+    }
 
     /* نافذة المعاينة */
     const dialog=$('#preview-dialog');
-    function updateVoteButton(){if(!state.active)return;const selected=hasVoted(state.active);$('#vote-button').setAttribute('aria-pressed',String(selected));$('#vote-label').textContent=selected?'♥ اخترت التصميم ده':'♡ التصميم ده عجبني';$('#vote-count').textContent=designVotes(state.active).toLocaleString('en-US');$('#unvote-button').hidden=!selected}
+    function updateVoteButton(){if(!state.active)return;const selected=hasVoted(state.active);$('#vote-button').setAttribute('aria-pressed',String(selected));$('#vote-label').textContent=selected?'♥ اخترت التصميم ده':'♡ التصميم ده عجبني';$('#vote-count').textContent=designVotes(state.active).toLocaleString('en-US')}
+    function updateFavoriteButton(){
+      if(!state.active)return;
+      const selected=isFavorite(state.active),button=$('#favorite-button');
+      button.setAttribute('aria-pressed',String(selected));
+      $('#favorite-label').textContent=selected?'♥ محفوظ في المفضلة — اضغط للإزالة':'☆ ضيف للمفضلة';
+    }
+    async function toggleFavorite(pair=state.active,source='preview'){
+      if(!pair||state.favoriteBusy)return;
+      const key=favoriteKey(pair),was=state.favorites.has(key);
+      state.favoriteBusy=true;
+      if(was)state.favorites.delete(key);else state.favorites.add(key);
+      render();updateFavoriteButton();
+      const buttons=[...document.querySelectorAll('#favorite-button,[data-favorite-design]')];buttons.forEach(button=>button.disabled=true);
+      try{
+        const result=await firebaseCall('setFavorite',pair,!was);
+        if(result.favorited)state.favorites.add(key);else state.favorites.delete(key);
+        toast(result.favorited?'اتضاف للمفضلة واتحفظ على حساب الزائر.':'اتشال من المفضلة واتحفظ التغيير.','success');
+        track('favorite_change',{design:key,favorited:result.favorited,source});
+      }catch(error){
+        if(was)state.favorites.add(key);else state.favorites.delete(key);
+        toast(String(error?.message||'مقدرناش نحفظ التفضيل. جرّب تاني.'),'error','التفضيل لم يُحفظ');
+      }finally{
+        state.favoriteBusy=false;render();updateFavoriteButton();
+        buttons.forEach(button=>button.disabled=false);
+      }
+    }
     function colorDetail(label,hex){return`<div class="color-detail"><i style="background:${hex}"></i><span><b>${label}</b><code>${hex}</code></span></div>`}
     function openDesign(token,updateHash=true){
       const pair=typeof token==='object'?token:findDesign(token);if(!pair)return;state.active=pair;
       $('#dialog-title').textContent=displayTitle(pair);$('#dialog-subtitle').textContent=pair.kind==='community'?'تصميم جديد من المجتمع — شوفه فاتح وداكن.':`${pair.base.name} مع ${pair.accent.name} — شوفه فاتح وداكن.`;
       $('#dialog-previews').innerHTML=previewTile(pair,'light',true)+previewTile(pair,'dark',true);
       $('#dialog-details').innerHTML=[colorDetail('خلفية فاتحة',pair.light.background),colorDetail('لون الشعار الفاتح',pair.light.primary),colorDetail('خلفية داكنة',pair.dark.background),colorDetail('لون الشعار الداكن',pair.dark.primary),colorDetail('لون إضافي',pair.accent.hex),colorDetail('لون مساعد',pair.detail.hex)].join('');
-      $('#contrast-note').textContent=`أقل تباين للشعار في النسختين ${pair.contrast.toFixed(2)}:1. تقدر تصوّت أو تنزّل التصميم.`;$('#delete-design').hidden=!(pair.kind==='community'&&pair.createdBy&&pair.createdBy===state.visitorUid);updateVoteButton();if(!dialog.open)dialog.showModal();
+      $('#contrast-note').textContent=`أقل تباين للشعار في النسختين ${pair.contrast.toFixed(2)}:1. تقدر تصوّت أو تحفظه في المفضلة أو تنزّله.`;$('#delete-design').hidden=!(pair.kind==='community'&&pair.createdBy&&pair.createdBy===state.visitorUid);updateVoteButton();updateFavoriteButton();if(!dialog.open)dialog.showModal();
       if(updateHash)history.replaceState(null,'',`${location.pathname}${location.search}#${slugToken(pair)}`);track('preview_open',{design:pair.kind==='community'?pair.firestoreId:pair.id,kind:pair.kind||'preset'});
     }
     function closeDesign(){if(dialog.open)dialog.close()}
@@ -997,21 +1141,48 @@
 
     /* التصويت: نفس المعرّفات القديمة للتصميمات العشرة، ومجموعة منفصلة لتصميمات المجتمع. */
     async function submitVote(){
-      if(!state.active||state.voteBusy)return;const pair=state.active,key=voteKey(pair),wasSelected=state.mine.has(key),oldCount=designVotes(pair);state.voteBusy=true;$('#vote-button').disabled=true;$('#unvote-button').disabled=true;
+      if(!state.active||state.voteBusy)return;const pair=state.active,key=voteKey(pair),wasSelected=state.mine.has(key),oldCount=designVotes(pair);state.voteBusy=true;$('#vote-button').disabled=true;
       if(wasSelected)state.mine.delete(key);else state.mine.add(key);state.votes[key]=Math.max(0,oldCount+(wasSelected?-1:1));render();updateVoteButton();
-      try{const result=await window.LumiFB.vote(pair);state.votes[key]=Math.max(0,Number(result.votes)||0);if(result.liked)state.mine.add(key);else state.mine.delete(key);toast(result.liked?'اتسجل إعجابك، شكرًا!':'شيلنا اختيارك.');}
+      try{const result=await firebaseCall('vote',pair);state.votes[key]=Math.max(0,Number(result.votes)||0);if(result.liked)state.mine.add(key);else state.mine.delete(key);toast(result.liked?'اتسجل إعجابك، شكرًا!':'شيلنا اختيارك.');}
       catch(error){if(wasSelected)state.mine.add(key);else state.mine.delete(key);state.votes[key]=oldCount;const message=String(error&&error.message||'');toast(/[\u0600-\u06FF]/.test(message)?message:'مقدرناش نحفظ اختيارك دلوقتي. جرّب تاني.','error')}
-      finally{state.voteBusy=false;$('#vote-button').disabled=false;$('#unvote-button').disabled=false;render();updateVoteButton()}
+      finally{state.voteBusy=false;$('#vote-button').disabled=false;render();updateVoteButton()}
     }
     window.LumiApp={
       notify(message,type='info',title=''){toast(message,type,title)},
       setVisitorUid(uid){state.visitorUid=String(uid||'');if(state.active)$('#delete-design').hidden=!(state.active.kind==='community'&&state.active.createdBy&&state.active.createdBy===state.visitorUid)},
       applyVoteData(stats,selected){if(stats!==undefined){Object.keys(state.votes).filter(key=>/^\d{3}$/.test(key)).forEach(key=>delete state.votes[key]);Object.assign(state.votes,stats||{})}if(selected!==undefined){state.mine=new Set([...state.mine].filter(key=>key.startsWith('community:')));new Set(selected||[]).forEach(key=>state.mine.add(String(key)))}render();if(state.active)updateVoteButton()},
-      applyCommunityDesigns(items){const previous=new Map(state.community.map(pair=>[pair.firestoreId,pair]));state.community=(items||[]).map(item=>createCommunityPair(item.id,item.data||{}));renderPalette();render(true);if(state.active&&state.active.kind==='community'){const current=state.community.find(pair=>pair.firestoreId===state.active.firestoreId);if(current){state.active=current;if(dialog.open)openDesign(current,false)}else closeDesign()}
+      applyCommunityDesigns(items){const toMillis=value=>value&&typeof value.toMillis==='function'?value.toMillis():value instanceof Date?value.getTime():Number(value&&value.seconds||0)*1000;state.community=(items||[]).map(item=>createCommunityPair(item.id,item.data||{})).sort((a,b)=>toMillis(b.createdAt)-toMillis(a.createdAt));renderPalette();render(true);if(state.active&&state.active.kind==='community'){const current=state.community.find(pair=>pair.firestoreId===state.active.firestoreId);if(current){state.active=current;if(dialog.open)openDesign(current,false)}else closeDesign()}
         const match=location.hash.match(/^#community-([A-Za-z0-9_-]{1,100})$/);if(match&&!dialog.open){const pair=state.community.find(item=>item.firestoreId===match[1]);if(pair)openDesign(pair,false)}},
       applyCommunityVoteStats(stats){Object.keys(state.votes).filter(key=>key.startsWith('community:')).forEach(key=>delete state.votes[key]);Object.entries(stats||{}).forEach(([id,count])=>state.votes[`community:${id}`]=Math.max(0,Number(count)||0));render();if(state.active)updateVoteButton()},
       applyCommunityMine(selected){state.mine=new Set([...state.mine].filter(key=>!key.startsWith('community:')));new Set(selected||[]).forEach(key=>state.mine.add(String(key)));render();if(state.active)updateVoteButton()},
-      addCommunityDesign(item){const pair=createCommunityPair(item.id,item.data||item);state.community=[pair,...state.community.filter(old=>old.firestoreId!==pair.firestoreId)];renderPalette();render(true);return pair}
+      applyFavorites(keys){state.favorites=new Set(keys||[]);render();if(state.active)updateFavoriteButton()},
+      applyPreferences(prefs){
+        state.remotePreferences=prefs||{};
+        if(state.preferencesTouched)return;
+        if(prefs&&prefs.themeMode&&['system','light','dark'].includes(prefs.themeMode)&&!state.themeTouched){themeMode=prefs.themeMode;try{localStorage.setItem(THEME_KEY,themeMode)}catch(_){}applyTheme()}
+        const filters=prefs&&prefs.filters;
+        if(filters&&typeof filters==='object'){
+          if(typeof filters.search==='string')$('#search').value=filters.search.slice(0,100);
+          if([...$('#base-filter').options].some(option=>option.value===filters.base))$('#base-filter').value=filters.base;
+          if([...$('#accent-filter').options].some(option=>option.value===filters.accent))$('#accent-filter').value=filters.accent;
+          if(['recommended','votes','contrast','contrast-low'].includes(filters.sort))$('#sort-filter').value=filters.sort;
+          if(typeof filters.mineOnly==='boolean')$('#mine-filter').checked=filters.mineOnly;
+          if(Number.isInteger(filters.page)&&filters.page>0)state.page=filters.page;
+        }
+        if(['gallery','ranking','favorites'].includes(prefs?.view)&&prefs.view!==state.view)setView(prefs.view,{persist:false,log:false});
+        render(true);
+      },
+      addCommunityDesign(item){const pair=createCommunityPair(item.id,item.data||item);state.community=[pair,...state.community.filter(old=>old.firestoreId!==pair.firestoreId)];renderPalette();render(true);return pair},
+      async migrateLegacyFavorites(ids){
+        const wanted=new Set((Array.isArray(ids)?ids:[]).map(Number).filter(Number.isFinite));
+        const matches=PAIRS.filter(pair=>wanted.has(pair.id));
+        for(const pair of matches){
+          await firebaseCall('setFavorite',pair,true);
+          state.favorites.add(favoriteKey(pair));
+        }
+        render();
+        return matches.length;
+      }
     };
 
     /* تحميل الشعار وتصدير النسختين معًا. */
@@ -1026,14 +1197,28 @@
       const uid=`vector-export-${++exportVectorCounter}`,bg=exportBackground(pair,mode,uid);
       return `<g transform="translate(${x} 0)"><defs>${bg.defs}</defs><rect x="0" y="0" width="1920" height="960" fill="${bg.fill}"/>${vectorArtworkMarkup(pair,mode,false)}</g>`;
     }
-    function makePairSvg(pair){return `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="500" viewBox="0 0 3840 960"><title>LUMIGAMI — ${escapeHtml(displayTitle(pair))}</title>${svgPanel(pair,'light',0)}${svgPanel(pair,'dark',1920)}</svg>`}
+    function makePairSvg(pair,logoHref=LOGO_URL){
+      if(pair.kind!=='community'){
+        const lightMatrix=makeColorMatrix(pair.light),darkMatrix=makeColorMatrix(pair.dark);
+        const matrixPanel=(mode,x)=>{
+          const config=pair[mode],bg=(()=>{if(pair.style===1)return`url(#${mode}-gradient)`;if(pair.style===2)return`url(#${mode}-radial)`;return config.background})();
+          let defs='';
+          if(pair.style===1)defs+=`<linearGradient id="${mode}-gradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${config.background}"/><stop offset="1" stop-color="${mixHex(config.background,pair.detail.hex,mode==='light'?.16:.24)}"/></linearGradient>`;
+          if(pair.style===2)defs+=`<radialGradient id="${mode}-radial" cx="18%" cy="12%" r="90%"><stop offset="0" stop-color="${mixHex(config.background,pair.accent.hex,mode==='light'?.15:.25)}"/><stop offset="68%" stop-color="${config.background}"/></radialGradient>`;
+          return `<defs>${defs}</defs><rect x="${x}" width="1920" height="960" fill="${bg}" stroke="${pair.detail.hex}" stroke-opacity=".28" stroke-width="4"/><image x="${x}" width="1920" height="960" href="${logoHref}" filter="url(#${mode})" preserveAspectRatio="xMidYMid meet"/>`;
+        };
+        return `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="3840" height="960" viewBox="0 0 3840 960"><title>LUMIGAMI — ${escapeHtml(displayTitle(pair))}</title><defs><filter id="light" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="${lightMatrix}"/></filter><filter id="dark" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="${darkMatrix}"/></filter></defs>${matrixPanel('light',0)}${matrixPanel('dark',1920)}</svg>`;
+      }
+      return `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="3840" height="960" viewBox="0 0 3840 960"><title>LUMIGAMI — ${escapeHtml(displayTitle(pair))}</title>${svgPanel(pair,'light',0)}${svgPanel(pair,'dark',1920)}</svg>`;
+    }
     function saveBlob(content,filename,type){const blob=content instanceof Blob?content:new Blob([content],{type}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=filename;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),3000)}
     async function download(kind){
       if(!state.active)return;
       const pair=state.active,name=`LUMIGAMI-${pair.kind==='community'?'Community-'+pair.firestoreId:displayNumber(pair)}-Light-Dark`;
       track('download',{design:pair.kind==='community'?pair.firestoreId:pair.id,format:kind});
-      const svg=makePairSvg(pair);
-      if(kind==='svg'){saveBlob(svg,name+'.svg','image/svg+xml;charset=utf-8');toast('ملف SVG جاهز، والشعار محفوظ كمسارات متجهية واضحة.','success');return}
+      const logoHref=LOGO_URL; // صورة الشعار الأصلية مضمّنة داخل الصفحة، فلا نعتمد على رابط خارجي أو CORS.
+      const svg=makePairSvg(pair,logoHref);
+      if(kind==='svg'){saveBlob(svg,name+'.svg','image/svg+xml;charset=utf-8');toast(pair.kind==='community'?'ملف SVG جاهز.':'ملف SVG جاهز. لو الشعار خارجي، قد يحتاج اتصالًا بالإنترنت.','success');return}
       let objectUrl;
       try{
         toast('بنجهّز صورة PNG…','info');
@@ -1046,7 +1231,7 @@
         if(!png)throw new Error('تعذر حفظ صورة PNG.');saveBlob(png,name+'.png','image/png');toast('صورة PNG اتحمّلت.','success');
       }catch(error){toast(error.message||'حصلت مشكلة أثناء تجهيز الصورة.','error')}finally{if(objectUrl)URL.revokeObjectURL(objectUrl)}
     }
-    async function shareDesign(){if(!state.active)return;const url=new URL(location.href);url.hash=slugToken(state.active);try{if(navigator.share)await navigator.share({title:`LUMIGAMI — ${displayTitle(state.active)}`,url:url.toString()});else await copyText(url.toString(),'رابط التصميم اتنسخ.')}catch(error){if(error.name!=='AbortError')copyText(url.toString(),'رابط التصميم اتنسخ.')}}
+    async function shareDesign(){if(!state.active)return;const url=new URL(location.href);url.hash=slugToken(state.active);track('share_design',{design:slugToken(state.active)});try{if(navigator.share)await navigator.share({title:`LUMIGAMI — ${displayTitle(state.active)}`,url:url.toString()});else await copyText(url.toString(),'رابط التصميم اتنسخ.')}catch(error){if(error.name!=='AbortError')copyText(url.toString(),'رابط التصميم اتنسخ.')}}
 
     /* حذف تصميمات المجتمع: صاحب التصميم فقط يقدر يحذفه. */
     let pendingDeletePair=null;
@@ -1061,13 +1246,14 @@
       const pair=pendingDeletePair;if(!pair||state.deleteBusy)return;
       state.deleteBusy=true;$('#confirm-delete-design').disabled=true;$('#confirm-delete-design').textContent='بنحذف…';
       try{
-        await window.LumiFB.deleteDesign(pair);
+        await firebaseCall('deleteDesign',pair);
         state.community=state.community.filter(item=>item.firestoreId!==pair.firestoreId);
+        state.favorites.delete(favoriteKey(pair));
         delete state.votes[`community:${pair.firestoreId}`];state.mine.delete(`community:${pair.firestoreId}`);
         if(deleteDialog.open)deleteDialog.close();pendingDeletePair=null;
         if(dialog.open)closeDesign();renderPalette();render(true);
         toast('اتحذف تصميمك من المعرض.','success');track('community_design_deleted',{designId:pair.firestoreId});
-      }catch(error){if(deleteDialog.open)deleteDialog.close();toast(String(error&&error.message||'مقدرناش نحذف التصميم دلوقتي. جرّب تاني.'),'error','تعذر الحذف')}
+      }catch(error){toast(String(error&&error.message||'مقدرناش نحذف التصميم دلوقتي. جرّب تاني.'),'error','تعذر الحذف')}
       finally{state.deleteBusy=false;$('#confirm-delete-design').disabled=false;$('#confirm-delete-design').textContent='احذف التصميم'}
     }
     $('#delete-design').addEventListener('click',requestDeleteDesign);
@@ -1098,27 +1284,33 @@
       $('#part-color-picker').value=color;$('#part-color-hex').value=color;
       $('#part-selector-grid').innerHTML=LOGO_PART_KEYS.map(key=>`<button class="part-selector-button" type="button" data-part-choice="${key}" aria-pressed="${key===selected}" style="--part-color:${parts[key]}"><i></i><span>${LOGO_PART_LABELS[key]}</span></button>`).join('');
     }
-    function updateEditorColor(value){if(!HEX_PATTERN.test(value))return;editorState.draft[editorState.mode][editorState.selected]=value.toUpperCase();renderEditorStage()}
-    function resetCustomizer(){editorState.mode='light';editorState.selected='background';editorState.draft=cloneDefaultParts();$('#custom-design-name').value='';renderQuickColors();renderPartQuickColors();renderEditorStage()}
+    function updateEditorColor(value){if(!HEX_PATTERN.test(value))return;editorState.draft[editorState.mode][editorState.selected]=value.toUpperCase();renderEditorStage();persistEditorDraftSoon();track('logo_part_color_change',{part:editorState.selected,mode:editorState.mode,hex:value.toUpperCase()})}
+    function resetCustomizer(){
+      const remote=state.remotePreferences||{};editorState.mode=['light','dark'].includes(remote.editorMode)?remote.editorMode:'light';editorState.selected=LOGO_PART_KEYS.includes(remote.selectedPart)?remote.selectedPart:'background';
+      const saved=remote.editorDraft;
+      editorState.draft=saved&&saved.light&&saved.dark?normalizeLogoParts(saved,DEFAULT_CUSTOM):cloneDefaultParts();
+      $('#custom-design-name').value=String(remote.editorName||'').slice(0,28);
+      renderQuickColors();renderPartQuickColors();renderEditorStage();
+    }
     function renderPartQuickColors(){
       const colors=allSharedColors();$('#part-quick-colors').innerHTML=colors.map(color=>`<button class="part-quick-color" type="button" data-editor-quick="${color.hex}" style="--swatch:${color.hex}" aria-label="استخدم اللون ${escapeHtml(color.name)} ${color.hex}" title="${escapeHtml(color.name)} ${color.hex}"></button>`).join('');
     }
     function openCustomizer(){resetCustomizer();if(!customizer.open)customizer.showModal();track('customizer_open',{})}
     function closeCustomizer(){if(customizer.open)customizer.close()}
     async function publishCustomDesign(event){event.preventDefault();if(state.publishBusy)return;let colors;try{colors=readCustomColors()}catch(error){toast(error.message,'warning');return}const name=$('#custom-design-name').value.trim().slice(0,28);state.publishBusy=true;$('#publish-custom-design').disabled=true;$('#publish-custom-design').textContent='بننشر التصميم…';
-      try{const result=await window.LumiFB.publishDesign(colors,name);const pair=window.LumiApp.addCommunityDesign(result);closeCustomizer();setView('gallery');toast('تصميمك اتنشر وبقى ظاهر للكل!','success');openDesign(pair);track('community_design_published',{designId:result.id})}
+      try{const result=await firebaseCall('publishDesign',colors,name);const pair=window.LumiApp.addCommunityDesign(result);closeCustomizer();setView('gallery');toast('تصميمك اتنشر وبقى ظاهر للكل!','success');openDesign(pair);track('community_design_published',{designId:result.id})}
       catch(error){toast(String(error&&error.message||'مقدرناش ننشر التصميم دلوقتي. جرّب تاني.'),'error','تعذر نشر التصميم')}
       finally{state.publishBusy=false;$('#publish-custom-design').disabled=false;$('#publish-custom-design').textContent='نشر النسخة'}
     }
-    $('#editor-stage').addEventListener('click',event=>{const target=event.target.closest('[data-logo-part]');const part=target?.dataset.logoPart;if(part&&LOGO_PART_KEYS.includes(part)){editorState.selected=part;renderEditorStage();track('logo_part_selected',{part,mode:editorState.mode});return}editorState.selected='background';renderEditorStage()});
-    $('#part-selector-grid').addEventListener('click',event=>{const button=event.target.closest('[data-part-choice]');const part=button?.dataset.partChoice;if(part&&LOGO_PART_KEYS.includes(part)){editorState.selected=part;renderEditorStage();track('logo_part_selected',{part,mode:editorState.mode,source:'list'})}});
-    document.querySelectorAll('[data-editor-mode]').forEach(button=>button.addEventListener('click',()=>{editorState.mode=button.dataset.editorMode;renderEditorStage();track('logo_editor_mode',{mode:editorState.mode})}));
+    $('#editor-stage').addEventListener('click',event=>{const target=event.target.closest('[data-logo-part]');const part=target?.dataset.logoPart;if(part&&LOGO_PART_KEYS.includes(part)){editorState.selected=part;renderEditorStage();persistEditorDraftSoon();track('logo_part_selected',{part,mode:editorState.mode});return}editorState.selected='background';renderEditorStage()});
+    $('#part-selector-grid').addEventListener('click',event=>{const button=event.target.closest('[data-part-choice]');const part=button?.dataset.partChoice;if(part&&LOGO_PART_KEYS.includes(part)){editorState.selected=part;renderEditorStage();persistEditorDraftSoon();track('logo_part_selected',{part,mode:editorState.mode,source:'list'})}});
+    document.querySelectorAll('[data-editor-mode]').forEach(button=>button.addEventListener('click',()=>{editorState.mode=button.dataset.editorMode;renderEditorStage();persistEditorDraftSoon();track('logo_editor_mode',{mode:editorState.mode})}));
     $('#part-color-picker').addEventListener('input',event=>updateEditorColor(event.target.value));
     $('#part-color-hex').addEventListener('input',event=>{const value=event.target.value.trim();if(HEX_PATTERN.test(value))updateEditorColor(value)});
     $('#part-color-hex').addEventListener('blur',event=>{const value=event.target.value.trim();if(!HEX_PATTERN.test(value)){event.target.value=editorState.draft[editorState.mode][editorState.selected];toast('اكتب كود لون صحيح بالشكل #A1B2C3.','warning')}});
-    $('#reset-current-part').addEventListener('click',()=>{editorState.draft[editorState.mode][editorState.selected]=DEFAULT_PARTS[editorState.mode][editorState.selected];renderEditorStage();toast('رجّعنا لون الجزء زي الأول.','success')});
-    $('#reset-current-mode').addEventListener('click',()=>{editorState.draft[editorState.mode]={...DEFAULT_PARTS[editorState.mode]};renderEditorStage();toast('رجّعنا ألوان الشكل ده.','success')});
-    $('#custom-design-name').addEventListener('input',renderEditorStage);
+    $('#reset-current-part').addEventListener('click',()=>{editorState.draft[editorState.mode][editorState.selected]=DEFAULT_PARTS[editorState.mode][editorState.selected];renderEditorStage();persistEditorDraftSoon();track('logo_part_reset',{part:editorState.selected,mode:editorState.mode});toast('رجّعنا لون الجزء زي الأول.','success')});
+    $('#reset-current-mode').addEventListener('click',()=>{editorState.draft[editorState.mode]={...DEFAULT_PARTS[editorState.mode]};renderEditorStage();persistEditorDraftSoon();track('logo_mode_reset',{mode:editorState.mode});toast('رجّعنا ألوان الشكل ده.','success')});
+    $('#custom-design-name').addEventListener('input',()=>{renderEditorStage();persistEditorDraftSoon()});
     $('#customizer-form').addEventListener('submit',publishCustomDesign);
     $('#open-customizer').addEventListener('click',openCustomizer);$('#customizer-close').addEventListener('click',closeCustomizer);$('#cancel-customizer').addEventListener('click',closeCustomizer);
     customizer.addEventListener('click',event=>{if(event.target===customizer)closeCustomizer()});
@@ -1127,8 +1319,9 @@
     document.addEventListener('click',event=>{
       const target=event.target,copyButton=target.closest('[data-copy]');if(copyButton){track('copy_color',{hex:copyButton.dataset.copy});copyText(copyButton.dataset.copy,'كود اللون اتنسخ.');return}
       const quick=target.closest('[data-editor-quick]');if(quick){const hex=quick.dataset.editorQuick;if(customizer.open&&HEX_PATTERN.test(hex)){updateEditorColor(hex);track('logo_part_color_preset',{part:editorState.selected,mode:editorState.mode,hex});}return}
+      const favoriteButton=target.closest('[data-favorite-design]');if(favoriteButton){event.preventDefault();event.stopPropagation();const pair=findDesign(favoriteButton.dataset.favoriteDesign);if(pair)toggleFavorite(pair,'card');return}
       const openButton=target.closest('[data-open]');if(openButton){openDesign(openButton.dataset.open);return}
-      const pageButton=target.closest('[data-page]');if(pageButton&&!pageButton.disabled){state.page=Number(pageButton.dataset.page);render();$('#main-section').scrollIntoView({behavior:'smooth',block:'start'});return}
+      const pageButton=target.closest('[data-page]');if(pageButton&&!pageButton.disabled){state.preferencesTouched=true;state.page=Number(pageButton.dataset.page);track('pagination_change',{page:state.page,view:state.view});persistPreferencesSoon();render();$('#main-section').scrollIntoView({behavior:'smooth',block:'start'});return}
       const tab=target.closest('[data-view]');if(tab){setView(tab.dataset.view);return}
     });
     document.addEventListener('keydown',event=>{
@@ -1137,12 +1330,12 @@
     });
     window.addEventListener('error',event=>{if(event.error)toast('حصل خطأ غير متوقع. حدّث الصفحة وجرب تاني.','error','حصلت مشكلة')});
     window.addEventListener('unhandledrejection',event=>{const message=String(event.reason&&event.reason.message||'');toast(/[\u0600-\u06FF]/.test(message)?message:'حصلت مشكلة أثناء تنفيذ العملية. جرّب تاني.','error','حصلت مشكلة')});
-    $('#dialog-close').addEventListener('click',closeDesign);$('#dialog-prev').addEventListener('click',()=>stepDesign(-1));$('#dialog-next').addEventListener('click',()=>stepDesign(1));$('#vote-button').addEventListener('click',submitVote);$('#unvote-button').addEventListener('click',submitVote);$('#download-svg').addEventListener('click',()=>download('svg'));$('#download-png').addEventListener('click',()=>download('png'));$('#share-design').addEventListener('click',shareDesign);
-    ['base-filter','accent-filter','sort-filter','mine-filter'].forEach(id=>$('#'+id).addEventListener('change',()=>{track('filter_change',{filter:id});render(true)}));
-    let searchLogged=false;$('#search').addEventListener('input',()=>{render(true);if(!searchLogged&&$('#search').value.trim()){track('search_used',{});searchLogged=true}if(!$('#search').value.trim())searchLogged=false});
+    $('#dialog-close').addEventListener('click',closeDesign);$('#dialog-prev').addEventListener('click',()=>stepDesign(-1));$('#dialog-next').addEventListener('click',()=>stepDesign(1));$('#vote-button').addEventListener('click',submitVote);$('#favorite-button').addEventListener('click',()=>toggleFavorite(state.active,'preview'));$('#download-svg').addEventListener('click',()=>download('svg'));$('#download-png').addEventListener('click',()=>download('png'));$('#share-design').addEventListener('click',shareDesign);
+    ['base-filter','accent-filter','sort-filter','mine-filter'].forEach(id=>$('#'+id).addEventListener('change',()=>{state.preferencesTouched=true;track('filter_change',{filter:id,value:id==='mine-filter'?$('#'+id).checked:$('#'+id).value});persistPreferencesSoon();render(true)}));
+    let searchLogged=false;$('#search').addEventListener('input',()=>{state.preferencesTouched=true;render(true);persistPreferencesSoon();if(!searchLogged&&$('#search').value.trim()){track('search_used',{query:$('#search').value.trim().slice(0,80)});searchLogged=true}if(!$('#search').value.trim())searchLogged=false});
 
     /* بداية التشغيل وروابط المشاركة المباشرة */
-    renderPalette();render(true);track('page_view',{path:location.pathname||'/'});
+    installLegacyFilters();renderPalette();render(true);track('page_view',{path:location.pathname||'/'});
     const direct=location.hash.match(/^#design-(\d{1,2})$/);if(direct){const pair=PAIRS.find(item=>item.displayIndex===Number(direct[1]));if(pair)openDesign(pair,false)}
     const shared=location.hash.match(/^#community-([A-Za-z0-9_-]{1,100})$/);if(shared){const pair=state.community.find(item=>item.firestoreId===shared[1]);if(pair)openDesign(pair,false)}
   </script>
@@ -1162,13 +1355,12 @@
           window.LumiApp?.notify?.(message,'error','مشكلة في حفظ البيانات');
         }else if(state!=='error')lastNotifiedError='';
       };
-      const withTimeout=(promise,ms=20000)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(Object.assign(new Error('الاتصال بطيء والعملية اتأخرت. جرّب تاني.'),{code:'deadline-exceeded'})),ms))]);
       const explain=error=>{
         const code=String(error?.code||'').toLowerCase();
         if(location.protocol==='file:')return'افتح الموقع من رابط HTTPS بعد رفعه، مش من ملف HTML على الجهاز.';
         if(code.includes('operation-not-allowed')||code.includes('admin-restricted'))return'فعّل تسجيل الدخول المجهول من Firebase Authentication.';
         if(code.includes('unauthorized-domain'))return'ضيف دومين الموقع في Authentication ← Settings ← Authorized domains.';
-        if(code.includes('permission-denied'))return'Firebase رفض الحفظ. الصق ملف firestore.rules المرفق في Firestore › Rules واضغط Publish.';
+        if(code.includes('permission-denied'))return'Firebase رفض الحفظ. انشر ملف firestore.rules المرفق كاملًا بعد دمجه مع قواعد مشروعك.';
         if(code.includes('not-found'))return'قاعدة Cloud Firestore مش موجودة في المشروع ده. أنشئ قاعدة بيانات Firestore من Firebase Console.';
         if(code.includes('failed-precondition'))return'إعداد قاعدة البيانات غير مكتمل أو محتاج فهرس. راجع رسالة الخطأ في Console.';
         if(code.includes('unauthenticated'))return'انتهت جلسة الزائر. اضغط «اختبر الحفظ» لتجديدها.';
@@ -1208,7 +1400,7 @@
         return output;
       };
 
-      let firestoreReady=false,probePromise=null;
+      let firestoreReady=false,probePromise=null,eventBlocked=false;
       const sdk='https://www.gstatic.com/firebasejs/13.3.0/';
       try{
         const [{initializeApp},A,F]=await Promise.all([
@@ -1233,7 +1425,6 @@
           db=F.getFirestore(app);
         }
 
-        const runTx=fn=>withTimeout(F.runTransaction(db,fn));
         const waitForUser=async()=>{
           if(!user)await Promise.race([authReady,new Promise(resolve=>setTimeout(resolve,15000))]);
           if(!user)throw new Error('معرّف الزائر لم يجهز. تأكد من تفعيل Anonymous Authentication وجرب تاني.');
@@ -1253,14 +1444,16 @@
               status('الزائر اتعرف. بنختبر الكتابة والقراءة في Firestore…','checking');
               await F.setDoc(ref,{uid:user.uid,check:token,createdAt:F.serverTimestamp()});
               wrote=true;
-              const snapshot=await F.getDoc(ref);
+              const snapshot=await F.getDocFromServer(ref);
               if(!snapshot.exists()||snapshot.data().uid!==user.uid||snapshot.data().check!==token){
                 throw new Error('الكتابة تمت لكن قراءة بيانات الاختبار لم ترجع نفس البيانات.');
               }
               await F.deleteDoc(ref);
               firestoreReady=true;
+              eventBlocked=false;
               status('الحفظ شغال — اتأكدنا من الكتابة والقراءة في Firebase.','ok');
               flushEvents();
+              flushPendingPreferences().catch(error=>console.warn('Queued preferences are still waiting:',error));
               return true;
             }catch(error){
               firestoreReady=false;
@@ -1275,15 +1468,14 @@
           })();
           return probePromise;
         };
-        const waitForDataStore=async()=>{await waitForUser();if(!firestoreReady)await withTimeout(verifyFirestoreWrite(),25000)};
-
-        const saveFailedEvent=item=>{
-          try{
-            const key='lumi-event-failures-v1',old=JSON.parse(localStorage.getItem(key)||'[]');
-            old.push({event:String(item?.event||'unknown').slice(0,50),at:Number(item?.at)||Date.now()});
-            localStorage.setItem(key,JSON.stringify(old.slice(-30)));
-          }catch(_){}
+        // لا تربط عمليات الموقع باختبار connectionDiagnostics؛ فقد تفشل صلاحيات الاختبار
+        // بينما تكون صلاحيات المجموعة الفعلية سليمة. كل عملية تختبر صلاحيات مجموعتها بنفسها.
+        const waitForDataStore=async()=>{
+          await waitForUser();
+          if(location.protocol==='file:')throw new Error('افتح الموقع من رابط HTTPS بعد رفعه، وليس من ملف HTML على الجهاز.');
+          if(typeof navigator!=='undefined'&&navigator.onLine===false)throw new Error('أنت غير متصل بالإنترنت. ارجع اتصل وجرب تاني.');
         };
+
         const logEvent=async item=>{
           if(!user)return {ok:false,error:new Error('No authenticated visitor')};
           try{
@@ -1298,21 +1490,20 @@
           }catch(error){console.warn('Activity log was not saved:',error);return {ok:false,error}}
         };
         const flushEvents=async()=>{
-          if(flushBusy||!user||!firestoreReady||!eventQueue.length)return;
+          // سجلات النشاط لا تنتظر اختبار الاتصال التجريبي؛ تحاول الحفظ مباشرة بعد تسجيل الزائر.
+          if(flushBusy||eventBlocked||!user||!eventQueue.length||(typeof navigator!=='undefined'&&navigator.onLine===false))return;
           flushBusy=true;
           try{
             let attempts=eventQueue.length;
-            while(user&&firestoreReady&&eventQueue.length&&attempts-->0){
+            while(user&&eventQueue.length&&attempts-->0&&(typeof navigator==='undefined'||navigator.onLine!==false)){
               const item=eventQueue[0],result=await logEvent(item);
               if(result.ok){eventQueue.shift();persistQueue();continue}
-              if(retryable(result.error))break;
-              // خطأ غير قابل لإعادة المحاولة لا يوقف بقية السجل إلى الأبد.
-              saveFailedEvent(item);eventQueue.shift();persistQueue();
-              const code=String(result.error?.code||'');
-              if(code.includes('permission-denied')){
-                status('اختبار الاتصال نجح، لكن قواعد activityLogs لا تسمح بحفظ سجل النشاط. راجع قواعد Firestore المنشورة.','error');
-                break;
-              }
+              // Keep the failed event and every event after it in local storage. Retry after
+              // the visitor presses the connection button or the network comes back.
+              eventBlocked=true;
+              const message=explain(result.error);
+              status(message||'في نشاط لسه ما اتحفظش. احتفظنا به مؤقتًا وهنحاول تاني بعد إصلاح الاتصال.','error');
+              break;
             }
           }finally{flushBusy=false}
         };
@@ -1322,6 +1513,34 @@
           persistQueue();flushEvents();
         };
         window.LumiFB.testConnection=()=>verifyFirestoreWrite(true);
+        window.LumiFB.savePreferences=async patch=>{
+          await waitForDataStore();
+          const allowed={};
+          for(const key of ['themeMode','view','filters','editorDraft','editorName','editorMode','selectedPart'])if(patch&&Object.prototype.hasOwnProperty.call(patch,key))allowed[key]=patch[key];
+          allowed.uid=user.uid;allowed.updatedAt=F.serverTimestamp();
+          try{await F.setDoc(F.doc(db,'visitorPreferences',user.uid),allowed,{merge:true});return true}
+          catch(error){console.error('Preferences were not saved:',error);throw new Error(explain(error)||error.message||'مقدرناش نحفظ إعداداتك. جرّب تاني.')}
+        };
+        window.LumiFB.setFavorite=async(pair,favorited)=>{
+          await waitForDataStore();
+          if(!pair)throw new Error('التصميم غير موجود.');
+          const key=pair.kind==='community'?`community-${pair.firestoreId}`:`preset-${String(pair.id).padStart(3,'0')}`;
+          const favoriteId=`${key}_${user.uid}`,ref=F.doc(db,'designFavorites',favoriteId);
+          const data={uid:user.uid,favoriteKey:key,designType:pair.kind==='community'?'community':'preset',designId:pair.kind==='community'?String(pair.firestoreId):String(pair.id).padStart(3,'0'),createdAt:F.serverTimestamp()};
+          try{
+            // A transaction makes favorite/unfavorite idempotent across tabs and survives a quick double click.
+            await F.runTransaction(db,async transaction=>{
+              const existing=await transaction.get(ref);
+              if(favorited){
+                if(!existing.exists())transaction.set(ref,data);
+              }else if(existing.exists()){
+                if(existing.data().uid!==user.uid)throw new Error('مش مسموح بتعديل المفضلة دي.');
+                transaction.delete(ref);
+              }
+            });
+            return{favorited:!!favorited,key};
+          }catch(error){console.error('Favorite was not saved:',error);throw new Error(explain(error)||error.message||'مقدرناش نحفظ المفضلة. راجع قواعد Firestore وجرب تاني.')}
+        };
 
         window.LumiFB.vote=async pair=>{
           await waitForDataStore();
@@ -1329,7 +1548,7 @@
             if(pair&&pair.kind==='community'){
               const designId=String(pair.firestoreId),voteId=`${designId}_${user.uid}`;
               const voteRef=F.doc(db,'communityDesignVotes',voteId),statsRef=F.doc(db,'communityDesignStats',designId),designRef=F.doc(db,'communityDesigns',designId);
-              const result=await runTx(async transaction=>{
+              const result=await F.runTransaction(db,async transaction=>{
                 const [voteSnapshot,statsSnapshot,designSnapshot]=await Promise.all([transaction.get(voteRef),transaction.get(statsRef),transaction.get(designRef)]);
                 if(!designSnapshot.exists())throw new Error('التصميم ده مش موجود دلوقتي.');
                 const current=statsSnapshot.exists()?Math.max(0,Number(statsSnapshot.data().votes)||0):0;
@@ -1349,7 +1568,7 @@
             if(!pair||!Number.isInteger(pair.id)||!Number.isInteger(pair.displayIndex))throw new Error('التصميم ده مش صحيح.');
             const pairId=String(pair.id).padStart(3,'0');
             const voteRef=F.doc(db,'pairVotes',`${pairId}_${user.uid}`),statsRef=F.doc(db,'pairVoteStats',pairId);
-            const result=await runTx(async transaction=>{
+            const result=await F.runTransaction(db,async transaction=>{
               const [voteSnapshot,statsSnapshot]=await Promise.all([transaction.get(voteRef),transaction.get(statsRef)]);
               const current=statsSnapshot.exists()?Math.max(0,Number(statsSnapshot.data().votes)||0):0;
               if(voteSnapshot.exists()){
@@ -1369,12 +1588,29 @@
         window.LumiFB.deleteDesign=async pair=>{
           await waitForDataStore();
           if(!pair||pair.kind!=='community'||!pair.firestoreId)throw new Error('التصميم ده مش قابل للحذف.');
-          const ref=F.doc(db,'communityDesigns',String(pair.firestoreId));
+          const designId=String(pair.firestoreId),ref=F.doc(db,'communityDesigns',designId);
           try{
-            const snapshot=await F.getDoc(ref);
+            const snapshot=await F.getDocFromServer(ref);
             if(!snapshot.exists())throw new Error('التصميم اتحذف أو مبقاش موجود.');
             if(snapshot.data().createdBy!==user.uid)throw new Error('تقدر تحذف التصميمات اللي نشرتها بنفسك بس.');
-            await F.deleteDoc(ref);return true;
+            // deleteDoc resolves when Firestore acknowledges the delete. Avoid a second read that can fail independently.
+            await F.deleteDoc(ref);
+            // تنظيف العدادات والتصويتات القديمة بعد حذف التصميم. لو فشل التنظيف، يظل حذف التصميم نفسه ناجحًا.
+            try{
+              const voteQuery=F.query(F.collection(db,'communityDesignVotes'),F.where('designId','==',designId));
+              const voteSnapshot=await F.getDocs(voteQuery);
+              for(let offset=0;offset<voteSnapshot.docs.length;offset+=450){
+                const batch=F.writeBatch(db);
+                voteSnapshot.docs.slice(offset,offset+450).forEach(doc=>batch.delete(doc.ref));
+                await batch.commit();
+              }
+              const statsRef=F.doc(db,'communityDesignStats',designId),statsSnapshot=await F.getDoc(statsRef);
+              if(statsSnapshot.exists())await F.deleteDoc(statsRef);
+              const ownFavoriteRef=F.doc(db,'designFavorites',`community-${designId}_${user.uid}`),ownFavorite=await F.getDocFromServer(ownFavoriteRef);
+              if(ownFavorite.exists())await F.deleteDoc(ownFavoriteRef);
+            }catch(cleanupError){console.warn('Design deleted; vote cleanup needs a retry:',cleanupError)}
+            window.LumiFB.track('community_design_deleted',{designId});
+            return true;
           }catch(error){console.error('Community design delete failed:',error);throw new Error(explain(error)||error.message||'مقدرناش نحذف التصميم. راجع قواعد Firestore وجرب تاني.')}
         };
 
@@ -1394,23 +1630,45 @@
           clean.parts=parts;
           const cleanName=String(name||'').trim().slice(0,28);
           try{
-            const ref=await withTimeout(F.addDoc(F.collection(db,'communityDesigns'),{name:cleanName,colors:clean,createdBy:user.uid,createdAt:F.serverTimestamp()}));
-            const result={id:ref.id,data:{name:cleanName,colors:clean,createdBy:user.uid}};
+            const ref=F.doc(F.collection(db,'communityDesigns'));
+            const record={name:cleanName,colors:clean,createdBy:user.uid,createdAt:F.serverTimestamp()};
+            // setDoc resolves only after Firestore has accepted the write; no second server read is needed.
+            await F.setDoc(ref,record);
+            const result={id:ref.id,data:{name:cleanName,colors,createdBy:user.uid,createdAt:null}};
             window.LumiFB.track('community_design_published',{designId:ref.id});return result;
           }catch(error){console.error('Custom design was not published:',error);throw new Error(explain(error)||error.message||'مقدرناش ننشر التصميم. اتأكد من قواعد Firestore وجرب تاني.')}
         };
 
+        const flushPendingPreferences=async()=>{
+          let pending={};try{pending=JSON.parse(localStorage.getItem('lumi-pending-preferences-v2')||'{}')}catch(_){}
+          if(!pending||typeof pending!=='object'||Array.isArray(pending)||!Object.keys(pending).length)return;
+          await window.LumiFB.savePreferences(pending);
+          try{localStorage.removeItem('lumi-pending-preferences-v2')}catch(_){}
+        };
+
         window.LumiFB.retry=async()=>{
+          eventBlocked=false;
           try{
             if(!user){
               if(!signingIn){signingIn=true;await A.signInAnonymously(auth);signingIn=false;}
               await waitForUser();
             }
-            await verifyFirestoreWrite(true);
-            window.LumiApp?.notify?.('اختبار الحفظ نجح. Firebase بيستقبل البيانات دلوقتي.','success','اتأكدنا من الاتصال');
+            let diagnosticError=null;
+            try{await verifyFirestoreWrite(true)}catch(error){diagnosticError=error}
+            // حتى لو لم تسمح القواعد بمسار الفحص، جرّب إرسال البيانات الفعلية المعلّقة.
+            eventBlocked=false;
+            await flushEvents();
+            await flushPendingPreferences();
+            preferenceSaveWarned=false;
+            if(diagnosticError){
+              status('معرّف الزائر جاهز، لكن اختبار المسار التجريبي فشل. جرّب النشر أو المفضلة؛ ستظهر صلاحيات كل مجموعة بشكل مستقل. '+explain(diagnosticError),'error');
+              return;
+            }
+            window.LumiApp?.notify?.('اختبار الحفظ نجح، والتغييرات المعلّقة اتبعتت لفايربيس.','success','الحفظ شغال');
           }catch(error){signingIn=false;status(explain(error),'error')}
         };
 
+        window.LumiFB._markBridgeReady();
         await A.setPersistence(auth,A.browserLocalPersistence).catch(error=>console.warn('Auth persistence could not be set:',error));
         A.onAuthStateChanged(auth,visitor=>{
           if(!visitor){
@@ -1424,7 +1682,10 @@
           }
           user=visitor;signingIn=false;resolveAuthReady(visitor);
           window.LumiApp?.setVisitorUid?.(visitor.uid);
-          status('تم التعرف على الزائر. بنختبر حفظ البيانات…','checking');
+          status('تم التعرف على الزائر. بنحمّل بياناتك ونجهّز الحفظ…','checking');
+          // ابدأ تحميل/حفظ البيانات بمجرد توفر UID، ولا تنتظر نتيجة فحص المجموعة التجريبية.
+          flushEvents();
+          flushPendingPreferences().catch(error=>console.warn('Queued preferences could not be restored yet:',error));
           if(!subscriptionsStarted){
             subscriptionsStarted=true;
             F.onSnapshot(F.collection(db,'pairVoteStats'),snapshot=>{
@@ -1433,7 +1694,7 @@
             F.onSnapshot(F.query(F.collection(db,'pairVotes'),F.where('uid','==',visitor.uid)),snapshot=>{
               const mine=new Set();snapshot.forEach(document=>mine.add(String(document.data().pairId)));window.LumiApp.applyVoteData(undefined,mine);
             },error=>status(explain(error),'error'));
-            F.onSnapshot(F.query(F.collection(db,'communityDesigns'),F.orderBy('createdAt','desc')),snapshot=>{
+            F.onSnapshot(F.collection(db,'communityDesigns'),snapshot=>{
               window.LumiApp.applyCommunityDesigns(snapshot.docs.map(document=>({id:document.id,data:document.data()})));
             },error=>status(explain(error),'error'));
             F.onSnapshot(F.collection(db,'communityDesignStats'),snapshot=>{
@@ -1442,10 +1703,35 @@
             F.onSnapshot(F.query(F.collection(db,'communityDesignVotes'),F.where('uid','==',visitor.uid)),snapshot=>{
               const mine=new Set();snapshot.forEach(document=>mine.add(`community:${document.data().designId}`));window.LumiApp.applyCommunityMine(mine);
             },error=>status(explain(error),'error'));
+            F.onSnapshot(F.query(F.collection(db,'designFavorites'),F.where('uid','==',visitor.uid)),snapshot=>{
+              const favorites=new Set();snapshot.forEach(document=>favorites.add(String(document.data().favoriteKey)));
+              window.LumiApp.applyFavorites(favorites);
+            },error=>status(explain(error),'error'));
+            F.onSnapshot(F.doc(db,'visitorPreferences',visitor.uid),snapshot=>{
+              window.LumiApp.applyPreferences(snapshot.exists()?snapshot.data():{});
+            },error=>console.warn('Could not load visitor preferences:',error));
           }
-          verifyFirestoreWrite().catch(()=>{});
+          // اختبار الاتصال مجرد تشخيص اختياري، وليس شرطًا لنقل المفضلة القديمة.
+          verifyFirestoreWrite().catch(error=>console.warn('Diagnostic probe failed; feature writes will still be attempted:',error));
+          (async()=>{
+            const legacyKey='lumigami-color-studio-favorites-v1';
+            let legacy=[];
+            try{const saved=JSON.parse(localStorage.getItem(legacyKey)||'[]');if(Array.isArray(saved))legacy=saved}
+            catch(_){legacy=[]}
+            if(legacy.length){
+              try{
+                const migrated=await window.LumiApp.migrateLegacyFavorites(legacy);
+                localStorage.removeItem(legacyKey);
+                if(migrated)window.LumiApp.notify(`نقلنا ${migrated} من اختياراتك القديمة للمفضلة الجديدة.`,'success','المفضلة اتنقلت');
+              }catch(migrationError){
+                console.warn('Legacy local favorites could not be migrated yet:',migrationError);
+                window.LumiApp.notify('في مفضلة قديمة لسه ما اتحفظتش على Firebase. اضغط «اختبر الحفظ» للمحاولة تاني.','warning','المفضلة القديمة');
+              }
+            }
+          })();
         });
       }catch(error){
+        window.LumiFB._markBridgeFailed?.();
         console.error('Firebase initialization failed:',error);
         status(explain(error),'error');
       }
@@ -1455,7 +1741,13 @@
         window.LumiApp?.notify?.('الاتصال بالإنترنت انقطع.','warning','أنت غير متصل');
       });
       window.addEventListener('online',()=>{
-        if(user){verifyFirestoreWrite(true).then(()=>flushEvents()).catch(()=>{});window.LumiApp?.notify?.('رجع الاتصال، بنختبر الحفظ دلوقتي.','info','رجعنا متصلين')}
+        eventBlocked=false;
+        if(user){
+          flushEvents();
+          verifyFirestoreWrite(true).catch(error=>console.warn('Diagnostic probe failed after reconnect; real collection writes remain enabled:',error));
+          flushPendingPreferences().catch(error=>console.warn('Pending preferences remain queued:',error));
+          window.LumiApp?.notify?.('رجع الاتصال. بنحاول نحفظ التغييرات المعلّقة.','info','رجعنا متصلين');
+        }
       });
     })();
   </script>
