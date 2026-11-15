@@ -1841,7 +1841,7 @@
         return output;
       };
 
-      let firestoreReady=false,probePromise=null,eventBlocked=false;
+      let firestoreReady=false,probePromise=null,eventBlocked=false,sharedColorsLoadErrorNotified=false;
       const sdk='https://www.gstatic.com/firebasejs/13.3.0/';
       try{
         const [{initializeApp},A,F]=await Promise.all([
@@ -2159,6 +2159,25 @@
           try{localStorage.removeItem('lumi-pending-preferences-v2')}catch(_){}
         };
 
+        let sharedColorsUnsubscribe=null;
+        const subscribeSharedLogoColors=()=>{
+          if(typeof sharedColorsUnsubscribe==='function')sharedColorsUnsubscribe();
+          sharedColorsLoadErrorNotified=false;
+          sharedColorsUnsubscribe=F.onSnapshot(F.query(F.collection(db,'sharedLogoColors'),F.limit(120)),snapshot=>{
+            window.LumiApp.applySharedColors(snapshot.docs.map(document=>({id:document.id,data:document.data()})));
+            sharedColorsLoadErrorNotified=false;
+          },error=>{
+            console.warn('Shared logo color palette could not load:',error);
+            const code=String(error?.code||'').toLowerCase();
+            let message='تعذر تحميل ألوان المجتمع.';
+            if(code.includes('permission-denied'))message='Firebase رفض قراءة ألوان المجتمع. انشر القاعدة: match /sharedLogoColors/{colorId} { allow get, list: if true; }';
+            else if(code.includes('unauthenticated'))message='جلسة الزائر لم تجهز بعد. انتظر لحظة ثم أعد المحاولة.';
+            else if(code.includes('unavailable')||code.includes('network')||code.includes('deadline-exceeded'))message='الاتصال بفايربيس غير مستقر. سنعيد تحميل ألوان المجتمع عند عودة الاتصال.';
+            else message=String(error?.message||message).slice(0,220);
+            if(!sharedColorsLoadErrorNotified){sharedColorsLoadErrorNotified=true;window.LumiApp?.notify?.(message,'warning','لوحة ألوان الشعار');}
+          });
+        };
+
         window.LumiFB.retry=async()=>{
           eventBlocked=false;
           try{
@@ -2172,6 +2191,7 @@
             eventBlocked=false;
             await flushEvents();
             await flushPendingPreferences();
+            subscribeSharedLogoColors();
             preferenceSaveWarned=false;
             if(diagnosticError){
               status('معرّف الزائر جاهز، لكن اختبار المسار التجريبي فشل. جرّب النشر أو المفضلة؛ ستظهر صلاحيات كل مجموعة بشكل مستقل. '+explain(diagnosticError),'error');
@@ -2210,9 +2230,7 @@
             F.onSnapshot(F.collection(db,'communityDesigns'),snapshot=>{
               window.LumiApp.applyCommunityDesigns(snapshot.docs.map(document=>({id:document.id,data:document.data()})));
             },error=>status(explain(error),'error'));
-            F.onSnapshot(F.query(F.collection(db,'sharedLogoColors'),F.orderBy('createdAt','desc'),F.limit(120)),snapshot=>{
-              window.LumiApp.applySharedColors(snapshot.docs.map(document=>({id:document.id,data:document.data()})));
-            },error=>{console.warn('Shared logo color palette could not load:',error);window.LumiApp?.notify?.('تعذر تحميل الألوان التي أضافها الزوار. الألوان الأساسية ما زالت متاحة.','warning','لوحة الألوان')});
+            subscribeSharedLogoColors();
             F.onSnapshot(F.collection(db,'communityDesignStats'),snapshot=>{
               const stats=Object.create(null);snapshot.forEach(document=>stats[document.id]=Math.max(0,Number(document.data().votes)||0));window.LumiApp.applyCommunityVoteStats(stats);
             },error=>status(explain(error),'error'));
@@ -2260,6 +2278,7 @@
         eventBlocked=false;
         if(user){
           flushEvents();
+          subscribeSharedLogoColors();
           verifyFirestoreWrite(true).catch(error=>console.warn('Diagnostic probe failed after reconnect; real collection writes remain enabled:',error));
           flushPendingPreferences().catch(error=>console.warn('Pending preferences remain queued:',error));
           window.LumiApp?.notify?.('رجع الاتصال. بنحاول نحفظ التغييرات المعلّقة.','info','رجعنا متصلين');
