@@ -497,9 +497,37 @@
     .part-color-picker { width:58px; height:48px; padding:4px; border:1px solid var(--line); border-radius:12px; background:var(--surface); cursor:pointer; }
     .hex-input { width:100%; min-width:0; height:48px; padding:0 11px; border:1px solid var(--line); border-radius:12px; outline:0; background:var(--surface); color:var(--ink); font:700 12px/1 Arial,sans-serif; direction:ltr; text-align:center; }
     .part-editor-label { display:flex; justify-content:space-between; gap:8px; color:var(--muted); font-size:10px; }
-    .part-quick-colors { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:8px; }
-    .part-quick-color { aspect-ratio:1; min-width:0; padding:0; border:2px solid var(--surface); border-radius:10px; background:var(--swatch); outline:1px solid var(--line); cursor:pointer; transition:transform .16s,outline-color .16s; }
-    .part-quick-color:hover { transform:translateY(-2px); outline-color:var(--brand); }
+    .editor-color-palette { display:grid; gap:10px; padding:13px; border:1px solid var(--line); border-radius:15px; background:var(--surface); }
+    .editor-color-palette-head { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    .editor-color-palette-head>div { min-width:0; display:grid; gap:3px; }
+    .editor-color-palette-head b { font-size:12px; }
+    .editor-color-palette-head small { color:var(--muted); font-size:9px; line-height:1.6; }
+    .editor-color-count { flex:0 0 auto; padding:4px 8px; border-radius:99px; background:var(--brand-soft); color:var(--brand); font-size:9px; font-weight:700; }
+    .editor-color-tabs { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:5px; padding:4px; border:1px solid var(--line); border-radius:11px; background:var(--surface-2); }
+    .editor-color-tabs button { min-width:0; min-height:34px; padding:0 5px; border:1px solid transparent; border-radius:8px; background:transparent; color:var(--muted); font-size:9px; font-weight:700; white-space:nowrap; }
+    .editor-color-tabs button[aria-pressed="true"] { border-color:var(--line); background:var(--surface); color:var(--brand); box-shadow:0 2px 7px rgba(0,0,0,.045); }
+    .part-quick-colors { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; max-height:270px; overflow:auto; padding:2px 2px 4px; overscroll-behavior:contain; }
+    .editor-color-item { min-width:0; }
+    .editor-color-apply { width:100%; min-width:0; min-height:46px; display:flex; align-items:center; gap:8px; padding:6px 8px; border:1px solid var(--line); border-radius:10px; background:var(--surface-2); color:var(--ink); text-align:right; transition:border-color .16s,background .16s,transform .16s; }
+    .editor-color-apply:hover { border-color:var(--brand); transform:translateY(-1px); }
+    .editor-color-apply.is-current { border-color:var(--brand); background:var(--brand-soft); box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--brand) 14%,transparent); }
+    .editor-color-chip { width:28px; height:28px; flex:0 0 28px; border:1px solid rgba(0,0,0,.12); border-radius:8px; background:var(--swatch); }
+    .editor-color-meta { min-width:0; display:grid; gap:3px; }
+    .editor-color-meta b { overflow:hidden; font-size:9px; text-overflow:ellipsis; white-space:nowrap; }
+    .editor-color-meta code { color:var(--muted); font:9px/1 Arial,sans-serif; direction:ltr; text-align:right; }
+    .editor-color-empty { grid-column:1/-1; padding:13px 10px; border:1px dashed var(--line); border-radius:10px; color:var(--muted); font-size:10px; line-height:1.7; text-align:center; }
+    .editor-add-color { display:grid; gap:8px; padding:11px; border:1px dashed color-mix(in srgb,var(--brand) 35%,var(--line)); border-radius:12px; background:var(--brand-soft); }
+    .editor-add-color-copy { display:grid; gap:3px; }
+    .editor-add-color-copy b { color:var(--brand); font-size:10px; }
+    .editor-add-color-copy small { color:var(--muted); font-size:9px; line-height:1.65; }
+    .editor-add-color-row { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:6px; }
+    .editor-color-name-input { width:100%; min-width:0; height:39px; padding:0 10px; border:1px solid var(--line); border-radius:9px; background:var(--surface); color:var(--ink); font:inherit; font-size:10px; outline:none; }
+    .editor-color-name-input:focus { border-color:var(--brand); box-shadow:0 0 0 3px color-mix(in srgb,var(--brand) 10%,transparent); }
+    .editor-add-color-button { min-height:39px; padding:0 11px; border:1px solid var(--brand); border-radius:9px; background:var(--brand); color:var(--brand-on); font-size:9px; font-weight:700; white-space:nowrap; }
+    .editor-add-color-button:disabled { opacity:.55; cursor:wait; }
+    .editor-add-color-foot { display:flex; align-items:center; gap:7px; flex-wrap:wrap; color:var(--muted); font-size:9px; }
+    .editor-add-color-foot code { padding:3px 6px; border:1px solid var(--line); border-radius:6px; background:var(--surface); color:var(--ink); font:10px/1 Arial,sans-serif; direction:ltr; }
+    .editor-shared-note { margin-inline-start:auto; }
     .part-actions { display:flex; gap:8px; }
     .part-reset-button { min-height:40px; padding:0 12px; border:1px solid var(--line); border-radius:10px; background:var(--surface); color:var(--muted); font-size:10px; }
     .custom-preview-note { margin:0; color:var(--muted); font-size:10px; line-height:1.8; }
@@ -559,13 +587,13 @@
       .part-selector-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
       .part-selector-button { min-height:40px; font-size:11px; }
       .delete-confirm-inner { padding:21px; }
-      .part-quick-colors { grid-template-columns:repeat(6,minmax(0,1fr)); gap:7px; }
+      .part-quick-colors { grid-template-columns:repeat(2,minmax(0,1fr)); }
       .customizer-actions { position:sticky; bottom:-1px; padding:12px 0 max(4px,var(--safe-bottom)); background:var(--surface); }
       .publish-button { flex:1; }
       .cancel-button { min-width:88px; }
     }
     @media(max-width:360px) {
-      .part-quick-colors { grid-template-columns:repeat(5,minmax(0,1fr)); }
+      .part-quick-colors { grid-template-columns:repeat(2,minmax(0,1fr)); }
       .selected-part { padding:10px; }
     }
     @media(prefers-reduced-motion:reduce) {
@@ -630,7 +658,6 @@
     }
 
   
-
 </style>
 <style id="logo-geometry-preservation-fix">
   /* الشعار الأصلي نسبته 1920:960 = 2:1. لا نسمح لأي حاوية أن تضغطه أو تمدده. */
@@ -749,7 +776,6 @@
   </footer>
 
 
-
   <dialog class="preview-dialog" id="preview-dialog" aria-labelledby="dialog-title">
     <div class="dialog-inner">
       <div class="dialog-head">
@@ -843,8 +869,26 @@
               <input class="part-color-picker" id="part-color-picker" type="color" value="#E4D7C7" aria-label="اختار لون الجزء المحدد">
               <input class="hex-input" id="part-color-hex" type="text" value="#E4D7C7" maxlength="7" spellcheck="false" aria-label="كود لون الجزء المحدد">
             </div>
-            <div class="part-editor-label"><span>ألوان الشعار الجاهزة</span><span>أو اختار أي لون بنفسك</span></div>
-            <div class="part-quick-colors" id="part-quick-colors"></div>
+            <section class="editor-color-palette" aria-label="لوحة ألوان الشعار">
+              <div class="editor-color-palette-head">
+                <div><b>لوحة ألوان الشعار</b><small>اختار من الألوان الجاهزة أو أضف لونك للكل</small></div>
+                <span class="editor-color-count" id="editor-color-count">12 لون</span>
+              </div>
+              <div class="editor-color-tabs" role="tablist" aria-label="تصنيفات الألوان">
+                <button type="button" data-editor-palette-tab="identity" aria-pressed="true">ألوان الهوية</button>
+                <button type="button" data-editor-palette-tab="community" aria-pressed="false">ألوان المجتمع</button>
+                <button type="button" data-editor-palette-tab="all" aria-pressed="false">الكل</button>
+              </div>
+              <div class="part-quick-colors" id="part-quick-colors" aria-live="polite"></div>
+              <div class="editor-add-color">
+                <div class="editor-add-color-copy"><b>عندك لون جديد؟</b><small>اختار اللون من أداة اللون فوق، واكتب له اسمًا لو تحب، ثم أضفه للوحة المشتركة.</small></div>
+                <div class="editor-add-color-row">
+                  <input id="shared-color-name" class="editor-color-name-input" type="text" maxlength="32" placeholder="اسم اللون (اختياري)" autocomplete="off" aria-label="اسم اللون الجديد">
+                  <button id="add-shared-color" class="editor-add-color-button" type="button">إضافة اللون</button>
+                </div>
+                <div class="editor-add-color-foot"><span>اللون الحالي</span><code id="shared-color-current-hex">#029A95</code><span class="editor-shared-note">هيظهر عند كل الزوار بعد الحفظ</span></div>
+              </div>
+            </section>
             <div class="part-actions"><button class="part-reset-button" id="reset-current-part" type="button">رجّع لون الجزء ده</button><button class="part-reset-button" id="reset-current-mode" type="button">إعادة ألوان الشكل كله</button></div>
             <p class="custom-preview-note">اختيار أي جزء من المجموعتين يحدد الأجزاء الثلاثة معًا. تغيير اللون أو إعادته يطبّق على المجموعة كاملة، بينما الخلفية والاسم وبروز الحروف والطائر 7 مستقلة.</p>
           </aside>
@@ -903,7 +947,7 @@
       brandName:["M 702.28 736.58 C 692.72 736.58 685.32 733.43 680.09 727.13 C 674.85 720.82 672.24 711.47 672.24 699.07 L 672.24 651.03 L 693.43 651.03 L 693.43 700.9 C 693.43 705.98 694.86 710.02 697.7 713.02 C 700.55 716.02 704.41 717.52 709.29 717.52 C 714.17 717.52 718.16 715.94 721.26 712.79 C 724.36 709.64 725.91 705.37 725.91 699.98 L 725.91 651.03 L 747.11 651.03 L 747.11 733.99 L 730.34 733.99 L 730.34 698.76 L 732.01 698.76 C 732.01 707.1 730.95 714.06 728.81 719.65 C 726.68 725.25 723.47 729.47 719.2 732.31 C 714.93 735.16 709.6 736.58 703.19 736.58 L 702.28 736.58 Z","M 1008.64 721.64 C 1012.71 721.64 1016.42 720.72 1019.77 718.89 C 1023.13 717.06 1025.82 714.42 1027.86 710.96 C 1029.89 707.51 1030.91 703.34 1030.91 698.46 L 1030.91 693.12 C 1030.91 688.45 1029.86 684.48 1027.78 681.23 C 1025.7 677.97 1022.98 675.51 1019.62 673.83 C 1016.27 672.15 1012.61 671.31 1008.64 671.31 C 1004.17 671.31 1000.23 672.36 996.82 674.44 C 993.42 676.52 990.75 679.45 988.82 683.21 C 986.89 686.97 985.92 691.44 985.92 696.63 C 985.92 701.71 986.89 706.14 988.82 709.9 C 990.75 713.66 993.42 716.56 996.82 718.59 C 1000.23 720.62 1004.17 721.64 1008.64 721.64 Z M 1002.54 771.81 C 998.58 771.81 994.54 771.66 990.42 771.35 C 986.3 771.05 982.46 770.64 978.91 770.13 L 978.91 752.44 C 982.57 752.85 986.48 753.23 990.65 753.59 C 994.82 753.94 998.73 754.12 1002.39 754.12 C 1009.2 754.12 1014.72 753.3 1018.94 751.68 C 1023.15 750.05 1026.26 747.49 1028.24 743.98 C 1030.22 740.47 1031.21 736.02 1031.21 730.63 L 1031.21 714.32 L 1035.79 703.95 C 1035.48 711.57 1033.9 718.05 1031.06 723.39 C 1028.21 728.73 1024.35 732.8 1019.47 735.59 C 1014.59 738.39 1008.95 739.78 1002.54 739.78 C 996.85 739.78 991.69 738.72 987.06 736.58 C 982.44 734.45 978.47 731.5 975.17 727.74 C 971.86 723.98 969.3 719.56 967.47 714.47 C 965.64 709.39 964.72 703.95 964.72 698.15 L 964.72 694.95 C 964.72 689.16 965.66 683.74 967.55 678.71 C 969.43 673.68 972.09 669.28 975.55 665.52 C 979.01 661.76 983.12 658.86 987.9 656.83 C 992.68 654.79 997.97 653.78 1003.76 653.78 C 1010.57 653.78 1016.5 655.25 1021.53 658.2 C 1026.56 661.15 1030.5 665.42 1033.35 671.01 C 1036.19 676.6 1037.77 683.46 1038.07 691.6 L 1034.41 692.21 L 1034.41 656.37 L 1051.19 656.37 L 1051.19 729.41 C 1051.19 739.48 1049.46 747.61 1046 753.81 C 1042.55 760.01 1037.24 764.57 1030.07 767.46 C 1022.9 770.36 1013.73 771.81 1002.54 771.81 Z","M 1124.54 734.45 L 1124.54 709.89 L 1121.03 709.89 L 1121.03 682.6 C 1121.03 677.82 1119.86 674.26 1117.52 671.92 C 1115.18 669.59 1111.58 668.42 1106.7 668.42 C 1104.16 668.42 1101.11 668.47 1097.55 668.57 C 1093.99 668.67 1090.4 668.8 1086.8 668.95 C 1083.19 669.1 1079.96 669.28 1077.11 669.48 L 1077.11 651.49 C 1079.45 651.29 1082.09 651.08 1085.04 650.88 C 1087.99 650.68 1091.01 650.55 1094.12 650.5 C 1097.22 650.45 1100.14 650.42 1102.88 650.42 C 1111.42 650.42 1118.52 651.54 1124.16 653.78 C 1129.8 656.01 1134.07 659.52 1136.97 664.3 C 1139.86 669.08 1141.31 675.33 1141.31 683.05 L 1141.31 734.45 L 1124.54 734.45 Z M 1097.85 736.58 C 1091.85 736.58 1086.59 735.51 1082.07 733.38 C 1077.54 731.24 1074.04 728.19 1071.55 724.23 C 1069.05 720.26 1067.81 715.49 1067.81 709.89 C 1067.81 703.79 1069.31 698.81 1072.31 694.95 C 1075.31 691.09 1079.53 688.19 1084.97 686.26 C 1090.4 684.33 1096.78 683.36 1104.1 683.36 L 1123.32 683.36 L 1123.32 696.02 L 1103.8 696.02 C 1098.92 696.02 1095.18 697.21 1092.59 699.6 C 1090 701.99 1088.7 705.07 1088.7 708.83 C 1088.7 712.59 1090 715.64 1092.59 717.98 C 1095.18 720.32 1098.92 721.48 1103.8 721.48 C 1106.75 721.48 1109.47 720.95 1111.96 719.88 C 1114.45 718.82 1116.53 716.99 1118.21 714.39 C 1119.89 711.8 1120.83 708.27 1121.03 703.79 L 1126.22 709.74 C 1125.71 715.54 1124.31 720.42 1122.02 724.38 C 1119.74 728.35 1116.58 731.37 1112.57 733.46 C 1108.55 735.54 1103.65 736.58 1097.85 736.58 Z","M 1317.14 653.78 L 1338.34 653.78 L 1338.34 736.58 L 1317.14 736.58 Z","M 924.61 653.78 L 945.81 653.78 L 945.81 736.58 L 924.61 736.58 Z","M 771.51 736.58 L 771.51 653.78 L 788.29 653.78 L 788.29 689.31 L 786.76 689.31 C 786.76 680.97 787.83 673.98 789.96 668.34 C 792.1 662.7 795.27 658.43 799.49 655.53 C 803.71 652.63 808.97 651.18 815.28 651.18 L 816.19 651.18 C 822.6 651.18 827.91 652.63 832.13 655.53 C 836.34 658.43 839.5 662.7 841.58 668.34 C 843.67 673.98 844.71 680.97 844.71 689.31 L 839.37 689.31 C 839.37 680.97 840.46 673.98 842.65 668.34 C 844.84 662.7 848.04 658.43 852.26 655.53 C 856.47 652.63 861.74 651.18 868.04 651.18 L 868.96 651.18 C 875.36 651.18 880.7 652.63 884.97 655.53 C 889.24 658.43 892.46 662.7 894.65 668.34 C 896.84 673.98 897.93 680.97 897.93 689.31 L 897.93 736.58 L 876.73 736.58 L 876.73 687.32 C 876.73 682.14 875.41 678 872.77 674.9 C 870.12 671.8 866.36 670.25 861.48 670.25 C 856.6 670.25 852.69 671.85 849.74 675.05 C 846.79 678.25 845.32 682.55 845.32 687.94 L 845.32 736.58 L 824.12 736.58 L 824.12 687.32 C 824.12 682.14 822.8 678 820.16 674.9 C 817.51 671.8 813.75 670.25 808.87 670.25 C 803.99 670.25 800.08 671.85 797.13 675.05 C 794.18 678.25 792.71 682.55 792.71 687.94 L 792.71 736.58 L 771.51 736.58 Z","M 1164.04 736.58 L 1164.04 653.78 L 1180.81 653.78 L 1180.81 689.31 L 1179.29 689.31 C 1179.29 680.97 1180.35 673.98 1182.49 668.34 C 1184.62 662.7 1187.8 658.43 1192.02 655.53 C 1196.24 652.63 1201.5 651.18 1207.8 651.18 L 1208.72 651.18 C 1215.12 651.18 1220.43 652.63 1224.65 655.53 C 1228.87 658.43 1232.02 662.7 1234.11 668.34 C 1236.19 673.98 1237.23 680.97 1237.23 689.31 L 1231.9 689.31 C 1231.9 680.97 1232.99 673.98 1235.18 668.34 C 1237.36 662.7 1240.56 658.43 1244.78 655.53 C 1249 652.63 1254.26 651.18 1260.57 651.18 L 1261.48 651.18 C 1267.89 651.18 1273.22 652.63 1277.49 655.53 C 1281.76 658.43 1284.99 662.7 1287.18 668.34 C 1289.36 673.98 1290.46 680.97 1290.46 689.31 L 1290.46 736.58 L 1269.26 736.58 L 1269.26 687.32 C 1269.26 682.14 1267.94 678 1265.29 674.9 C 1262.65 671.8 1258.89 670.25 1254.01 670.25 C 1249.13 670.25 1245.21 671.85 1242.27 675.05 C 1239.32 678.25 1237.84 682.55 1237.84 687.94 L 1237.84 736.58 L 1216.65 736.58 L 1216.65 687.32 C 1216.65 682.14 1215.33 678 1212.68 674.9 C 1210.04 671.8 1206.28 670.25 1201.4 670.25 C 1196.52 670.25 1192.6 671.85 1189.66 675.05 C 1186.71 678.25 1185.23 682.55 1185.23 687.94 L 1185.23 736.58 L 1164.04 736.58 Z","M 611.85 717.52 L 611.85 736.58 L 659.88 736.58 L 659.88 717.52 Z M 593.24 625.26 L 593.24 736.58 L 614.9 736.58 L 614.9 625.26 Z"]
     };
     const HEX_PATTERN=/^#[0-9A-Fa-f]{6}$/;
-    const state={view:'gallery',page:1,active:null,shown:[],community:[],communitySignature:'',votes:Object.create(null),mine:new Set(),favorites:new Set(),visitorUid:'',remotePreferences:null,preferencesTouched:false,toastTimer:null,voteBusy:false,favoriteBusy:false,publishBusy:false,deleteBusy:false,liveRenderFrame:0,editorOpen:false,comments:[],commentBusy:false};
+    const state={view:'gallery',page:1,active:null,shown:[],community:[],communitySignature:'',sharedColors:[],sharedColorSignature:'',votes:Object.create(null),mine:new Set(),favorites:new Set(),visitorUid:'',remotePreferences:null,preferencesTouched:false,toastTimer:null,voteBusy:false,favoriteBusy:false,publishBusy:false,deleteBusy:false,liveRenderFrame:0,editorOpen:false,comments:[],commentBusy:false};
 
     const PENDING_PREFS_KEY='lumi-pending-preferences-v2';
     let preferenceSaveTimer=null;
@@ -1096,11 +1140,12 @@
     window.LumiFB.track=(event,details={})=>{const queue=window.LumiFB._pending;queue.push({event,details,at:Date.now()});if(queue.length>120)queue.splice(0,queue.length-120);try{localStorage.setItem('lumi-event-queue-v1',JSON.stringify(queue))}catch(_){}};
     window.LumiFB.vote=async()=>{throw new Error('لسه بنجهّز حفظ الاختيارات. جرّب كمان لحظات.')};
     window.LumiFB.publishDesign=async()=>{throw new Error('لسه بنجهّز نشر التصميمات. جرّب كمان لحظات.')};
+    window.LumiFB.addSharedColor=async()=>{throw new Error('لسه بنجهّز لوحة الألوان المشتركة. جرّب كمان لحظات.')};
     window.LumiFB.retry=()=>toast('لسه بنجهّز الاتصال بفايربيس. جرّب بعد لحظات.','info');$('#firebase-retry').addEventListener('click',()=>window.LumiFB.retry?.());
     function firebaseCall(method,...args){return window.LumiFB.call(method,...args)}
     function track(event,details={}){try{window.LumiFB.track(event,details)}catch(_){}}
 
-    /* إشعارات الموقع. */
+    /* إشعارات مدمجة مع ألوان الموقع. */
     const noticeMeta={
       success:{title:'تمام!',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>'},
       error:{title:'حصلت مشكلة',icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8v5m0 3h.01"/><circle cx="12" cy="12" r="9"/></svg>'},
@@ -1418,6 +1463,26 @@
         const next=new Set(keys||[]);
         if(!sameSet(state.favorites,next)){state.favorites=next;refreshAfterLiveData({favoritesChanged:true})}
       },
+      applySharedColors(items){
+        const toMillis=value=>value&&typeof value.toMillis==='function'?value.toMillis():value instanceof Date?value.getTime():Number(value&&value.seconds||value||0)*1000;
+        const next=(items||[]).map(item=>{
+          const data=item.data||item;
+          return {id:String(item.id||data.id||''),name:String(data.name||'لون مخصص').slice(0,32),hex:safeHex(data.hex,'#029A95'),createdBy:String(data.createdBy||''),createdAt:data.createdAt||null};
+        }).filter(item=>item.id).sort((a,b)=>toMillis(b.createdAt)-toMillis(a.createdAt));
+        const signature=next.map(item=>`${item.id}|${item.name}|${item.hex}|${item.createdBy}`).join('~');
+        if(signature===state.sharedColorSignature)return;
+        state.sharedColors=next;state.sharedColorSignature=signature;
+        if(state.editorOpen)renderPartQuickColors();
+      },
+      addSharedColor(item){
+        const data=item.data||item;
+        const color={id:String(item.id||data.id||''),name:String(data.name||'لون مخصص').slice(0,32),hex:safeHex(data.hex,'#029A95'),createdBy:String(data.createdBy||state.visitorUid),createdAt:data.createdAt||Date.now()};
+        if(!color.id)return null;
+        state.sharedColors=[color,...state.sharedColors.filter(old=>old.id!==color.id)];
+        state.sharedColorSignature='';
+        renderPartQuickColors();
+        return color;
+      },
       applyPreferences(prefs){
         state.remotePreferences=prefs||{};
         if(state.preferencesTouched)return;
@@ -1542,7 +1607,7 @@
       $('#selected-part-title').textContent=editorSelectionLabel(selected);
       $('#selected-part-subtitle').textContent=(mode==='light'?'لون المجموعة في الشكل الفاتح':'لون المجموعة في الشكل الداكن')+(selectedKeys.length>1?(sameColor?' · الأجزاء الثلاثة بنفس اللون':' · ألوان مختلفة؛ اختيار لون جديد يوحّدها'):'');
       $('#selected-part-swatch').style.setProperty('--selected-color',color);$('#selected-part-swatch').style.background=color;
-      $('#part-color-picker').value=color;$('#part-color-hex').value=color;
+      $('#part-color-picker').value=color;$('#part-color-hex').value=color;$('#shared-color-current-hex').textContent=color;
       $('#part-selector-grid').querySelectorAll('[data-part-choice]').forEach(button=>{
         const key=button.dataset.partChoice,keys=editorKeysForSelection(key),swatch=parts[keys[0]],mixed=keys.length>1&&!keys.every(part=>parts[part]===swatch);
         button.setAttribute('aria-pressed',String(key===selected));button.style.setProperty('--part-color',swatch);
@@ -1584,8 +1649,58 @@
       $('#custom-design-name').value=String(remote.editorName||'').slice(0,28);
       renderQuickColors();renderPartQuickColors();renderEditorStage();
     }
+    let editorPaletteTab='identity';
+    function dedupeEditorColors(items){
+      const seen=new Set(),result=[];
+      for(const item of items){
+        const hex=String(item?.hex||'').toUpperCase();
+        if(!HEX_PATTERN.test(hex)||seen.has(hex))continue;
+        seen.add(hex);result.push({...item,hex,name:String(item.name||paletteName(hex)).slice(0,32)});
+      }
+      return result;
+    }
+    function editorColorGroups(){
+      const identity=dedupeEditorColors([
+        ...PALETTE.map(color=>({...color,source:'identity'})),
+        ...BRAND_COLOR_PRESETS.map(color=>({...color,source:'identity'}))
+      ]);
+      const community=[];
+      state.sharedColors.forEach(color=>community.push({...color,source:'shared'}));
+      state.community.slice(0,60).forEach(pair=>{
+        const values=[...COLOR_KEYS.map(key=>pair.colors[key]),...['light','dark'].flatMap(mode=>LOGO_PART_KEYS.map(key=>pair.parts?.[mode]?.[key]))];
+        values.forEach(hex=>{if(hex&&HEX_PATTERN.test(hex))community.push({name:paletteName(hex),hex,source:'design'})});
+      });
+      const shared=dedupeEditorColors(community);
+      return {identity,community:shared,all:dedupeEditorColors([...identity,...shared])};
+    }
     function renderPartQuickColors(){
-      const colors=allSharedColors();$('#part-quick-colors').innerHTML=colors.map(color=>`<button class="part-quick-color" type="button" data-editor-quick="${color.hex}" style="--swatch:${color.hex}" aria-label="استخدم اللون ${escapeHtml(color.name)} ${color.hex}" title="${escapeHtml(color.name)} ${color.hex}"></button>`).join('');
+      const groups=editorColorGroups(),colors=groups[editorPaletteTab]||groups.identity;
+      document.querySelectorAll('[data-editor-palette-tab]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.editorPaletteTab===editorPaletteTab)));
+      $('#editor-color-count').textContent=`${colors.length} لون`;
+      $('#part-quick-colors').innerHTML=colors.length?colors.map(color=>{
+        const owned=!!(color.id&&color.createdBy&&color.createdBy===state.visitorUid);
+        const current=editorState.draft?.[editorState.mode]?.[editorState.selected]===color.hex;
+        return `<div class="editor-color-item"><button class="editor-color-apply${current?' is-current':''}" type="button" data-editor-quick="${color.hex}" style="--swatch:${color.hex}" aria-label="استخدم ${escapeHtml(color.name)} ${color.hex}" title="${escapeHtml(color.name)} — ${color.hex}"><i class="editor-color-chip"></i><span class="editor-color-meta"><b>${escapeHtml(color.name)}</b><code>${color.hex}</code></span></button></div>`;
+      }).join(''):'<div class="editor-color-empty">مفيش ألوان في القسم ده لسه. اختار لون من فوق وأضفه للوحة المشتركة.</div>';
+    }
+    async function addCurrentColorToSharedPalette(){
+      const hex=String($('#part-color-hex').value||editorState.draft[editorState.mode][editorState.selected]||'').trim().toUpperCase();
+      const name=String($('#shared-color-name').value||'').trim().slice(0,32)||`لون ${hex}`;
+      if(!HEX_PATTERN.test(hex)){toast('اختار لون صحيح الأول.','warning');return}
+      const existing=editorColorGroups().all.find(color=>color.hex===hex);
+      if(existing){
+        editorPaletteTab=existing.source==='identity'?'identity':'community';renderPartQuickColors();
+        toast('اللون ده موجود بالفعل في اللوحة.','info');return;
+      }
+      const button=$('#add-shared-color');button.disabled=true;button.textContent='بنحفظ اللون…';
+      try{
+        const item=await firebaseCall('addSharedColor',name,hex);
+        window.LumiApp.addSharedColor(item);
+        $('#shared-color-name').value='';editorPaletteTab='community';renderPartQuickColors();
+        toast('اللون اتحفظ في اللوحة المشتركة وهيظهر لباقي الناس.','success','اتضاف لون جديد');
+        track('shared_logo_color_added',{hex,name});
+      }catch(error){toast(String(error?.message||'مقدرناش نحفظ اللون. جرّب تاني.'),'error','تعذر حفظ اللون')}
+      finally{button.disabled=false;button.textContent='إضافة اللون'}
     }
     function updateEditorPageVisibility(){
       const editing=state.editorOpen,ranking=state.view==='ranking',favorites=state.view==='favorites';
@@ -1634,6 +1749,9 @@
     $('#part-color-hex').addEventListener('blur',event=>{const value=event.target.value.trim();if(!HEX_PATTERN.test(value)){event.target.value=editorState.draft[editorState.mode][editorState.selected];toast('اكتب كود لون صحيح بالشكل #A1B2C3.','warning')}});
     $('#reset-current-part').addEventListener('click',()=>{editorKeysForSelection(editorState.selected).forEach(key=>{editorState.draft[editorState.mode][key]=DEFAULT_PARTS[editorState.mode][key]});patchEditorStage();persistEditorDraftSoon();track('logo_part_reset',{part:editorState.selected,parts:editorKeysForSelection(editorState.selected),mode:editorState.mode});toast('رجّعنا لون الجزء أو المجموعة زي الأول.','success')});
     $('#reset-current-mode').addEventListener('click',()=>{editorState.draft[editorState.mode]={...DEFAULT_PARTS[editorState.mode]};patchEditorStage();persistEditorDraftSoon();track('logo_mode_reset',{mode:editorState.mode});toast('رجّعنا ألوان الشكل ده.','success')});
+    document.querySelectorAll('[data-editor-palette-tab]').forEach(button=>button.addEventListener('click',()=>{editorPaletteTab=button.dataset.editorPaletteTab;renderPartQuickColors();track('editor_palette_tab',{tab:editorPaletteTab})}));
+    $('#add-shared-color').addEventListener('click',addCurrentColorToSharedPalette);
+    $('#shared-color-name').addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();addCurrentColorToSharedPalette()}});
     $('#custom-design-name').addEventListener('input',()=>{persistEditorDraftSoon()});
     $('#customizer-form').addEventListener('submit',publishCustomDesign);
     $('#open-customizer').addEventListener('click',openCustomizer);$('#customizer-close').addEventListener('click',closeCustomizer);$('#cancel-customizer').addEventListener('click',closeCustomizer);
@@ -1996,6 +2114,19 @@
           }catch(error){console.error('Community design delete failed:',error);throw new Error(explain(error)||error.message||'مقدرناش نحذف التصميم. راجع قواعد Firestore وجرب تاني.')}
         };
 
+        window.LumiFB.addSharedColor=async(name,hex)=>{
+          await waitForDataStore();
+          const cleanHex=String(hex||'').trim().toUpperCase();
+          const cleanName=String(name||'').trim().slice(0,32)||`لون ${cleanHex}`;
+          if(!/^#[0-9A-F]{6}$/.test(cleanHex))throw new Error('كود اللون غير صحيح. استخدم صيغة مثل #A1B2C3.');
+          try{
+            const ref=F.doc(F.collection(db,'sharedLogoColors'));
+            const record={name:cleanName,hex:cleanHex,createdBy:user.uid,createdAt:F.serverTimestamp()};
+            await F.setDoc(ref,record);
+            return {id:ref.id,data:{...record,createdAt:Date.now()}};
+          }catch(error){console.error('Shared logo color was not saved:',error);throw new Error(explain(error)||error.message||'مقدرناش نحفظ اللون في اللوحة المشتركة. راجع قواعد Firestore وجرب تاني.')}
+        };
+
         window.LumiFB.publishDesign=async(colors,name='')=>{
           await waitForDataStore();
           const keys=['lightBackground','lightLogo','darkBackground','darkLogo','accent','detail'],clean={};
@@ -2079,6 +2210,9 @@
             F.onSnapshot(F.collection(db,'communityDesigns'),snapshot=>{
               window.LumiApp.applyCommunityDesigns(snapshot.docs.map(document=>({id:document.id,data:document.data()})));
             },error=>status(explain(error),'error'));
+            F.onSnapshot(F.query(F.collection(db,'sharedLogoColors'),F.orderBy('createdAt','desc'),F.limit(120)),snapshot=>{
+              window.LumiApp.applySharedColors(snapshot.docs.map(document=>({id:document.id,data:document.data()})));
+            },error=>{console.warn('Shared logo color palette could not load:',error);window.LumiApp?.notify?.('تعذر تحميل الألوان التي أضافها الزوار. الألوان الأساسية ما زالت متاحة.','warning','لوحة الألوان')});
             F.onSnapshot(F.collection(db,'communityDesignStats'),snapshot=>{
               const stats=Object.create(null);snapshot.forEach(document=>stats[document.id]=Math.max(0,Number(document.data().votes)||0));window.LumiApp.applyCommunityVoteStats(stats);
             },error=>status(explain(error),'error'));
