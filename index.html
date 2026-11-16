@@ -285,6 +285,69 @@
     @media (max-width:680px) { .export-options { grid-template-columns:1fr; } }
     @media (max-width:560px) { .dialog-tool-actions { width:100%; } .dialog-tool-actions .action-button { flex:1 1 130px; } .export-format-actions { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); } .export-group-brand .export-format-actions { grid-template-columns:repeat(2,minmax(0,1fr)); } .export-format-button { flex-direction:column; gap:3px; min-height:52px; padding:6px 4px; font-size:10px; } .export-format-code { min-width:42px; height:23px; } }
 
+    /* Account controls and member profile */
+    .account-login-button,.account-profile-button{min-height:42px;display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:0 13px;border:1px solid var(--line);border-radius:13px;background:var(--surface);color:var(--ink);font-size:11px;font-weight:700;white-space:nowrap;transition:border-color .2s,background .2s,transform .2s}
+    .account-login-button:hover,.account-profile-button:hover{border-color:var(--brand);background:var(--brand-soft);transform:translateY(-1px)}
+    .account-login-button svg{width:18px;height:18px;color:var(--brand)}
+    .account-profile-button[hidden],.account-login-button[hidden]{display:none!important}
+    .account-avatar-mini{width:28px;height:28px;display:grid;place-items:center;overflow:hidden;border-radius:50%;background:var(--brand-soft);color:var(--brand);font-size:12px;font-weight:800}
+    .account-avatar-mini img{width:100%;height:100%;object-fit:cover}
+    .account-profile-name{max-width:115px;overflow:hidden;text-overflow:ellipsis}
+    .profile-page{min-height:72vh;padding-block:34px 74px}
+    .profile-page[hidden]{display:none!important}
+    .profile-page-top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:22px}
+    .profile-page-top h2{margin:4px 0 2px;font-size:clamp(24px,4vw,34px);font-weight:800}
+    .profile-page-top p{margin:0;color:var(--muted);font-size:12px}
+    .profile-kicker{font:800 9px/1.3 Sora,Arial,sans-serif;letter-spacing:.18em;color:var(--accent);direction:ltr}
+    .profile-back-button{min-height:40px;padding:0 13px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);font-size:11px;font-weight:700;white-space:nowrap}
+    .profile-overview{display:grid;grid-template-columns:auto minmax(170px,1fr) minmax(190px,.8fr) auto;align-items:center;gap:18px;padding:20px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(145deg,var(--surface),var(--surface-2));box-shadow:var(--shadow-soft)}
+    .profile-avatar-wrap{position:relative;width:88px;height:88px}
+    .profile-avatar-large{width:88px;height:88px;display:grid;place-items:center;overflow:hidden;border:3px solid var(--surface);border-radius:50%;background:var(--brand-soft);color:var(--brand);font-size:30px;font-weight:800;box-shadow:0 0 0 1px var(--line)}
+    .profile-avatar-large img{width:100%;height:100%;object-fit:cover}
+    .profile-avatar-edit{position:absolute;inset-inline-end:-3px;bottom:0;width:30px;height:30px;display:grid;place-items:center;border:2px solid var(--surface);border-radius:50%;background:var(--brand);color:var(--brand-on);cursor:pointer}
+    .profile-avatar-edit svg{width:15px;height:15px}
+    .profile-overview-copy{min-width:0}
+    .profile-account-label{color:var(--accent);font-size:10px;font-weight:800}
+    .profile-overview-copy h3{margin:3px 0;font-size:19px;font-weight:800;overflow-wrap:anywhere}
+    .profile-overview-copy p{margin:0;color:var(--muted);font-size:11px;overflow-wrap:anywhere}
+    .profile-avatar-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+    .profile-small-button{display:inline-flex;align-items:center;justify-content:center;min-height:29px;padding:0 9px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--muted);font-size:9px;font-weight:700;cursor:pointer}
+    .profile-name-form{display:grid;grid-template-columns:1fr auto;gap:6px 8px;min-width:0}
+    .profile-name-form label{grid-column:1/-1;font-size:10px;font-weight:700;color:var(--muted)}
+    .profile-name-form input{min-width:0;min-height:39px;padding:0 10px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font:inherit;font-size:11px}
+    .profile-save-button{min-height:39px;padding:0 11px;border:1px solid var(--brand);border-radius:10px;background:var(--brand);color:var(--brand-on);font-size:10px;font-weight:700}
+    .profile-logout-button{align-self:center;min-height:38px;padding:0 11px;border:1px solid color-mix(in srgb,var(--danger) 35%,var(--line));border-radius:10px;background:color-mix(in srgb,var(--danger) 7%,var(--surface));color:var(--danger);font-size:10px;font-weight:700}
+    .profile-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:17px 0}
+    .profile-stat{padding:14px;border:1px solid var(--line);border-radius:15px;background:var(--surface);text-align:center}
+    .profile-stat b{display:block;color:var(--brand);font:800 24px/1.1 Sora,Arial,sans-serif}
+    .profile-stat span{display:block;margin-top:5px;color:var(--muted);font-size:10px}
+    .profile-tabs{display:flex;gap:6px;overflow-x:auto;padding:5px;border:1px solid var(--line);border-radius:15px;background:var(--surface-2);scrollbar-width:thin}
+    .profile-tab{flex:1 0 auto;min-height:39px;padding:0 13px;border:0;border-radius:10px;background:transparent;color:var(--muted);font-size:11px;font-weight:700;white-space:nowrap}
+    .profile-tab.is-active{background:var(--surface);color:var(--brand);box-shadow:var(--shadow-soft)}
+    .profile-panel{margin-top:18px}
+    .profile-panel[hidden]{display:none!important}
+    .profile-panel-heading{margin-bottom:12px}
+    .profile-panel-heading h3{margin:0;font-size:17px;font-weight:800}
+    .profile-panel-heading p{margin:4px 0 0;color:var(--muted);font-size:11px}
+    .profile-items{display:grid;gap:9px}
+    .profile-item{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:13px 15px;border:1px solid var(--line);border-radius:15px;background:var(--surface)}
+    .profile-item-main{min-width:0}
+    .profile-item-title{display:block;margin:0 0 4px;font-size:12px;font-weight:800;overflow-wrap:anywhere}
+    .profile-item-description{display:block;color:var(--muted);font-size:10px;line-height:1.75;overflow-wrap:anywhere;white-space:pre-wrap}
+    .profile-item-meta{display:block;margin-top:5px;color:var(--muted);font-size:9px}
+    .profile-item-actions{display:flex;gap:6px;align-items:center}
+    .profile-item-action{min-height:33px;padding:0 10px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);color:var(--ink);font-size:9px;font-weight:700;white-space:nowrap}
+    .profile-empty,.profile-loading{padding:25px 16px;border:1px dashed var(--line);border-radius:15px;color:var(--muted);font-size:11px;text-align:center;background:var(--surface)}
+    .profile-draft-card{padding:16px;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+    .profile-draft-swatches{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+    .profile-draft-mode{padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2)}
+    .profile-draft-mode b{display:block;margin-bottom:7px;font-size:10px}
+    .profile-draft-colors{display:flex;gap:5px}
+    .profile-draft-colors i{width:25px;height:25px;border:1px solid rgba(0,0,0,.12);border-radius:8px}
+    .profile-open-editor{margin-top:11px;min-height:40px;padding:0 14px;border:1px solid var(--brand);border-radius:11px;background:var(--brand);color:var(--brand-on);font-size:10px;font-weight:700}
+    @media(max-width:850px){.profile-overview{grid-template-columns:auto minmax(0,1fr) minmax(180px,.8fr)}.profile-logout-button{grid-column:1/-1;justify-self:start}}
+    @media(max-width:600px){.account-login-button,.account-profile-button{min-height:40px;padding:0 9px;font-size:10px}.account-profile-name{max-width:82px}.profile-page{padding-block:23px 55px}.profile-page-top{flex-direction:column;gap:13px}.profile-overview{grid-template-columns:auto minmax(0,1fr);gap:12px;padding:14px}.profile-name-form{grid-column:1/-1}.profile-logout-button{grid-column:1/-1;justify-self:stretch}.profile-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.profile-stat{padding:11px}.profile-stat b{font-size:21px}.profile-item{padding:11px;grid-template-columns:minmax(0,1fr)}.profile-item-actions{justify-content:flex-start}.profile-draft-swatches{grid-template-columns:1fr}}
+
     /* LUMIGAMI Identity — friendly Google / email account onboarding */
     .identity-dialog { width:min(500px,calc(100% - 26px)); max-width:none; max-height:min(92vh,760px); margin:auto; padding:0; overflow:auto; border:1px solid var(--line); border-radius:26px; background:var(--surface); color:var(--ink); box-shadow:0 28px 90px rgba(0,0,0,.34); }
     .identity-dialog::backdrop { background:rgba(5,12,8,.64); backdrop-filter:blur(9px); -webkit-backdrop-filter:blur(9px); }
@@ -468,6 +531,7 @@
       .nav { order: 2; flex: 1 1 100%; }
       .nav-tab { flex: 1; min-height: 42px; }
       .theme-control { order: 0; flex: 0 0 auto; }
+      .account-login-button,.account-profile-button { order: 1; flex: 0 0 auto; }
       .theme-choice { width: 42px; min-height: 42px; padding: 0; }
       .theme-choice span { display: none; }
       .dialog-previews { grid-template-columns: 1fr; }
@@ -999,6 +1063,13 @@
         <span class="brand-copy"><span class="brand-name">LUMIGAMI</span><span class="brand-caption">اختار اللي يعجبك</span></span>
       </a>
       <div class="header-actions">
+        <button class="account-login-button" id="account-login-button" type="button" aria-label="تسجيل الدخول">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="8" r="4"/></svg><span>تسجيل الدخول</span>
+        </button>
+        <button class="account-profile-button" id="account-profile-button" type="button" hidden aria-label="فتح الملف الشخصي">
+          <span class="account-avatar-mini" id="account-avatar-mini"><img id="account-avatar-image" alt="" hidden><span id="account-avatar-fallback">ح</span></span>
+          <span class="account-profile-name" id="account-profile-name">حسابي</span>
+        </button>
         <nav class="nav" aria-label="أقسام الموقع">
           <button class="nav-tab" type="button" data-view="gallery" aria-selected="true">التصميمات</button>
           <button class="nav-tab" type="button" data-view="ranking" aria-selected="false">الأكثر إعجابًا</button>
@@ -1087,10 +1158,56 @@
     </section>
   </main>
 
+  <section class="profile-page container" id="profile-page" aria-labelledby="profile-page-title" hidden>
+    <div class="profile-page-top">
+      <button class="profile-back-button" id="profile-back-button" type="button"><span aria-hidden="true">←</span> العودة للموقع</button>
+      <div><span class="profile-kicker">LUMIGAMI MEMBER SPACE</span><h2 id="profile-page-title">ملفي الشخصي</h2><p>مساحتك الخاصة لكل ما صممته واخترته وشاركته.</p></div>
+    </div>
+    <section class="profile-overview" aria-label="معلومات الحساب">
+      <div class="profile-avatar-wrap">
+        <div class="profile-avatar-large" id="profile-avatar-large"><img id="profile-avatar-image" alt="الصورة الشخصية" hidden><span id="profile-avatar-fallback">ح</span></div>
+        <label class="profile-avatar-edit" for="profile-avatar-file" title="تغيير الصورة" aria-label="تغيير الصورة">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 5 5 5M4 20l4.2-.8L19 8.4a2.1 2.1 0 0 0-3-3L5.2 16.2 4 20Z"/></svg>
+        </label>
+        <input id="profile-avatar-file" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+      </div>
+      <div class="profile-overview-copy">
+        <span class="profile-account-label">حساب LUMIGAMI</span>
+        <h3 id="profile-display-heading">عضو LUMIGAMI</h3>
+        <p id="profile-account-detail">أعمالك محفوظة في حسابك.</p>
+        <div class="profile-avatar-actions"><label class="profile-small-button" for="profile-avatar-file">تغيير الصورة</label><button class="profile-small-button" id="profile-avatar-remove" type="button" hidden>إزالة الصورة</button></div>
+      </div>
+      <form class="profile-name-form" id="profile-name-form">
+        <label for="profile-display-name">الاسم الظاهر في الموقع</label>
+        <input id="profile-display-name" maxlength="40" type="text" placeholder="اكتب الاسم الذي تفضله" autocomplete="nickname">
+        <button class="profile-save-button" type="submit">حفظ الاسم</button>
+      </form>
+      <button class="profile-logout-button" id="profile-logout-button" type="button">تسجيل الخروج</button>
+    </section>
+    <div class="profile-stats" aria-label="ملخص نشاط الحساب">
+      <div class="profile-stat"><b id="profile-stat-designs">0</b><span>تصميماتي</span></div>
+      <div class="profile-stat"><b id="profile-stat-comments">0</b><span>تعليقاتي</span></div>
+      <div class="profile-stat"><b id="profile-stat-votes">0</b><span>اختياراتي</span></div>
+      <div class="profile-stat"><b id="profile-stat-favorites">0</b><span>مفضلتي</span></div>
+    </div>
+    <nav class="profile-tabs" aria-label="أقسام الملف الشخصي">
+      <button type="button" class="profile-tab is-active" data-profile-tab="designs" aria-selected="true">تصميماتي</button>
+      <button type="button" class="profile-tab" data-profile-tab="comments" aria-selected="false">تعليقاتي</button>
+      <button type="button" class="profile-tab" data-profile-tab="votes" aria-selected="false">اختياراتي</button>
+      <button type="button" class="profile-tab" data-profile-tab="favorites" aria-selected="false">المفضلة</button>
+      <button type="button" class="profile-tab" data-profile-tab="edits" aria-selected="false">تعديلاتي</button>
+    </nav>
+    <section class="profile-panel" id="profile-panel-designs" data-profile-panel="designs"><div class="profile-panel-heading"><h3>التصميمات التي نشرتها</h3><p>كل نسخة قمت بإنشائها ومشاركتها مع المجتمع.</p></div><div class="profile-items" id="profile-items-designs"><div class="profile-loading">بنحمّل تصميماتك…</div></div></section>
+    <section class="profile-panel" id="profile-panel-comments" data-profile-panel="comments" hidden><div class="profile-panel-heading"><h3>تعليقاتي</h3><p>آراؤك التي شاركتها على التصميمات.</p></div><div class="profile-items" id="profile-items-comments"></div></section>
+    <section class="profile-panel" id="profile-panel-votes" data-profile-panel="votes" hidden><div class="profile-panel-heading"><h3>التصميمات التي اخترتها</h3><p>التصميمات التي صوّت لها بإعجاب.</p></div><div class="profile-items" id="profile-items-votes"></div></section>
+    <section class="profile-panel" id="profile-panel-favorites" data-profile-panel="favorites" hidden><div class="profile-panel-heading"><h3>التصميمات المحفوظة في المفضلة</h3><p>التصميمات التي احتفظت بها للرجوع إليها.</p></div><div class="profile-items" id="profile-items-favorites"></div></section>
+    <section class="profile-panel" id="profile-panel-edits" data-profile-panel="edits" hidden><div class="profile-panel-heading"><h3>تعديلاتي ومسوداتي</h3><p>آخر مسودة ألوان محفوظة في حسابك.</p></div><div class="profile-draft-card" id="profile-draft-card"><div class="profile-empty">لا توجد مسودة محفوظة حتى الآن. ابدأ تصميمًا واحفظ تعديلاتك لتظهر هنا.</div></div><button class="profile-open-editor" id="profile-open-editor" type="button">فتح مساحة التصميم</button></section>
+  </section>
+
   <footer class="footer" id="site-footer">
     <div class="container footer-inner">
       <span><b>كل فكرة ليها مكان.</b> جرّب ألوانك وشاركها مع الكل.</span>
-      <span>اختياراتك وتعليقاتك وتصميماتك مرتبطة بهويتك المجهولة في Firebase، من غير ما نطلب اسمك أو إيميلك.</span>
+      <span>أنشئ حسابك لتحفظ تصميماتك وتعليقاتك واختياراتك وتستعيدها من أي جهاز.</span>
     </div>
   </footer>
 
@@ -1421,6 +1538,16 @@
     };
     const HEX_PATTERN=/^#[0-9A-Fa-f]{6}$/;
     const state={view:'gallery',page:1,active:null,shown:[],community:[],communitySignature:'',votes:Object.create(null),mine:new Set(),favorites:new Set(),visitorUid:'',deviceId:'',remotePreferences:null,preferencesTouched:false,toastTimer:null,voteBusy:false,favoriteBusy:false,publishBusy:false,deleteBusy:false,liveRenderFrame:0,editorOpen:false,comments:[],commentBusy:false,preferencesLoaded:false};
+    let profileReturnState=null;
+    function updateLumiAccountHeader(visitor){
+      const login=$('#account-login-button'),profile=$('#account-profile-button'),name=$('#account-profile-name'),image=$('#account-avatar-image'),fallback=$('#account-avatar-fallback');
+      const isMember=!!visitor&&!visitor.isAnonymous;
+      if(login)login.hidden=isMember;if(profile)profile.hidden=!isMember;
+      const label=String(visitor?.displayName||visitor?.email?.split('@')[0]||'حسابي').trim()||'حسابي';
+      if(name)name.textContent=label;
+      if(image){if(visitor?.photoURL){image.src=visitor.photoURL;image.hidden=false;if(fallback)fallback.hidden=true;image.onerror=()=>{image.hidden=true;if(fallback)fallback.hidden=false}}else{image.removeAttribute('src');image.hidden=true;if(fallback)fallback.hidden=false}}
+      if(fallback)fallback.textContent=Array.from(label)[0]||'ح';
+    }
 
     const PENDING_PREFS_KEY='lumi-pending-preferences-v2';
     let preferenceSaveTimer=null;
@@ -1878,6 +2005,8 @@
       onAuthChanged(visitor){
         const uid=String(visitor?.uid||'');
         lumiIdentityVerifiedUid=visitor&&!visitor.isAnonymous?uid:'';
+        updateLumiAccountHeader(visitor);
+        if(profilePage&&!profilePage.hidden&&visitor?.isAnonymous)closeProfilePage();
       },
       clearVerification(){lumiIdentityVerifiedUid=''}
     };
@@ -2270,6 +2399,117 @@
       },
       flushPendingPreferences(){return savePreferencePatch({})}
     };
+
+    /* LUMIGAMI member profile: reads existing owner-linked Firestore records. */
+    const profilePage=$('#profile-page'),profileMain=$('#top'),profileEditor=$('#editor-page'),profileFooter=$('#site-footer');
+    let profileDataCache=null,profileDataUid='';
+    function setProfileTab(tab){
+      document.querySelectorAll('[data-profile-tab]').forEach(button=>{const active=button.dataset.profileTab===tab;button.classList.toggle('is-active',active);button.setAttribute('aria-selected',String(active))});
+      document.querySelectorAll('[data-profile-panel]').forEach(panel=>{panel.hidden=panel.dataset.profilePanel!==tab});
+    }
+    function profileUid(){return String(window.LumiFB?.getCurrentUid?.()||state.visitorUid||'')}
+    function openProfilePage(){
+      const account=window.LumiFB?.getCachedAccount?.();
+      if(!account||account.isAnonymous){
+        setLumiIdentityMode('signin');setLumiIdentityMethod('username');
+        if(lumiIdentityActionContext)lumiIdentityActionContext.textContent='سجّل الدخول لعرض تصميماتك وتعليقاتك واختياراتك المحفوظة.';
+        if(lumiIdentityDialog&&!lumiIdentityDialog.open)lumiIdentityDialog.showModal();return;
+      }
+      profileReturnState={mainHidden:profileMain.hidden,editorHidden:profileEditor.hidden,footerHidden:profileFooter.hidden};
+      closeDesign();profileMain.hidden=true;profileEditor.hidden=true;profileFooter.hidden=true;profilePage.hidden=false;
+      setProfileTab('designs');profilePage.scrollIntoView({behavior:'smooth',block:'start'});
+      loadLumiProfile(true).catch(error=>{console.error('Profile load failed:',error);$('#profile-items-designs').innerHTML='<div class="profile-empty">تعذر تحميل ملفك الشخصي. تحقق من الاتصال ثم حاول مرة أخرى.</div>';toast(String(error?.message||'تعذر تحميل الملف الشخصي.'),'error')});
+    }
+    function closeProfilePage(){
+      profilePage.hidden=true;
+      const previous=profileReturnState||{mainHidden:false,editorHidden:true,footerHidden:false};
+      profileMain.hidden=previous.mainHidden;profileEditor.hidden=previous.editorHidden;profileFooter.hidden=previous.footerHidden;profileReturnState=null;
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+    function profileMillis(value){return value&&typeof value.toMillis==='function'?value.toMillis():value instanceof Date?value.getTime():Number(value?.seconds||0)*1000}
+    function profileDate(value){const ms=profileMillis(value);return ms?new Intl.DateTimeFormat('ar-EG',{dateStyle:'medium'}).format(new Date(ms)):'—'}
+    function profileDesignPair(type,id){
+      const designType=String(type||''),designId=String(id||'');
+      if(designType==='preset'){const number=Number(designId);return PAIRS.find(pair=>pair.id===number)||null}
+      if(designType==='community')return state.community.find(pair=>pair.firestoreId===designId)||null;
+      return null;
+    }
+    function profileOpenButton(pair){return pair?`<button class="profile-item-action" type="button" data-profile-open="${escapeHtml(slugToken(pair))}">عرض التصميم</button>`:''}
+    function renderProfileItems(host,items,emptyText){
+      if(!host)return;
+      if(!items.length){host.innerHTML=`<div class="profile-empty">${escapeHtml(emptyText)}</div>`;return}
+      host.innerHTML=items.map(item=>`<article class="profile-item"><div class="profile-item-main"><b class="profile-item-title">${escapeHtml(item.title||'عنصر من LUMIGAMI')}</b>${item.description?`<span class="profile-item-description">${escapeHtml(item.description)}</span>`:''}<span class="profile-item-meta">${escapeHtml(item.meta||'')}</span></div><div class="profile-item-actions">${profileOpenButton(item.pair)}${item.deleteId?`<button class="profile-item-action" type="button" data-profile-delete-comment="${escapeHtml(item.deleteId)}">حذف التعليق</button>`:''}</div></article>`).join('');
+    }
+    async function loadLumiProfile(force=false){
+      const uid=profileUid();if(!uid)throw new Error('لم يتم التعرف على حسابك. سجّل الدخول مجددًا.');
+      if(profileDataCache&&profileDataUid===uid&&!force){renderLumiProfile(profileDataCache);return profileDataCache}
+      ['designs','comments','votes','favorites'].forEach(key=>{const host=$(`#profile-items-${key}`);if(host)host.innerHTML='<div class="profile-loading">بنحمّل بياناتك…</div>'});
+      const data=await firebaseCall('getProfileData');profileDataCache=data;profileDataUid=uid;renderLumiProfile(data);return data;
+    }
+    function renderLumiProfile(data){
+      const account=window.LumiFB.getCachedAccount?.()||{};
+      const displayName=String(account.displayName||account.email?.split('@')[0]||'عضو LUMIGAMI');
+      $('#profile-display-heading').textContent=displayName;$('#profile-account-detail').textContent=account.email|| (account.username?`@${account.username}`:'حساب LUMIGAMI');$('#profile-display-name').value=account.displayName||'';
+      const photo=account.photoURL||'';const big=$('#profile-avatar-image'),mini=$('#account-avatar-image');
+      [big,mini].forEach((img,index)=>{if(img){if(photo){img.src=photo;img.hidden=false;img.onerror=()=>{img.hidden=true;if(index===0)$('#profile-avatar-fallback').hidden=false;else $('#account-avatar-fallback').hidden=false}}else{img.removeAttribute('src');img.hidden=true}}});
+      $('#profile-avatar-fallback').hidden=!!photo;$('#profile-avatar-fallback').textContent=Array.from(displayName)[0]||'ح';$('#account-avatar-fallback').hidden=!!photo;$('#account-avatar-fallback').textContent=Array.from(displayName)[0]||'ح';
+      $('#profile-avatar-remove').hidden=!photo;
+      const designs=(data.designs||[]).slice().sort((a,b)=>profileMillis(b.createdAt)-profileMillis(a.createdAt));
+      const communityMap=new Map(state.community.map(pair=>[pair.firestoreId,pair]));
+      designs.forEach(item=>{if(!communityMap.has(item.id))communityMap.set(item.id,createCommunityPair(item.id,item))});
+      const comments=(data.comments||[]).slice().sort((a,b)=>profileMillis(b.createdAt)-profileMillis(a.createdAt));
+      const presetVotes=(data.pairVotes||[]).map(v=>profileDesignPair('preset',v.pairId)).filter(Boolean);
+      const communityVotes=(data.communityVotes||[]).map(v=>communityMap.get(String(v.designId))||profileDesignPair('community',v.designId)).filter(Boolean);
+      const favorites=(data.favorites||[]).map(f=>profileDesignPair(f.designType,f.designId)).filter(Boolean);
+      $('#profile-stat-designs').textContent=designs.length.toLocaleString('ar-EG');$('#profile-stat-comments').textContent=comments.length.toLocaleString('ar-EG');$('#profile-stat-votes').textContent=(presetVotes.length+communityVotes.length).toLocaleString('ar-EG');$('#profile-stat-favorites').textContent=favorites.length.toLocaleString('ar-EG');
+      renderProfileItems($('#profile-items-designs'),designs.map(item=>({title:item.name||'تصميم من إنشائي',description:'تصميم نشرته في معرض LUMIGAMI.',meta:`تاريخ النشر: ${profileDate(item.createdAt)}`,pair:communityMap.get(item.id)})),'لم تنشر أي تصميم بعد. ابدأ بتصميمك الأول وشاركه مع المجتمع.');
+      renderProfileItems($('#profile-items-comments'),comments.map(item=>{const pair=profileDesignPair(item.designType,item.designId);return{title:pair?displayTitle(pair):'تعليق على تصميم',description:item.text,meta:`${profileDate(item.createdAt)}${pair?' · '+displayTitle(pair):''}`,pair,deleteId:item.id}}),'لم تكتب أي تعليق بعد. شارك رأيك في التصميمات التي تعجبك.');
+      const votes=[...presetVotes,...communityVotes];
+      renderProfileItems($('#profile-items-votes'),votes.map(pair=>({title:displayTitle(pair),description:'اخترت هذا التصميم وصوّت له بإعجاب.',meta:pair.kind==='community'?'تصميم من المجتمع':'تصميم أساسي',pair})),'لم تختر أي تصميم بعد. اضغط زر الإعجاب على التصميمات التي تفضلها.');
+      renderProfileItems($('#profile-items-favorites'),favorites.map(pair=>({title:displayTitle(pair),description:'حفظته في قائمة المفضلة للرجوع إليه لاحقًا.',meta:'في مفضلتي',pair})),'قائمة المفضلة فارغة حاليًا. احفظ التصميمات التي تريد الرجوع إليها.');
+      const draft=data.preferences?.editorDraft,card=$('#profile-draft-card');
+      if(draft&&draft.light&&draft.dark){
+        const colorsFor=mode=>['background','bird1','bird2','bird3','bird4','bird5','bird6','bird7','brandName','letterProtrusions'].map(key=>draft[mode]?.[key]).filter(color=>typeof color==='string'&&/^#[0-9a-f]{6}$/i.test(color)).slice(0,7);
+        const swatches=mode=>`<div class="profile-draft-mode"><b>${mode==='light'?'الشكل الفاتح':'الشكل الداكن'}</b><div class="profile-draft-colors">${colorsFor(mode).map(color=>`<i title="${escapeHtml(color)}" style="background:${escapeHtml(color)}"></i>`).join('')}</div></div>`;
+        card.innerHTML=`<b class="profile-item-title">${escapeHtml(data.preferences.editorName||'مسودتي المحفوظة')}</b><span class="profile-item-description">آخر مسودة ألوان محفوظة في إعدادات حسابك. يمكنك متابعة تعديلها.</span><div class="profile-draft-swatches">${swatches('light')}${swatches('dark')}</div>`;
+        $('#profile-open-editor').hidden=false;
+      }else{card.innerHTML='<div class="profile-empty">لا توجد مسودة محفوظة حتى الآن. ابدأ تصميمًا واحفظ تعديلاتك لتظهر هنا.</div>';$('#profile-open-editor').hidden=true}
+    }
+    $('#account-login-button')?.addEventListener('click',()=>{
+      setLumiIdentityMode('signin');setLumiIdentityMethod('username');
+      if(lumiIdentityActionContext)lumiIdentityActionContext.textContent='سجّل الدخول إلى حسابك لاستعادة تصميماتك وتعليقاتك واختياراتك.';
+      if(lumiIdentityDialog&&!lumiIdentityDialog.open)lumiIdentityDialog.showModal();
+    });
+    $('#account-profile-button')?.addEventListener('click',openProfilePage);
+    $('#profile-back-button')?.addEventListener('click',closeProfilePage);
+    document.querySelectorAll('[data-profile-tab]').forEach(button=>button.addEventListener('click',()=>setProfileTab(button.dataset.profileTab)));
+    profilePage?.addEventListener('click',event=>{
+      const open=event.target.closest('[data-profile-open]');if(open){const pair=findDesign(open.dataset.profileOpen);if(pair){closeProfilePage();openDesign(pair)}return}
+      const remove=event.target.closest('[data-profile-delete-comment]');if(remove){const id=remove.dataset.profileDeleteComment;if(confirm('هل تريد حذف هذا التعليق نهائيًا؟'))firebaseCall('deleteComment',id).then(()=>{profileDataCache=null;return loadLumiProfile(true)}).then(()=>toast('تم حذف تعليقك.','success')).catch(error=>toast(String(error?.message||'تعذر حذف التعليق.'),'error'));return}
+    });
+    $('#profile-name-form')?.addEventListener('submit',async event=>{
+      event.preventDefault();const displayName=String($('#profile-display-name').value||'').trim();
+      if(!displayName||displayName.length>40){toast('اكتب اسمًا من حرف إلى 40 حرفًا.','warning');return}
+      const button=$('#profile-name-form button[type="submit"]');button.disabled=true;
+      try{await firebaseCall('updateAccountProfile',displayName);toast('تم تحديث اسم حسابك.','success');await loadLumiProfile(true);updateLumiAccountHeader(window.LumiFB.getCachedAccount?.())}
+      catch(error){toast(String(error?.message||'تعذر تحديث الاسم.'),'error')}
+      finally{button.disabled=false}
+    });
+    $('#profile-avatar-file')?.addEventListener('change',async event=>{
+      const file=event.target.files?.[0];event.target.value='';if(!file)return;
+      if(!/^image\/(jpeg|png|webp)$/i.test(file.type)||file.size>5*1024*1024){toast('اختر صورة JPG أو PNG أو WebP بحجم لا يتجاوز 5 ميجابايت.','warning');return}
+      try{const url=await firebaseCall('uploadProfileAvatar',file);const account=await firebaseCall('getAccountStatus');updateLumiAccountHeader(account);await loadLumiProfile(true);toast('تم تحديث صورتك الشخصية.','success')}
+      catch(error){toast(String(error?.message||'تعذر رفع الصورة. تأكد من تفعيل Firebase Storage وقواعده.'),'error')}
+    });
+    $('#profile-avatar-remove')?.addEventListener('click',async()=>{
+      try{await firebaseCall('removeProfileAvatar');const account=await firebaseCall('getAccountStatus');updateLumiAccountHeader(account);await loadLumiProfile(true);toast('تمت إزالة الصورة الشخصية.','success')}
+      catch(error){toast(String(error?.message||'تعذر إزالة الصورة.'),'error')}
+    });
+    $('#profile-open-editor')?.addEventListener('click',()=>{closeProfilePage();openCustomizer()});
+    $('#profile-logout-button')?.addEventListener('click',async()=>{
+      try{await firebaseCall('signOut');profileDataCache=null;closeProfilePage();toast('تم تسجيل الخروج. يمكنك متابعة التصفح كزائر.','success')}
+      catch(error){toast(String(error?.message||'تعذر تسجيل الخروج.'),'error')}
+    });
 
     /* تصدير النسختين بصيغة SVG متجهية حقيقية باستخدام مسارات الشعار الأصلية. */
     let exportVectorCounter=0;
@@ -3348,10 +3588,11 @@
       let firestoreReady=false,probePromise=null,eventBlocked=false;
       const sdk='https://www.gstatic.com/firebasejs/13.3.0/';
       try{
-        const [{initializeApp},A,F]=await Promise.all([
+        const [{initializeApp},A,F,S]=await Promise.all([
           import(sdk+'firebase-app.js'),
           import(sdk+'firebase-auth.js'),
-          import(sdk+'firebase-firestore.js')
+          import(sdk+'firebase-firestore.js'),
+          import(sdk+'firebase-storage.js')
         ]);
         // إعدادات تطبيق LUMIGAMI WEB من مشروع Firebase الجديد lumigami-studio-new.
         // Analytics غير مطلوب لتشغيل Firestore أو Anonymous Authentication؛ لذلك لا نحمّله هنا.
@@ -3366,6 +3607,7 @@
         };
         const app=initializeApp(firebaseConfig);
         auth=A.getAuth(app);
+        const storage=S.getStorage(app);
         try{
           db=F.initializeFirestore(app,{localCache:F.persistentLocalCache({tabManager:F.persistentMultipleTabManager()})});
         }catch(initError){
@@ -3429,6 +3671,45 @@
           const current=auth.currentUser||user;
           return {uid:current.uid,isAnonymous:!!current.isAnonymous,email:current.email||'',displayName:current.displayName||'',photoURL:current.photoURL||'',providers:Array.isArray(current.providerData)?current.providerData.map(item=>item.providerId):[]};
         };
+        let cachedAccount=null;
+        window.LumiFB.getCachedAccount=()=>{
+          const current=auth?.currentUser||user;
+          if(!current)return null;
+          return {uid:current.uid,isAnonymous:!!current.isAnonymous,email:current.email||'',displayName:current.displayName||'',photoURL:current.photoURL||'',providers:Array.isArray(current.providerData)?current.providerData.map(item=>item.providerId):[],username:current.displayName||''};
+        };
+        window.LumiFB.updateAccountProfile=async displayName=>{
+          await waitForDataStore();const current=auth.currentUser||user;
+          if(!current||current.isAnonymous)throw new Error('سجّل الدخول بحساب دائم أولًا.');
+          const clean=String(displayName||'').trim().slice(0,40);if(!clean)throw new Error('اكتب اسمًا صحيحًا.');
+          await A.updateProfile(current,{displayName:clean});user=auth.currentUser||current;return window.LumiFB.getCachedAccount();
+        };
+        window.LumiFB.uploadProfileAvatar=async file=>{
+          await waitForDataStore();const current=auth.currentUser||user;
+          if(!current||current.isAnonymous)throw new Error('سجّل الدخول بحساب دائم أولًا.');
+          if(!file||!/^image\/(jpeg|png|webp)$/i.test(file.type)||file.size>5*1024*1024)throw new Error('اختر صورة JPG أو PNG أو WebP بحجم لا يتجاوز 5 ميجابايت.');
+          const avatarRef=S.ref(storage,`profileAvatars/${current.uid}/avatar`);
+          await S.uploadBytes(avatarRef,file,{contentType:file.type,cacheControl:'public,max-age=3600'});
+          const photoURL=await S.getDownloadURL(avatarRef);
+          await A.updateProfile(current,{photoURL});user=auth.currentUser||current;return photoURL;
+        };
+        window.LumiFB.removeProfileAvatar=async()=>{
+          await waitForDataStore();const current=auth.currentUser||user;
+          if(!current||current.isAnonymous)throw new Error('سجّل الدخول بحساب دائم أولًا.');
+          const avatarRef=S.ref(storage,`profileAvatars/${current.uid}/avatar`);
+          try{await S.deleteObject(avatarRef)}catch(error){if(error?.code!=='storage/object-not-found')throw error}
+          await A.updateProfile(current,{photoURL:null});user=auth.currentUser||current;return true;
+        };
+        window.LumiFB.getProfileData=async()=>{
+          await waitForDataStore();const uid=user.uid;
+          const ownQuery=(name,field)=>F.getDocs(F.query(F.collection(db,name),F.where(field,'==',uid),F.limit(300)));
+          const [comments,designs,pairVotes,communityVotes,favorites,preferences]=await Promise.all([
+            ownQuery('designComments','uid'),ownQuery('communityDesigns','createdBy'),ownQuery('pairVotes','uid'),
+            ownQuery('communityDesignVotes','uid'),ownQuery('designFavorites','uid'),F.getDoc(F.doc(db,'visitorPreferences',uid))
+          ]);
+          const rows=snapshot=>snapshot.docs.map(document=>({id:document.id,...document.data()}));
+          return {comments:rows(comments),designs:rows(designs),pairVotes:rows(pairVotes),communityVotes:rows(communityVotes),favorites:rows(favorites),preferences:preferences.exists()?preferences.data():{}};
+        };
+        window.LumiFB.signOut=async()=>{await A.signOut(auth);user=null;return true};
         window.LumiFB.authenticateGoogle=async(mode='signup')=>{
           await waitForUser();
           const provider=new A.GoogleAuthProvider();
