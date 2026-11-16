@@ -14,7 +14,7 @@
 <title>LUMIGAMI — اختار اللي يعجبك</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Sora:wght@300;400;500;700;800&display=swap" rel="stylesheet">
   <script>
     /* نستخدم مفتاح إعداد جديد حتى لا يظل اختيار قديم من نسخة سابقة مانعًا الوضع التلقائي. */
     (() => {
@@ -808,7 +808,9 @@
           <button class="action-button danger-action" id="delete-design" type="button" hidden>حذف تصميمي</button>
           <button class="action-button" id="share-design" type="button">نسخ رابط التصميم</button>
           <button class="action-button" id="download-svg" type="button">تحميل SVG</button>
-          <button class="action-button primary" id="download-png" type="button">تحميل PNG</button>
+          <button class="action-button" id="download-png" type="button">تحميل PNG</button>
+          <button class="action-button" id="download-logo-pdf" type="button">الشعار فقط PDF</button>
+          <button class="action-button primary" id="download-brand-pdf" type="button">تصدير الهوية البصرية PDF</button>
         </div>
       </div>
     </div>
@@ -1089,10 +1091,19 @@
         result[mode]={};LOGO_PART_KEYS.forEach(key=>result[mode][key]=safeHex(source[key],fallback[key]||fallback.background));
       });return result;
     }
+    /* ألوان أجزاء التصميمات العشرة: نفس معادلة إعادة التلوين الأصلية (خلفية/أساسي/إضافي) مطبّقة على كل جزء من الشعار. */
+    const SRC_COLORS=[[1,155,149],[255,232,143],[224,230,245]];
+    function inv3(m){const[[a,b,c],[d,e,f],[g,i,j]]=m,A=e*j-f*i,B=c*i-b*j,C=b*f-c*e,D=f*g-d*j,E=a*j-c*g,F=c*d-a*f,G=d*i-e*g,H=b*g-a*i,I=a*e-b*d,det=a*A+b*D+c*G;return[[A,B,C],[D,E,F],[G,H,I]].map(r=>r.map(v=>v/det))}
+    function recolor(theme,hex){
+      const S=[0,1,2].map(ch=>SRC_COLORS.map(c=>c[ch]/255)),I=inv3(S),T=[0,1,2].map(ch=>[theme.background,theme.primary,theme.accent].map(x=>hexToRgb(x)[ch]/255));
+      const M=T.map(r=>[0,1,2].map(j=>r.reduce((s,v,k)=>s+v*I[k][j],0))),v=hexToRgb(hex).map(x=>x/255);
+      return '#'+M.map(r=>Math.round(Math.max(0,Math.min(1,r[0]*v[0]+r[1]*v[1]+r[2]*v[2]))*255).toString(16).padStart(2,'0')).join('').toUpperCase();
+    }
     function partsFor(pair,mode){
       if(pair.parts&&pair.parts[mode])return pair.parts[mode];
-      const primary=pair[mode].primary,accent=pair[mode].accent||pair.accent.hex;
-      return {background:pair[mode].background,bird1:accent,bird2:accent,bird3:accent,bird4:accent,bird5:primary,bird6:accent,bird7:accent,brandName:primary,letterProtrusions:accent};
+      pair._parts=pair._parts||{};
+      if(!pair._parts[mode]){const out={};LOGO_PART_KEYS.forEach(key=>{out[key]=recolor(pair[mode],key==='background'?'#019B95':DEFAULT_PARTS.light[key])});pair._parts[mode]=out}
+      return pair._parts[mode];
     }
     function createCommunityPair(id,data){
       const raw=data&&data.colors||{},colors={};COLOR_KEYS.forEach(key=>colors[key]=safeHex(raw[key],DEFAULT_CUSTOM[key]));
@@ -1784,6 +1795,145 @@
     installLegacyFilters();renderPalette();render(true);updateEditorPageVisibility();track('page_view',{path:location.pathname||'/'});
     const direct=location.hash.match(/^#design-(\d{1,2})$/);if(direct){const pair=PAIRS.find(item=>item.displayIndex===Number(direct[1]));if(pair)openDesign(pair,false)}
     const shared=location.hash.match(/^#community-([A-Za-z0-9_-]{1,100})$/);if(shared){const pair=state.community.find(item=>item.firestoreId===shared[1]);if(pair)openDesign(pair,false)}
+    /* ===== تصدير الهوية البصرية (PDF) والشعار لوحده (PDF) ===== */
+    const JSPDF_URL='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+    const PDF_W=1920,PDF_H=1080;
+    let jsPdfPromise=null,brandBusy=false;
+    function loadJsPdf(){
+      if(window.jspdf&&window.jspdf.jsPDF)return Promise.resolve(window.jspdf.jsPDF);
+      return jsPdfPromise=jsPdfPromise||new Promise((ok,no)=>{const s=document.createElement('script');s.src=JSPDF_URL;s.crossOrigin='anonymous';s.onload=()=>ok(window.jspdf.jsPDF);s.onerror=()=>{jsPdfPromise=null;no(new Error('تعذر تحميل مكتبة PDF. تأكد من الإنترنت وجرب تاني.'))};document.head.append(s)});
+    }
+    async function loadSora(){try{await Promise.all(['300','400','500','700','800'].map(w=>document.fonts.load(`${w} 60px Sora`)))}catch(_){}}
+    let lvPaths=null;
+    const logoPaths=()=>lvPaths=lvPaths||{bird:LOGO_VECTOR.bird.map(d=>new Path2D(d)),prot:LOGO_VECTOR.protrusions.map(d=>new Path2D(d)),name:LOGO_VECTOR.brandName.map(d=>new Path2D(d))};
+    /* حدود أجزاء الشعار داخل مساحة 1920×960 الأصلية */
+    const BIRD_BOX={x:737.7,y:245.79,w:444.6,h:316.55},NAME_BOX={x:581.66,y:625.26,w:756.68,h:146.55};
+    function drawLogo(ctx,parts,layout,cx,cy){
+      const P=logoPaths(),fillList=(list,color)=>{ctx.fillStyle=color;list.forEach(p=>ctx.fill(p))};
+      const bird=()=>P.bird.forEach((p,i)=>{ctx.fillStyle=parts['bird'+(i+1)];ctx.fill(p)});
+      const name=()=>{fillList(P.prot,parts.letterProtrusions);fillList(P.name,parts.brandName)}; /* البروزات تحت الحروف زي الشعار الأصلي */
+      ctx.save();
+      if(layout==='stack'){ctx.translate(cx-960,cy-508.8);bird();name()}
+      else{
+        const s=.708,bw=BIRD_BOX.w*s,gap=42,left=cx-(bw+gap+NAME_BOX.w)/2;
+        ctx.save();ctx.translate(left+bw+gap-NAME_BOX.x,cy-(NAME_BOX.y+NAME_BOX.h/2));name();ctx.restore();
+        ctx.translate(left-BIRD_BOX.x*s,cy-(BIRD_BOX.y+BIRD_BOX.h/2)*s);ctx.scale(s,s);bird();
+      }
+      ctx.restore();
+    }
+    function colorName(hex){
+      const[r,g,b]=hexToRgb(hex).map(v=>v/255),mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2,d=mx-mn,s=d?d/(1-Math.abs(2*l-1)):0;
+      let h=0;if(d){h=mx===r?((g-b)/d)%6:mx===g?(b-r)/d+2:(r-g)/d+4;h=(h*60+360)%360}
+      if(s<.1)return l<.15?'Black':l>.9?'White':l<.4?'Dark Gray':l>.7?'Light Gray':'Gray';
+      if(h>=15&&h<65&&s<.55&&l>.6)return l>.8?'Cream':'Sand';
+      if(h>=10&&h<45&&s<.45&&l>=.35)return l<.45?'Dark Taupe':'Taupe';
+      const n=h<15||h>=345?'Red':h<40?(l<.45?'Brown':'Orange'):h<65?'Yellow':h<95?'Lime':h<165?'Green':h<195?'Teal':h<255?'Blue':h<290?'Purple':'Pink';
+      return (l<.22?'Deep ':l<.38&&n!=='Brown'?'Dark ':l>.82?'Light ':n==='Brown'&&l<.3?'Dark ':'')+n;
+    }
+    const rgbDist=(a,b)=>{const x=hexToRgb(a),y=hexToRgb(b);return Math.hypot(x[0]-y[0],x[1]-y[1],x[2]-y[2])};
+    const bestText=(bg,list,min=4.5)=>{const ok=list.find(c=>contrastRatio(c,bg)>=min);return ok||list.slice().sort((a,b)=>contrastRatio(b,bg)-contrastRatio(a,bg))[0]};
+    function roundRectPath(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+    function brandSwatches(pair){
+      const L=partsFor(pair,'light'),D=partsFor(pair,'dark');
+      const pool=[L.background,D.background,L.bird1,D.bird4,L.letterProtrusions,D.letterProtrusions,L.brandName,D.brandName,L.bird4,D.bird1,L.bird7,D.bird7];
+      const out=[];pool.forEach(c=>{if(out.length<6&&out.every(o=>rgbDist(o,c)>24))out.push(c)});
+      pool.forEach(c=>{if(out.length<6)out.push(c)});
+      return ['Primary','Primary Dark','Accent','Fold shade','Bird body','Wing shade'].map((role,i)=>({role,hex:out[i].toLowerCase()}));
+    }
+    /* ---- الصفحات (1920×1080) ---- */
+    const pageLogoStack=mode=>(ctx,pair)=>{const p=partsFor(pair,mode);ctx.fillStyle=p.background;ctx.fillRect(0,0,PDF_W,PDF_H);drawLogo(ctx,p,'stack',960,508.8)};
+    function pageLogoRows(ctx,pair){
+      [['light',0],['dark',PDF_H/2]].forEach(([mode,y])=>{const p=partsFor(pair,mode);ctx.fillStyle=p.background;ctx.fillRect(0,y,PDF_W,PDF_H/2);drawLogo(ctx,p,'row',960,y+PDF_H/4)});
+    }
+    const rgbText=hex=>hexToRgb(hex).join(' ');
+    function cmykText(hex){const[r,g,b]=hexToRgb(hex).map(v=>v/255),k=1-Math.max(r,g,b);return(k>=1?[0,0,0,100]:[(1-r-k)/(1-k),(1-g-k)/(1-k),(1-b-k)/(1-k),k].map(v=>Math.round(v*100))).join(' ')}
+    const wcagLabel=r=>r>=7?'AAA':r>=4.5?'AA':r>=3?'AA Large':'Decorative';
+    function drawBirdIcon(ctx,parts,x,y,size){const P=logoPaths(),s=size/BIRD_BOX.w;ctx.save();ctx.translate(x-BIRD_BOX.x*s,y-BIRD_BOX.y*s);ctx.scale(s,s);P.bird.forEach((p,i)=>{ctx.fillStyle=parts['bird'+(i+1)];ctx.fill(p)});ctx.restore()}
+    function pageColorsSheet(ctx,pair){
+      const L=partsFor(pair,'light'),D=partsFor(pair,'dark'),bg=mixHex(L.background,'#FFFFFF',.93),sw=brandSwatches(pair),X=128,W=1664,F='Sora, Arial, sans-serif';
+      const ink=bestText(bg,[D.background,L.background,'#16211F'],7),mute=mixHex(ink,bg,.45),line=mixHex(ink,bg,.84);
+      ctx.fillStyle=bg;ctx.fillRect(0,0,PDF_W,PDF_H);ctx.textBaseline='alphabetic';
+      /* الرأس: أيقونة الطائر + الاسم + عنوان الصفحة */
+      ctx.fillStyle=D.background;roundRectPath(ctx,X,64,104,104,28);ctx.fill();drawBirdIcon(ctx,D,X+18,92,68);
+      ctx.fillStyle=ink;ctx.textAlign='left';ctx.font=`800 84px ${F}`;ctx.fillText('Lumigami',X+140,138);
+      ctx.textAlign='right';ctx.font=`700 44px ${F}`;ctx.fillText('Brand Colors',X+W,116);
+      ctx.fillStyle=mute;ctx.font=`500 22px ${F}`;ctx.fillText('6 colors  ·  HEX  ·  RGB  ·  CMYK',X+W,152);
+      ctx.fillStyle=line;ctx.fillRect(X,196,W,2);
+      /* شريط الألوان */
+      const y0=236,h=540,cw=W/6;
+      ctx.save();roundRectPath(ctx,X,y0,W,h,36);ctx.clip();
+      sw.forEach((c,i)=>{
+        const x=X+i*cw,t=contrastRatio('#FFFFFF',c.hex)>=contrastRatio('#0B1F1C',c.hex)?'#FFFFFF':'#0B1F1C';
+        ctx.fillStyle=c.hex;ctx.fillRect(x-1,y0,cw+2,h);ctx.fillStyle=t;ctx.textAlign='left';
+        ctx.globalAlpha=.65;ctx.font=`600 20px ${F}`;ctx.fillText('0'+(i+1),x+30,y0+60);ctx.globalAlpha=1;
+        ctx.font=`700 28px ${F}`;ctx.fillText(c.role,x+30,y0+96);
+        ctx.font=`700 34px ${F}`;ctx.fillText(colorName(c.hex),x+30,y0+h-176);
+        ctx.font=`800 46px ${F}`;ctx.fillText(c.hex,x+30,y0+h-120);
+        ctx.globalAlpha=.8;ctx.font=`500 21px ${F}`;ctx.fillText('RGB  '+rgbText(c.hex),x+30,y0+h-72);ctx.fillText('CMYK  '+cmykText(c.hex),x+30,y0+h-40);ctx.globalAlpha=1;
+      });
+      ctx.restore();
+      /* نسب الاستخدام المقترحة */
+      ctx.fillStyle=mute;ctx.textAlign='left';ctx.font=`600 21px ${F}`;ctx.fillText('SUGGESTED PROPORTION',X,828);
+      const wts=[34,24,16,12,8,6];let px=X;
+      ctx.save();roundRectPath(ctx,X,844,W,28,14);ctx.clip();
+      wts.forEach((p,i)=>{const w=W*p/100;ctx.fillStyle=sw[i].hex;ctx.fillRect(px,844,w+1,28);px+=w});ctx.restore();
+      px=X;ctx.fillStyle=ink;ctx.font=`600 20px ${F}`;wts.forEach(p=>{ctx.fillText(p+'%',px+4,904);px+=W*p/100});
+      /* أفضل ثلاث تركيبات تباينًا */
+      const pairs=[];sw.forEach((a,i)=>sw.forEach((b,j)=>{if(i<j)pairs.push({a:a.hex,b:b.hex,r:contrastRatio(a.hex,b.hex)})}));
+      pairs.sort((x,y)=>y.r-x.r);const top=pairs.slice(0,3),cwid=(W-48)/3;
+      top.forEach((p,i)=>{
+        const x=X+i*(cwid+24),y=934,dark=luminance(p.a)<luminance(p.b),bgc=dark?p.a:p.b,fg=dark?p.b:p.a;
+        ctx.fillStyle=bgc;roundRectPath(ctx,x,y,cwid,92,22);ctx.fill();ctx.lineWidth=2;ctx.strokeStyle=line;ctx.stroke();
+        ctx.fillStyle=fg;ctx.textAlign='left';ctx.font=`800 46px ${F}`;ctx.fillText('Aa',x+30,y+64);
+        const t=bestText(bgc,[fg,'#FFFFFF','#0B1F1C'],4.5);ctx.fillStyle=t;ctx.textAlign='right';
+        ctx.font=`700 30px ${F}`;ctx.fillText(p.r.toFixed(1)+':1',x+cwid-28,y+44);ctx.font=`600 19px ${F}`;ctx.fillText(wcagLabel(p.r),x+cwid-28,y+72);
+      });
+    }
+    function pageFont(ctx,pair){
+      const L=partsFor(pair,'light'),D=partsFor(pair,'dark'),bg=L.background;
+      const strong=bestText(bg,[L.brandName,D.background,L.letterProtrusions,L.bird5],4.5);
+      const soft=bestText(bg,[D.bird4,L.bird4,D.bird1,L.bird1,D.brandName,L.letterProtrusions],3);
+      ctx.fillStyle=bg;ctx.fillRect(0,0,PDF_W,PDF_H);ctx.textBaseline='alphabetic';ctx.textAlign='left';
+      ctx.fillStyle=soft;ctx.font='700 46px Sora, Arial, sans-serif';ctx.fillText('Font',90,112);
+      ctx.fillStyle=strong;ctx.font='800 104px Sora, Arial, sans-serif';ctx.fillText('SORA',196,316);
+      ctx.fillStyle=soft;ctx.fillRect(166,386,783,3);ctx.fillRect(948,56,3,950);
+      ctx.font='700 52px Sora, Arial, sans-serif';
+      ['ABCDEFGHIJKL','MNOPQRSTUV','WXYZabdefghi','jklmnopqrstuv','wxyz01234567','89!@#$%^&*()'].forEach((row,i)=>{
+        let x=194;const y=492+i*82;[...row].forEach(ch=>{ctx.fillText(ch,x,y);x+=ctx.measureText(ch).width+13});
+      });
+      ctx.fillStyle=strong;
+      [['Light',300],['Regular',400],['Medium',500],['Bold',700]].forEach(([t,w],i)=>{ctx.font=`${w} 96px Sora, Arial, sans-serif`;ctx.fillText(t,1246,252+i*190)});
+    }
+    async function buildPdf(pair,pages){
+      const jsPDF=await loadJsPdf();await loadSora();
+      const doc=new jsPDF({orientation:'landscape',unit:'pt',format:[PDF_W,PDF_H],compress:true});
+      for(let i=0;i<pages.length;i++){
+        let scale=2,canvas=document.createElement('canvas');canvas.width=PDF_W*scale;canvas.height=PDF_H*scale;
+        let ctx=canvas.getContext('2d');if(!ctx){scale=1;canvas.width=PDF_W;canvas.height=PDF_H;ctx=canvas.getContext('2d')}
+        if(!ctx)throw new Error('المتصفح مش قادر يجهّز صفحات PDF.');
+        ctx.scale(scale,scale);pages[i](ctx,pair);
+        if(i)doc.addPage([PDF_W,PDF_H],'landscape');
+        doc.addImage(canvas.toDataURL('image/png'),'PNG',0,0,PDF_W,PDF_H,undefined,'FAST');
+        canvas.width=canvas.height=1;await new Promise(r=>setTimeout(r,0));
+      }
+      return doc.output('blob');
+    }
+    async function exportPdf(kind){
+      if(!state.active||brandBusy)return;brandBusy=true;
+      const pair=state.active,tag=pair.kind==='community'?'Community-'+pair.firestoreId:displayNumber(pair),full=kind==='brand';
+      const buttons=[$('#download-brand-pdf'),$('#download-logo-pdf')];buttons.forEach(b=>b.disabled=true);
+      track('download',{design:pair.kind==='community'?pair.firestoreId:pair.id,format:full?'brand-pdf':'logo-pdf'});
+      try{
+        toast(full?'بنجهّز ملف الهوية البصرية… ممكن ياخد ثواني.':'بنجهّز ملف الشعار…','info');
+        const blob=await buildPdf(pair,full?[pageLogoStack('light'),pageLogoStack('dark'),pageLogoRows,pageColorsSheet,pageFont]:[pageLogoStack('light'),pageLogoStack('dark')]);
+        saveBlob(blob,`LUMIGAMI-${full?'Brand-Identity':'Logo'}-${tag}.pdf`,'application/pdf');
+        toast(full?'ملف الهوية البصرية جاهز.':'ملف الشعار جاهز.','success');
+      }catch(error){console.error(error);toast(String(error&&error.message||'تعذر تجهيز ملف PDF. جرّب تاني.'),'error')}
+      finally{brandBusy=false;buttons.forEach(b=>b.disabled=false)}
+    }
+    $('#download-brand-pdf').addEventListener('click',()=>exportPdf('brand'));
+    $('#download-logo-pdf').addEventListener('click',()=>exportPdf('logo'));
+
   </script>
 
   <script type="module">
