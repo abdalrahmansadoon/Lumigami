@@ -285,41 +285,6 @@
     @media (max-width:680px) { .export-options { grid-template-columns:1fr; } }
     @media (max-width:560px) { .dialog-tool-actions { width:100%; } .dialog-tool-actions .action-button { flex:1 1 130px; } .export-format-actions { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); } .export-group-brand .export-format-actions { grid-template-columns:repeat(2,minmax(0,1fr)); } .export-format-button { flex-direction:column; gap:3px; min-height:52px; padding:6px 4px; font-size:10px; } .export-format-code { min-width:42px; height:23px; } }
 
-    /* LUMIGAMI Identity — gentle passkey onboarding */
-    .identity-dialog { width:min(500px,calc(100% - 26px)); max-width:none; max-height:min(92vh,760px); margin:auto; padding:0; overflow:auto; border:1px solid var(--line); border-radius:26px; background:var(--surface); color:var(--ink); box-shadow:0 28px 90px rgba(0,0,0,.34); }
-    .identity-dialog::backdrop { background:rgba(5,12,8,.64); backdrop-filter:blur(9px); -webkit-backdrop-filter:blur(9px); }
-    .identity-dialog[open] { animation:identity-enter .34s cubic-bezier(.2,.8,.25,1) both; }
-    @keyframes identity-enter { from { opacity:0; transform:translateY(18px) scale(.975); } to { opacity:1; transform:translateY(0) scale(1); } }
-    .identity-dialog-inner { position:relative; padding:clamp(22px,5vw,34px); }
-    .identity-close { position:absolute; inset-block-start:14px; inset-inline-start:14px; width:36px; height:36px; border:1px solid var(--line); border-radius:12px; background:var(--surface-2); color:var(--muted); font-size:20px; line-height:1; }
-    .identity-brand-mark { width:76px; height:76px; display:grid; place-items:center; margin:3px auto 17px; border:1px solid color-mix(in srgb,var(--brand) 28%,var(--line)); border-radius:25px; background:linear-gradient(145deg,var(--brand-soft),var(--surface-2)); color:var(--brand); box-shadow:0 12px 32px color-mix(in srgb,var(--brand) 13%,transparent); }
-    .identity-brand-mark svg { width:39px; height:39px; }
-    .identity-kicker { display:block; margin-bottom:7px; color:var(--accent); font:800 9px/1.3 Sora,Arial,sans-serif; letter-spacing:.2em; text-align:center; direction:ltr; }
-    .identity-title { margin:0; color:var(--ink); font-size:clamp(22px,5vw,29px); line-height:1.35; font-weight:800; text-align:center; }
-    .identity-subtitle { max-width:390px; margin:10px auto 20px; color:var(--muted); font-size:13px; line-height:1.95; text-align:center; }
-    .identity-benefits { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin:20px 0; }
-    .identity-benefit { display:flex; align-items:flex-start; gap:10px; min-width:0; padding:12px; border:1px solid var(--line); border-radius:15px; background:var(--surface-2); }
-    .identity-benefit-icon { flex:0 0 31px; width:31px; height:31px; display:grid; place-items:center; border-radius:10px; background:var(--brand-soft); color:var(--brand); }
-    .identity-benefit-icon svg { width:17px; height:17px; }
-    .identity-benefit b { display:block; margin:0 0 2px; font-size:11px; }
-    .identity-benefit small { display:block; color:var(--muted); font-size:9px; line-height:1.65; }
-    .identity-device-note { display:flex; gap:9px; align-items:flex-start; margin:14px 0 17px; padding:11px 12px; border:1px solid color-mix(in srgb,var(--accent) 25%,var(--line)); border-radius:13px; background:var(--accent-soft); color:var(--ink); font-size:10px; line-height:1.8; }
-    .identity-device-note svg { flex:0 0 17px; width:17px; height:17px; margin-top:2px; color:var(--accent); }
-    .identity-action-context { min-height:20px; margin:0 0 11px; color:var(--muted); font-size:10px; text-align:center; }
-    .identity-primary { width:100%; min-height:52px; display:flex; align-items:center; justify-content:center; gap:10px; padding:0 17px; border:1px solid var(--brand); border-radius:15px; background:var(--brand); color:var(--brand-on); font:inherit; font-size:13px; font-weight:700; line-height:1.3; box-shadow:0 8px 20px color-mix(in srgb,var(--brand) 18%,transparent); transition:transform .2s,filter .2s,opacity .2s; }
-    .identity-primary:hover:not(:disabled) { transform:translateY(-1px); filter:brightness(1.05); }
-    .identity-primary svg { width:20px; height:20px; }
-    .identity-secondary { width:100%; min-height:45px; margin-top:9px; padding:0 14px; border:1px solid var(--line); border-radius:13px; background:var(--surface-2); color:var(--ink); font-size:11px; font-weight:700; transition:border-color .2s,background .2s; }
-    .identity-secondary:hover:not(:disabled) { border-color:var(--brand); background:var(--brand-soft); }
-    .identity-later { display:block; margin:11px auto 0; padding:7px 12px; border:0; background:transparent; color:var(--muted); font-size:10px; text-decoration:underline; text-underline-offset:3px; }
-    .identity-status { display:none; margin:13px 0 0; padding:10px 12px; border:1px solid var(--line); border-radius:12px; background:var(--surface-2); color:var(--muted); font-size:10px; line-height:1.8; text-align:center; }
-    .identity-status.is-visible { display:block; }
-    .identity-status.is-error { border-color:color-mix(in srgb,var(--danger) 35%,var(--line)); color:var(--danger); background:color-mix(in srgb,var(--danger) 7%,var(--surface)); }
-    .identity-status.is-success { border-color:color-mix(in srgb,var(--success) 35%,var(--line)); color:var(--success); background:color-mix(in srgb,var(--success) 7%,var(--surface)); }
-    .identity-trust-note { margin:15px 4px 0; color:var(--muted); font-size:9px; line-height:1.8; text-align:center; }
-    .identity-dialog button:disabled { opacity:.58; cursor:wait; transform:none; }
-    @media (max-width:440px) { .identity-benefits { grid-template-columns:1fr; } .identity-dialog-inner { padding:24px 18px 20px; } }
-
     /* Footer and messages */
     .footer { padding: 21px 0 calc(30px + var(--safe-bottom)); border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; line-height: 1.9; }
     .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
@@ -1154,49 +1119,6 @@
     </div>
   </dialog>
 
-  <dialog class="identity-dialog" id="lumi-identity-dialog" aria-labelledby="lumi-identity-title" aria-describedby="lumi-identity-subtitle">
-    <div class="identity-dialog-inner">
-      <button class="identity-close" id="lumi-identity-close" type="button" aria-label="إغلاق نافذة الهوية">×</button>
-      <div class="identity-brand-mark" aria-hidden="true">
-        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M24 5.5c-9.2 0-16.5 7.1-16.5 16.1 0 4.4 1.6 7.7 4.2 10.7"/>
-          <path d="M24 11c-6.1 0-11 4.7-11 10.6 0 3.2 1.1 5.7 3.1 7.8"/>
-          <path d="M24 16.5c-3.1 0-5.6 2.3-5.6 5.3 0 3.1 1.6 5.1 3.1 7.1 1.8 2.4 2.5 4.4 2.5 8.4"/>
-          <path d="M24 5.5c9.2 0 16.5 7.1 16.5 16.1 0 4.4-1.6 7.7-4.2 10.7"/>
-          <path d="M24 11c6.1 0 11 4.7 11 10.6 0 3.2-1.1 5.7-3.1 7.8"/>
-          <path d="M24 16.5c3.1 0 5.6 2.3 5.6 5.3 0 3.1-1.6 5.1-3.1 7.1-1.8 2.4-2.5 4.4-2.5 8.4"/>
-          <path d="M17 41.5c2.2-1.1 4.5-1.6 7-1.6s4.8.5 7 1.6"/>
-        </svg>
-      </div>
-      <span class="identity-kicker">LUMIGAMI IDENTITY</span>
-      <h2 class="identity-title" id="lumi-identity-title">خلّي لمساتك محفوظة</h2>
-      <p class="identity-subtitle" id="lumi-identity-subtitle">فعّل مفتاح مرور لهذا الجهاز حتى نحفظ تعديلاتك الخاصة ومفضلاتك وتعليقاتك، وتقدر ترجع لها بعد حذف بيانات المتصفح طالما ظل مفتاح المرور محفوظًا على الجهاز.</p>
-      <div class="identity-benefits">
-        <div class="identity-benefit">
-          <span class="identity-benefit-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 4.5 6v5.5c0 4.6 3.1 7.7 7.5 9.5 4.4-1.8 7.5-4.9 7.5-9.5V6L12 3Z"/><path d="m8.8 12 2.1 2.1 4.4-4.5"/></svg></span>
-          <span><b>هوية أكثر أمانًا</b><small>تحقق من جهازك دون كلمة مرور تقليدية.</small></span>
-        </div>
-        <div class="identity-benefit">
-          <span class="identity-benefit-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5.5h16v13H4z"/><path d="M8 9h8M8 12.5h5M8 16h3"/></svg></span>
-          <span><b>تعديلاتك معاك</b><small>استعد ألوانك ومسوداتك وتفضيلاتك.</small></span>
-        </div>
-      </div>
-      <div class="identity-device-note">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
-        <span>سنطلب مفتاح مرور محليًا غير قابل للمزامنة عندما يدعم جهازك ذلك. إذا كنت سجلت هويتك على هذا الجهاز من قبل، اختر استعادة هويتي بدل إنشاء هوية جديدة. قد لا تدعم بعض الأجهزة هذا النوع؛ وفي هذه الحالة لن نفعّل الحفظ بدل إعطائك وعدًا غير مضمون.</span>
-      </div>
-      <p class="identity-action-context" id="lumi-identity-action-context">لإكمال العملية التي اخترتها، احفظ هويتك أولًا.</p>
-      <button class="identity-primary" id="lumi-identity-register" type="button">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3a7 7 0 0 0-7 7v1M12 3a7 7 0 0 1 7 7v1M8 12v1a4 4 0 0 0 8 0v-1M12 8v5M5 17.5c1.8 2 4.2 3 7 3s5.2-1 7-3"/></svg>
-        <span id="lumi-identity-register-label">حفظ هويتي على هذا الجهاز</span>
-      </button>
-      <button class="identity-secondary" id="lumi-identity-recover" type="button">لدي مفتاح مرور سابق — استعادة هويتي</button>
-      <button class="identity-later" id="lumi-identity-later" type="button">ليس الآن، سأكمل التصفح</button>
-      <p class="identity-status" id="lumi-identity-status" role="status" aria-live="polite"></p>
-      <p class="identity-trust-note">لا يرسل جهازك بصمة الإصبع أو رمز القفل إلى LUMIGAMI. يُستخدم التحقق محليًا لإثبات امتلاك مفتاح المرور فقط.</p>
-    </div>
-  </dialog>
-
   <dialog class="publish-review-dialog" id="publish-review-dialog" aria-labelledby="publish-review-title">
     <div class="publish-review-inner">
       <div class="publish-review-topline"><span class="publish-review-icon" aria-hidden="true">✦</span><span class="publish-review-kicker">مراجعة قبل النشر</span></div>
@@ -1640,135 +1562,7 @@
     window.LumiFB.vote=async()=>{throw new Error('لسه بنجهّز حفظ الاختيارات. جرّب كمان لحظات.')};
     window.LumiFB.publishDesign=async()=>{throw new Error('لسه بنجهّز نشر التصميمات. جرّب كمان لحظات.')};
     window.LumiFB.retry=()=>toast('لسه بنجهّز الاتصال بفايربيس. جرّب بعد لحظات.','info');$('#firebase-retry').addEventListener('click',()=>window.LumiFB.retry?.());
-    const LUMI_IDENTITY_PROTECTED_METHODS = new Set([
-      'savePreferences','setFavorite','vote','addComment','deleteComment','deleteDesign','publishDesign'
-    ]);
-    const lumiIdentityDialog = document.getElementById('lumi-identity-dialog');
-    const lumiIdentityStatus = document.getElementById('lumi-identity-status');
-    const lumiIdentityActionContext = document.getElementById('lumi-identity-action-context');
-    const lumiIdentityRegisterButton = document.getElementById('lumi-identity-register');
-    const lumiIdentityRecoverButton = document.getElementById('lumi-identity-recover');
-    const lumiIdentityLaterButton = document.getElementById('lumi-identity-later');
-    let lumiIdentityVerifiedUid = '';
-    let lumiIdentityBusy = false;
-    let lumiIdentityPendingActions = [];
-    const lumiIdentityActionLabels = {
-      savePreferences:'حفظ إعداداتك وتعديلاتك الشخصية', setFavorite:'حفظ التصميم في المفضلة',
-      vote:'تسجيل اختيارك للتصميم', addComment:'نشر تعليقك', deleteComment:'حذف تعليقك',
-      deleteDesign:'حذف تصميمك المنشور', publishDesign:'نشر تصميمك الجديد'
-    };
-    function setLumiIdentityStatus(message,kind='info'){
-      if(!lumiIdentityStatus)return;
-      lumiIdentityStatus.textContent=String(message||'');
-      lumiIdentityStatus.className='identity-status'+(message?' is-visible':'')+(kind==='error'?' is-error':kind==='success'?' is-success':'');
-    }
-    function setLumiIdentityBusy(busy){
-      lumiIdentityBusy=!!busy;
-      [lumiIdentityRegisterButton,lumiIdentityRecoverButton,lumiIdentityLaterButton,document.getElementById('lumi-identity-close')].forEach(button=>{if(button)button.disabled=lumiIdentityBusy});
-      const label=document.getElementById('lumi-identity-register-label');
-      if(label)label.textContent=lumiIdentityBusy?'جارٍ تجهيز الحفظ…':'حفظ هويتي على هذا الجهاز';
-      if(lumiIdentityRegisterButton)lumiIdentityRegisterButton.setAttribute('aria-busy',String(lumiIdentityBusy));
-    }
-    function openLumiIdentityDialog(method){
-      const action=lumiIdentityActionLabels[method]||'حفظ التغيير';
-      if(lumiIdentityActionContext)lumiIdentityActionContext.textContent=`لإكمال «${action}»، احفظ هويتك أولًا.`;
-      setLumiIdentityStatus('');
-      if(lumiIdentityDialog&&!lumiIdentityDialog.open)lumiIdentityDialog.showModal();
-    }
-    function rejectLumiIdentityPending(){
-      const pending=lumiIdentityPendingActions.splice(0);
-      const cancelled=new Error('لم يتم حفظ التغيير. يمكنك متابعة التصفح وتفعيل هوية LUMIGAMI عندما تكون مستعدًا.');
-      cancelled.code='LUMI_IDENTITY_CANCELLED';
-      pending.forEach(item=>item.reject(cancelled));
-      if(lumiIdentityDialog?.open)lumiIdentityDialog.close();
-      setLumiIdentityStatus('');
-    }
-    async function resumeLumiIdentityPending(){
-      const pending=lumiIdentityPendingActions.splice(0);
-      if(lumiIdentityDialog?.open)lumiIdentityDialog.close();
-      for(const item of pending){
-        try{item.resolve(await item.execute())}
-        catch(error){item.reject(error)}
-      }
-    }
-    async function waitForLumiFirebaseBridge(){
-      if(window.LumiFB?._bridgeReady)return true;
-      const ready=await Promise.race([window.LumiFB?._bridgePromise||Promise.resolve(false),new Promise(resolve=>setTimeout(()=>resolve(false),15000))]);
-      if(!ready)throw new Error('لم يكتمل الاتصال بخدمة الهوية. تأكد من نشر وظائف Firebase ثم حدّث الصفحة.');
-      return true;
-    }
-    async function runLumiIdentityRegistration(){
-      if(lumiIdentityBusy)return;
-      setLumiIdentityBusy(true);setLumiIdentityStatus('بنجهّز مفتاح مرور محلي لهذا الجهاز…');
-      try{
-        await waitForLumiFirebaseBridge();
-        const result=await window.LumiFB.registerPasskey();
-        lumiIdentityVerifiedUid=String(result?.uid||window.LumiFB.getCurrentUid?.()||'');
-        if(!lumiIdentityVerifiedUid)throw new Error('تم إنشاء مفتاح المرور لكن لم نتأكد من هوية Firebase الحالية. أعد المحاولة.');
-        setLumiIdentityStatus('تم حفظ هويتك بنجاح. بنكمّل العملية التي اخترتها…','success');
-        await resumeLumiIdentityPending();
-        if(window.LumiApp?.notify)window.LumiApp.notify('تم تفعيل هوية LUMIGAMI وحفظ التغيير.','success','هويتك محفوظة');
-      }catch(error){
-        console.error('LUMIGAMI passkey registration failed:',error);
-        setLumiIdentityStatus(identityFriendlyError(error),'error');
-      }finally{setLumiIdentityBusy(false)}
-    }
-    async function runLumiIdentityRecovery(){
-      if(lumiIdentityBusy)return;
-      setLumiIdentityBusy(true);setLumiIdentityStatus('ابحث عن مفتاح المرور المحفوظ على هذا الجهاز…');
-      try{
-        await waitForLumiFirebaseBridge();
-        const result=await window.LumiFB.restorePasskey();
-        lumiIdentityVerifiedUid=String(result?.uid||window.LumiFB.getCurrentUid?.()||'');
-        if(!lumiIdentityVerifiedUid)throw new Error('لم نتمكن من تأكيد الهوية المستعادة. أعد المحاولة.');
-        const status=await window.LumiFB.getPasskeyStatus();
-        if(!status?.registered)throw new Error('تم تسجيل الدخول، لكن مفتاح المرور غير مسجل على هذه الهوية. لم ننفذ التغيير.');
-        setLumiIdentityStatus('رجعت هويتك وتصميماتك المحفوظة. بنكمّل الآن…','success');
-        await resumeLumiIdentityPending();
-        if(window.LumiApp?.notify)window.LumiApp.notify('تمت استعادة هويتك وبياناتك السابقة.','success','أهلًا بعودتك');
-      }catch(error){
-        console.error('LUMIGAMI passkey recovery failed:',error);
-        setLumiIdentityStatus(identityFriendlyError(error),'error');
-      }finally{setLumiIdentityBusy(false)}
-    }
-    function identityFriendlyError(error){
-      const name=String(error?.name||''),code=String(error?.code||''),message=String(error?.message||'');
-      if(name==='NotAllowedError')return 'لم يكتمل التحقق. قد تكون أغلقت نافذة الجهاز أو لا يوجد مفتاح مرور مسجل هنا.';
-      if(name==='NotSupportedError')return 'هذا المتصفح أو الجهاز لا يدعم طريقة مفتاح المرور المطلوبة.';
-      if(name==='InvalidStateError')return 'يوجد مفتاح مرور مسجل بالفعل لهذا الحساب. جرّب استعادة هويتك بدل إنشاء مفتاح جديد.';
-      if(code==='functions/failed-precondition'&&/single-device|backup|مزامن|متزامن/i.test(message))return 'الجهاز قدّم مفتاح مرور قابلًا للمزامنة. للحفاظ على وضع «هذا الجهاز فقط»، لم نفعّله. استخدم مفتاح مرور محليًا غير متزامن إن كان متاحًا.';
-      if(code==='functions/not-found'||/NOT_FOUND.*function|function.*not found/i.test(message))return 'خدمة Passkey لم تُنشر بعد في Firebase. انشر وظائف الحزمة المرفقة ثم حاول مرة أخرى.';
-      if(code==='functions/not-found')return 'لم نعثر على هوية سابقة بهذا المفتاح. يمكنك إنشاء هوية جديدة على هذا الجهاز.';
-      if(/Functions callable|functions\/unavailable|network|fetch/i.test(message))return 'تعذر الاتصال بخدمة الهوية. تأكد من نشر Cloud Functions واتصال الإنترنت ثم حاول مجددًا.';
-      return message.slice(0,240)||'لم نتمكن من إكمال إعداد الهوية. حاول مرة أخرى.';
-    }
-    window.LumiIdentity={
-      isProtectedMethod(method){return LUMI_IDENTITY_PROTECTED_METHODS.has(method)},
-      async runAction(method,args,execute){
-        if(!LUMI_IDENTITY_PROTECTED_METHODS.has(method))return execute();
-        await waitForLumiFirebaseBridge();
-        const uid=String(window.LumiFB.getCurrentUid?.()||'');
-        if(!uid)throw new Error('جلسة الزائر لم تجهز بعد. حاول مرة أخرى.');
-        if(lumiIdentityVerifiedUid===uid)return execute();
-        let status;
-        try{status=await window.LumiFB.getPasskeyStatus()}catch(error){throw new Error(identityFriendlyError(error))}
-        if(status?.registered){lumiIdentityVerifiedUid=uid;return execute()}
-        return new Promise((resolve,reject)=>{
-          lumiIdentityPendingActions.push({method,args,execute,resolve,reject});
-          openLumiIdentityDialog(method);
-        });
-      },
-      clearVerification(){lumiIdentityVerifiedUid=''}
-    };
-    lumiIdentityRegisterButton?.addEventListener('click',runLumiIdentityRegistration);
-    lumiIdentityRecoverButton?.addEventListener('click',runLumiIdentityRecovery);
-    lumiIdentityLaterButton?.addEventListener('click',rejectLumiIdentityPending);
-    document.getElementById('lumi-identity-close')?.addEventListener('click',rejectLumiIdentityPending);
-    lumiIdentityDialog?.addEventListener('cancel',event=>{event.preventDefault();if(!lumiIdentityBusy)rejectLumiIdentityPending()});
-    function firebaseCall(method,...args){
-      const execute=()=>window.LumiFB.call(method,...args);
-      return window.LumiIdentity?.isProtectedMethod(method)?window.LumiIdentity.runAction(method,args,execute):execute();
-    }
+    function firebaseCall(method,...args){return window.LumiFB.call(method,...args)}
     function track(event,details={}){try{window.LumiFB.track(event,details)}catch(_){}}
 
     /* إشعارات مدمجة مع ألوان الموقع. */
@@ -3174,7 +2968,7 @@
         return detail?`${message} [${detail}]`:message;
       };
 
-      let auth=null,db=null,user=null,activeSubscriptionUid="",subscriptionStops=[],signingIn=false,flushBusy=false;
+      let auth=null,db=null,user=null,subscriptionsStarted=false,signingIn=false,flushBusy=false;
       let resolveAuthReady;
       const authReady=new Promise(resolve=>{resolveAuthReady=resolve});
       const eventQueue=window.LumiFB._pending;
@@ -3222,11 +3016,10 @@
       let firestoreReady=false,probePromise=null,eventBlocked=false;
       const sdk='https://www.gstatic.com/firebasejs/13.3.0/';
       try{
-        const [{initializeApp},A,F,CF]=await Promise.all([
+        const [{initializeApp},A,F]=await Promise.all([
           import(sdk+'firebase-app.js'),
           import(sdk+'firebase-auth.js'),
-          import(sdk+'firebase-firestore.js'),
-          import(sdk+'firebase-functions.js')
+          import(sdk+'firebase-firestore.js')
         ]);
         // إعدادات تطبيق LUMIGAMI WEB من مشروع Firebase الجديد lumigami-studio-new.
         // Analytics غير مطلوب لتشغيل Firestore أو Anonymous Authentication؛ لذلك لا نحمّله هنا.
@@ -3241,12 +3034,6 @@
         };
         const app=initializeApp(firebaseConfig);
         auth=A.getAuth(app);
-        const passkeyFunctions=CF.getFunctions(app,'us-central1');
-        const callPasskeyFunction=async(name,data={})=>{
-          const callable=CF.httpsCallable(passkeyFunctions,name);
-          const response=await callable(data);
-          return response.data;
-        };
         try{
           db=F.initializeFirestore(app,{localCache:F.persistentLocalCache({tabManager:F.persistentMultipleTabManager()})});
         }catch(initError){
@@ -3303,36 +3090,6 @@
           await waitForUser();
           if(location.protocol==='file:')throw new Error('افتح الموقع من رابط HTTPS بعد رفعه، وليس من ملف HTML على الجهاز.');
           if(typeof navigator!=='undefined'&&navigator.onLine===false)throw new Error('أنت غير متصل بالإنترنت. ارجع اتصل وجرب تاني.');
-        };
-        const loadPasskeyBrowser=async()=>{
-          if(!window.isSecureContext||!navigator.credentials)throw new Error('مفاتيح المرور تحتاج إلى HTTPS ومتصفح يدعم WebAuthn.');
-          return import('https://esm.sh/@simplewebauthn/browser@14.0.0');
-        };
-        window.LumiFB.getCurrentUid=()=>auth?.currentUser?.uid||user?.uid||'';
-        window.LumiFB.getPasskeyStatus=async()=>{
-          await waitForUser();
-          return callPasskeyFunction('getPasskeyStatus');
-        };
-        window.LumiFB.registerPasskey=async()=>{
-          await waitForDataStore();
-          const browser=await loadPasskeyBrowser();
-          if(browser.browserSupportsWebAuthn&&!browser.browserSupportsWebAuthn())throw new Error('هذا المتصفح لا يدعم مفاتيح المرور. جرّب متصفحًا أحدث يدعم WebAuthn.');
-          const prepared=await callPasskeyFunction('generatePasskeyRegistrationOptions');
-          if(prepared.alreadyRegistered)throw new Error('هذا الحساب لديه مفتاح مرور بالفعل. استخدم خيار استعادة الهوية.');
-          const response=await browser.startRegistration({optionsJSON:prepared.optionsJSON});
-          const result=await callPasskeyFunction('verifyPasskeyRegistration',{challengeId:prepared.challengeId,response});
-          return {uid:user.uid,registered:!!result.registered,deviceType:result.deviceType||'singleDevice'};
-        };
-        window.LumiFB.restorePasskey=async()=>{
-          const browser=await loadPasskeyBrowser();
-          if(browser.browserSupportsWebAuthn&&!browser.browserSupportsWebAuthn())throw new Error('هذا المتصفح لا يدعم مفاتيح المرور. جرّب متصفحًا أحدث يدعم WebAuthn.');
-          const prepared=await callPasskeyFunction('generatePasskeyAuthenticationOptions');
-          const response=await browser.startAuthentication({optionsJSON:prepared.optionsJSON});
-          const result=await callPasskeyFunction('verifyPasskeyAuthentication',{challengeId:prepared.challengeId,response});
-          if(!result?.customToken)throw new Error('لم يرجع خادم الهوية رمز استعادة صالحًا.');
-          const credential=await A.signInWithCustomToken(auth,result.customToken);
-          user=credential.user;
-          return {uid:credential.user.uid,restored:true};
         };
 
         const logEvent=async item=>{
@@ -3612,33 +3369,30 @@
           // ابدأ تحميل/حفظ البيانات بمجرد توفر UID، ولا تنتظر نتيجة فحص المجموعة التجريبية.
           flushEvents();
           flushPendingPreferences().catch(error=>console.warn('Queued preferences could not be restored yet:',error));
-          if(activeSubscriptionUid!==visitor.uid){
-            subscriptionStops.forEach(stop=>{try{stop()}catch(_){}});
-            subscriptionStops=[];activeSubscriptionUid=visitor.uid;
-            window.LumiIdentity?.clearVerification?.();
-            // عند استعادة UID مختلف، أوقف مستمعي الهوية السابقة وأعد ربط كل البيانات بالهوية المستعادة.
-            subscriptionStops.push(F.onSnapshot(F.collection(db,'pairVoteStats'),snapshot=>{
+          if(!subscriptionsStarted){
+            subscriptionsStarted=true;
+            F.onSnapshot(F.collection(db,'pairVoteStats'),snapshot=>{
               const next=Object.create(null);snapshot.forEach(document=>next[document.id]=Math.max(0,Number(document.data().votes)||0));window.LumiApp.applyVoteData(next,undefined);
-            },error=>status(explain(error,'قراءة عدادات إعجاب التصميمات الأصلية pairVoteStats'),'error')));
-            subscriptionStops.push(F.onSnapshot(F.query(F.collection(db,'pairVotes'),F.where('uid','==',visitor.uid)),snapshot=>{
+            },error=>status(explain(error,'قراءة عدادات إعجاب التصميمات الأصلية pairVoteStats'),'error'));
+            F.onSnapshot(F.query(F.collection(db,'pairVotes'),F.where('uid','==',visitor.uid)),snapshot=>{
               const mine=new Set();snapshot.forEach(document=>mine.add(String(document.data().pairId)));window.LumiApp.applyVoteData(undefined,mine);
-            },error=>status(explain(error,'قراءة إعجابات الزائر pairVotes'),'error')));
-            subscriptionStops.push(F.onSnapshot(F.collection(db,'communityDesigns'),snapshot=>{
+            },error=>status(explain(error,'قراءة إعجابات الزائر pairVotes'),'error'));
+            F.onSnapshot(F.collection(db,'communityDesigns'),snapshot=>{
               window.LumiApp.applyCommunityDesigns(snapshot.docs.map(document=>({id:document.id,data:document.data()})));
-            },error=>status(explain(error,'قراءة نسخ المجتمع communityDesigns'),'error')));
-            subscriptionStops.push(F.onSnapshot(F.collection(db,'communityDesignStats'),snapshot=>{
+            },error=>status(explain(error,'قراءة نسخ المجتمع communityDesigns'),'error'));
+              F.onSnapshot(F.collection(db,'communityDesignStats'),snapshot=>{
               const stats=Object.create(null);snapshot.forEach(document=>stats[document.id]=Math.max(0,Number(document.data().votes)||0));window.LumiApp.applyCommunityVoteStats(stats);
-            },error=>status(explain(error,'قراءة عدادات نسخ المجتمع communityDesignStats'),'error')));
-            subscriptionStops.push(F.onSnapshot(F.query(F.collection(db,'communityDesignVotes'),F.where('uid','==',visitor.uid)),snapshot=>{
+            },error=>status(explain(error,'قراءة عدادات نسخ المجتمع communityDesignStats'),'error'));
+            F.onSnapshot(F.query(F.collection(db,'communityDesignVotes'),F.where('uid','==',visitor.uid)),snapshot=>{
               const mine=new Set();snapshot.forEach(document=>mine.add(`community:${document.data().designId}`));window.LumiApp.applyCommunityMine(mine);
-            },error=>status(explain(error,'قراءة إعجابات المجتمع communityDesignVotes'),'error')));
-            subscriptionStops.push(F.onSnapshot(F.query(F.collection(db,'designFavorites'),F.where('uid','==',visitor.uid)),snapshot=>{
+            },error=>status(explain(error,'قراءة إعجابات المجتمع communityDesignVotes'),'error'));
+            F.onSnapshot(F.query(F.collection(db,'designFavorites'),F.where('uid','==',visitor.uid)),snapshot=>{
               const favorites=new Set();snapshot.forEach(document=>favorites.add(String(document.data().favoriteKey)));
               window.LumiApp.applyFavorites(favorites);
-            },error=>status(explain(error,'قراءة المفضلة designFavorites'),'error')));
-            subscriptionStops.push(F.onSnapshot(F.doc(db,'visitorPreferences',visitor.uid),snapshot=>{
+            },error=>status(explain(error,'قراءة المفضلة designFavorites'),'error'));
+            F.onSnapshot(F.doc(db,'visitorPreferences',visitor.uid),snapshot=>{
               window.LumiApp.applyPreferences(snapshot.exists()?snapshot.data():{},!snapshot.metadata.fromCache);
-            },error=>{console.error('Could not load visitor preferences:',error);status(explain(error,'قراءة التفضيلات visitorPreferences'),'error')}));
+            },error=>{console.error('Could not load visitor preferences:',error);status(explain(error,'قراءة التفضيلات visitorPreferences'),'error')});
           }
           // اختبار الاتصال مجرد تشخيص اختياري، وليس شرطًا لنقل المفضلة القديمة.
           verifyFirestoreWrite().catch(error=>console.warn('Diagnostic probe failed; feature writes will still be attempted:',error));
